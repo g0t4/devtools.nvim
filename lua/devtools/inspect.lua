@@ -73,7 +73,7 @@ function M.print(object, opts)
 end
 
 function M.pretty_print(object)
-    M.print_inspect(object, { pretty = true })
+    M.print(object, { pretty = true })
 end
 
 return M
