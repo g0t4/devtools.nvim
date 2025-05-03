@@ -1,0 +1,16 @@
+{
+    "diagnostics": {
+        "globals": [ "vim", "describe", "it", "assert" ],
+        "disable": [
+            "lowercase-global",
+            "need-check-nil",
+        ],
+        "unusedLocalExclude": [ "_*" ],
+    },
+
+    "workspace.library": [
+        "$VIMRUNTIME",
+        "~/.local/share/nvim/lazy/rxlua",
+        -- TODO if I need other libraries, add here for LS purposes
+    ]
+}
