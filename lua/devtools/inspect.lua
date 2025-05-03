@@ -1,3 +1,4 @@
+local M = {}
 --
 -- *** color output
 local color_keys = {
@@ -33,7 +34,7 @@ local color_keys = {
     whitebg   = 47
 }
 -- print("\27[31mThis is red text\27[0m")
-function black(text, options)
+function M.black(text, options)
     options = options or {}
     if not options.color then
         return text
@@ -41,7 +42,7 @@ function black(text, options)
     return "\27[" .. color_keys.black .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
-function red(text, options)
+function M.red(text, options)
     options = options or {}
     if not options.color then
         return text
@@ -49,7 +50,7 @@ function red(text, options)
     return "\27[" .. color_keys.red .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
-function blue(text, options)
+function M.blue(text, options)
     options = options or {}
     if not options.color then
         return text
@@ -57,7 +58,7 @@ function blue(text, options)
     return "\27[" .. color_keys.blue .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
-function magenta(text, options)
+function M.magenta(text, options)
     options = options or {}
     if not options.color then
         return text
@@ -65,7 +66,7 @@ function magenta(text, options)
     return "\27[" .. color_keys.magenta .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
-function green(text, options)
+function M.green(text, options)
     options = options or {}
     if not options.color then
         return text
@@ -73,7 +74,7 @@ function green(text, options)
     return "\27[" .. color_keys.green .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
-function tbl_is_list(tbl)
+local function tbl_is_list(tbl)
     if type(tbl) ~= "table" then
         return false
     end
@@ -94,7 +95,7 @@ end
 
 ---@param object any
 ---@return string description
-function inspect(object, opts, current_depth)
+function M.inspect(object, opts, current_depth)
     opts = opts or {}
     opts.color = opts.color or true
     opts.pretty = opts.pretty or false -- migrate to opts for this
@@ -107,17 +108,17 @@ function inspect(object, opts, current_depth)
         return "..."
     end
     if object == nil then
-        return black("nil", opts)
+        return M.black("nil", opts)
     elseif type(object) == 'table' then
         -- PRN check if all keys/indicies are integer and consecutive => if so, don't print indicies
         local is_list = tbl_is_list(object)
         local items = {}
         for key, value in pairs(object) do
             if is_list then
-                table.insert(items, green(inspect(value, opts, current_depth + 1), opts))
+                table.insert(items, M.green(M.inspect(value, opts, current_depth + 1), opts))
             else
                 if type(key) ~= 'number' then key = '"' .. key .. '"' end
-                local item = '[' .. blue(key, opts) .. '] = ' .. green(inspect(value, opts, current_depth + 1), opts)
+                local item = '[' .. M.blue(key, opts) .. '] = ' .. M.green(M.inspect(value, opts, current_depth + 1), opts)
                 table.insert(items, item)
             end
         end
@@ -130,20 +131,22 @@ function inspect(object, opts, current_depth)
         end
         return "{ " .. table.concat(items, ", ") .. " }"
     elseif type(object) == "number" then
-        return magenta(tostring(object), opts)
+        return M.magenta(tostring(object), opts)
     elseif type(object) == "string" then
         local escaped = object:gsub('"', '\\"')
-        return green('"' .. escaped .. '"', opts)
+        return M.green('"' .. escaped .. '"', opts)
     else
         -- PRN udf?
         return tostring(object)
     end
 end
 
-function print_inspect(object, opts)
-    print(inspect(object, opts))
+function M.print(object, opts)
+    print(M.inspect(object, opts))
 end
 
-function pretty_print(object)
-    print_inspect(object, { pretty = true })
+function M.pretty_print(object)
+    M.print_inspect(object, { pretty = true })
 end
+
+return M
