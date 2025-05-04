@@ -36,6 +36,8 @@ local color_keys = {
     --   https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit
 }
 
+-- TODO rewrite this to cover all colors... and be reusable.
+-- Try using your new AI tools to do this (zed predicts too)
 
 -- print("\27[31mThis is red text\27[0m")
 function M.black(text, options)
