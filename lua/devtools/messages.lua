@@ -1,3 +1,9 @@
+--
+-- TODO outstanding issues:
+-- - see OSC reference in dotfiles,"Can't re-enter normal mode from terminal mode" (see full stack trace there)
+--
+
+
 -- * DumpBuffer module
 local M = {}
 
