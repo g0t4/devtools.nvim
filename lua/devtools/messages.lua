@@ -10,7 +10,9 @@ function M.setup()
     end)
     -- show messages
     vim.keymap.set('n', '<leader>mm', function()
-        vim.cmd(":messages")
+        -- FYI cannot get to work with vim.cmd(":messages").... but this worked:
+        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":messages<CR>", true, false, true), 'n', false)
+        --             '<C-\\><C-n>:messages<CR>', true, true, true), 't', false)
     end)
 
     vim.keymap.set('n', '<leader>mo', function()
