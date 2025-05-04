@@ -2,7 +2,6 @@
 local M = {}
 
 function M.setup()
-    -- * keymaps for messages buffer
     vim.keymap.set('n', '<leader>mc', function()
         M.clear()
     end)
@@ -12,8 +11,7 @@ function M.setup()
 end
 
 function format_dump(value)
-    -- ? bring over my inspect from zeta.nvim repo?
-    -- TODO add in code to detect and extract details like known userdata type / fields, etc
+    -- TODO! merge in inspect now that its in devtools with this
     local type = type(value)
     if type == "table" then
         return vim.inspect(value)
