@@ -14,10 +14,12 @@ function M.setup()
         vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(":messages<CR>", true, false, true), 'n', false)
         --             '<C-\\><C-n>:messages<CR>', true, true, true), 't', false)
     end)
-
     vim.keymap.set('n', '<leader>mo', function()
         M.ensure_open()
     end)
+    -- ideas:
+    --  keymap to copy :messages to messages buffer?
+    --  curious... is there an event for when :messages arrive... at least smth with text changed right?
 end
 
 function format_dump(value)
