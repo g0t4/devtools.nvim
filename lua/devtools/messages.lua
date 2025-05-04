@@ -1,7 +1,10 @@
 --
--- TODO outstanding issues:
+-- TODOs 
 -- - see OSC reference in dotfiles,"Can't re-enter normal mode from terminal mode" (see full stack trace there)
---
+-- - messages toggle where it will discard messages if buffer not open, vs accumulate them anyways... 
+--   might even have it off by default and require toggling it on each session
+--   this would only be when the buffer is not visible in a window
+--   normal behavior when open... log always
 
 
 -- * DumpBuffer module
