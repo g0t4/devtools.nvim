@@ -10,8 +10,8 @@
 
     "workspace.library": [
         "$VIMRUNTIME",
-        "~/.local/share/nvim/lazy/rxlua",
-        -- TODO if I need other libraries, add here for LS purposes
+        // "~/.local/share/nvim/lazy/rxlua",
+        // TODO if I need other libraries, add here for LS purposes
     ],
 
     "workspace.checkThirdParty": "Disable"
