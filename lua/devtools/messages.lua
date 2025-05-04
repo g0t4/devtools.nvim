@@ -8,6 +8,12 @@ function M.setup()
         -- ALSO clear builtin :messages
         vim.cmd(":messages clear")
     end)
+    -- show messages
+    vim.keymap.set('n', '<leader>mm', function()
+        M.ensure_open()
+        vim.cmd(":messages")
+    end)
+
     vim.keymap.set('n', '<leader>mo', function()
         M.ensure_open()
     end)
