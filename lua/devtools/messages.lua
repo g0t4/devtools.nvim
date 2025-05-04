@@ -10,7 +10,6 @@ function M.setup()
     end)
     -- show messages
     vim.keymap.set('n', '<leader>mm', function()
-        M.ensure_open()
         vim.cmd(":messages")
     end)
 
