@@ -2,8 +2,11 @@
 local M = {}
 
 function M.setup()
-    vim.keymap.set('n', '<leader>mc', function()
+    vim.keymap.set('n', '<leader>mc', M.clear)
+    vim.keymap.set('n', '<leader>mcc', function()
         M.clear()
+        -- ALSO clear builtin :messages
+        vim.cmd(":messages clear")
     end)
     vim.keymap.set('n', '<leader>mo', function()
         M.ensure_open()
