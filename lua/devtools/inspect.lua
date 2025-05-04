@@ -1,6 +1,25 @@
 local ansi = require("devtools.ansi")
 
 local M = {}
+
+setmetatable(M, {
+    __call = function(_, ...)
+        -- since I've been using inspect as a primary global, this means I only have to import this module and the globals issue is fixed for inspect()
+        -- when M() is called => inspect() in most consumers
+        -- so most consumers can:
+        --   local inspect = require("devtools.inspect")
+        --   inspect(...)
+        --   inspect.inspect(...) -- still works, though I could hide that
+        --   inspect.print(...) -- etc, still works
+        --
+        return M.inspect(...)
+    end,
+    -- __index = function(_, key)
+    --     -- resolve arbitrary key lookups
+    --     return "you tried to access: " .. key
+    -- end
+})
+
 local function tbl_is_list(tbl)
     if type(tbl) ~= "table" then
         return false
