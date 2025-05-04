@@ -1,8 +1,8 @@
-local dump = require("devtools.dump")
+local messages = require("devtools.messages")
 local M = {}
 
 function M.setup()
-    dump.setup()
+    messages.setup()
 end
 
 return M
