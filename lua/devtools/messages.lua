@@ -258,9 +258,18 @@ function M.clear()
         return
     end
 
-    -- TODO try my approach from iron.nvim:
-    --  core uses:    vim.fn.chansend(meta.job, string.char(12))
-    --  then I tmp set scrollback to 1 to truncate that
+    -- PRN if still have trouble clearing... try my approach from iron.nvim:
+    -- -- 1. iron.nvim clear_repl does:
+    -- -- https://github.com/g0t4/iron.nvim/blob/6d911ee/lua/iron/core.lua#L156
+    -- vim.fn.chansend(meta.job, string.char(12))
+    --
+    -- -- 2. then I added this in my nvim config:
+    -- -- https://github.com/g0t4/dotfiles/blob/04db401e/.config/nvim/lua/plugins/terminals.lua#L154-L157
+    -- local sb = vim.bo[meta.bufnr].scrollback
+    -- vim.bo[meta.bufnr].scrollback = 1
+    -- vim.bo[meta.bufnr].scrollback = sb
+    --
+    -- BUT, for now recreate is working fine so lets use that
 
     -- recreate the buffer to clear it?
     local old_dump_bufnr = M.dump_bufnr
