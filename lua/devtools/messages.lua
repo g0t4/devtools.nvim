@@ -1,7 +1,7 @@
 --
--- TODOs 
+-- TODOs
 -- - see OSC reference in dotfiles,"Can't re-enter normal mode from terminal mode" (see full stack trace there)
--- - messages toggle where it will discard messages if buffer not open, vs accumulate them anyways... 
+-- - messages toggle where it will discard messages if buffer not open, vs accumulate them anyways...
 --   might even have it off by default and require toggling it on each session
 --   this would only be when the buffer is not visible in a window
 --   normal behavior when open... log always
@@ -156,6 +156,7 @@ local function ensure_buffer_exists()
         return
     end
     M.create_new_buffer()
+    vim.api.nvim_buf_set_name(M.dump_bufnr, 'buffer_dump')
 end
 
 -- TODO if this works then hide as local func (put above)
@@ -186,7 +187,6 @@ function M.create_new_buffer()
     -- ensure listed w/ name:
     --   I want users to easily find it should they want to
     vim.api.nvim_set_option_value('buflisted', true, { buf = M.dump_bufnr })
-    vim.api.nvim_buf_set_name(M.dump_bufnr, 'buffer_dump')
 end
 
 local function ensure_buffer_is_open()
@@ -280,6 +280,12 @@ function M.clear()
     --
     -- close the old buffer
     vim.api.nvim_buf_delete(old_dump_bufnr, { force = true })
+    --
+    -- set name now that old is closed
+    --   cannot set this before old replaced... chicken and egg
+    --   otherwise I'd prefer create_new_buffer do this
+    --   HONESTLY, I could get rid of this too (or set an incrementing counter on end of name)
+    vim.api.nvim_buf_set_name(M.dump_bufnr, 'buffer_dump')
 
     -- FYI this seemed to work at first, but its buggy...
     --   when I log after a clear, it will show old text too
