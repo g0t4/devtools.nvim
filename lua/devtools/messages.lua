@@ -155,8 +155,11 @@ local function ensure_buffer_exists()
     if M.dump_bufnr ~= nil then
         return
     end
+    M.create_new_buffer()
+end
 
-    -- create buffer first time
+-- TODO if this works then hide as local func (put above)
+function M.create_new_buffer()
     M.dump_bufnr = vim.api.nvim_create_buf(true, false) -- listed, scratch
 
     -- * terminal backing:
@@ -255,8 +258,35 @@ function M.clear()
         return
     end
 
-    -- both regular and terminal buffers, if modifiable:
-    vim.api.nvim_buf_set_lines(M.dump_bufnr, 0, -1, false, {})
+    -- TODO try my approach from iron.nvim:
+    --  core uses:    vim.fn.chansend(meta.job, string.char(12))
+    --  then I tmp set scrollback to 1 to truncate that
+
+    -- recreate the buffer to clear it?
+    local old_dump_bufnr = M.dump_bufnr
+    --
+    M.create_new_buffer()
+    --
+    if M.is_visible(old_dump_bufnr) then
+        -- if buffer was open, then reuse the same window
+        -- if it wasn't then this is all in the background
+        local win_id = window_id_for_buffer(old_dump_bufnr)
+        if win_id == nil then
+            error("unexpected, window id not found for old buffer during messages clear, this should not happen")
+            return
+        end
+        vim.api.nvim_win_set_buf(win_id, M.dump_bufnr)
+    end
+    --
+    -- close the old buffer
+    vim.api.nvim_buf_delete(old_dump_bufnr, { force = true })
+
+    -- FYI this seemed to work at first, but its buggy...
+    --   when I log after a clear, it will show old text too
+    -- vim.api.nvim_buf_set_lines(M.dump_bufnr, 0, -1, false, {})
+
+    -- FYI also tried but it won't clear scrollback (just like issue w/ term buffer hooked up to a shell)
+    -- vim.api.nvim_chan_send(M.dump_channel, '\x1bc') -- ANSI reset (ESC c)
 
     return M
 end
