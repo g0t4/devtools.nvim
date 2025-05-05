@@ -293,7 +293,7 @@ function M.clear()
     -- set name now that old is closed
     --   cannot set this before old replaced... chicken and egg
     --   otherwise I'd prefer create_new_buffer do this
-    --   HONESTLY, I could get rid of this too (or set an incrementing counter on end of name)
+    --   FYI name used to close old buffer so it doesn't get captured in werkspace session save
     vim.api.nvim_buf_set_name(M.dump_bufnr, 'buffer_dump')
 
     -- FYI this seemed to work at first, but its buggy...
