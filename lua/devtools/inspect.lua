@@ -39,7 +39,15 @@ end
 
 --%%
 
+-- TODO would be nice to get type hints to work on inspect() top level call too!
+--   for now can do inspect.inspect() to get the type hints
+--
 ---@param object any
+---@param opts? {
+---    color?: boolean,
+---    pretty?: boolean,
+---    pretty_down_to?: number,
+---}
 ---@return string description
 function M.inspect(object, opts, current_depth)
     opts = opts or {}
