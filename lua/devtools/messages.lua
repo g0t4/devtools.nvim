@@ -82,9 +82,20 @@ local function dump_command(opts)
     --   what would a commma mean?
     --   conversely, can pass a table for multiple expressions
 
+    -- helpers to be able to use in the selected lines
+    local env_overrides = {
+        -- override print so it goes to the buffer
+        "local print = require('devtools.messages').append",
+        -- make messages module available
+        "local messages = require('devtools.messages')",
+        "local inspect = require('devtools.inspect')",
+        "local ansi = require('devtools.ansi')",
+    }
+
     -- * evaluate lua expression (if passed)
     if opts.args ~= "" then
-        local chunk, err = load("return " .. opts.args)
+        table.insert(env_overrides, "return " .. opts.args)
+        local chunk, err = load(table.concat(env_overrides, "\n"))
         if not chunk then
             messages.append(ansi.red("Invalid expression: " .. err))
             return
@@ -112,16 +123,6 @@ local function dump_command(opts)
         for _, line in ipairs(selected_lines) do
             M.append(line)
         end
-
-        -- helpers to be able to use in the selected lines
-        local env_overrides = {
-            -- override print so it goes to the buffer
-            "local print = require('devtools.messages').append",
-            -- make messages module available
-            "local messages = require('devtools.messages')",
-            "local inspect = require('devtools.inspect')",
-            "local ansi = require('devtools.ansi')",
-        }
 
         local script = table.concat(env_overrides, "\n")
             .. "\n" .. table.concat(selected_lines, "\n")
