@@ -4,6 +4,7 @@ local inspect = require('devtools.inspect')
 
 -- * DumpBuffer module
 local M = {}
+local messages = M
 
 function M.setup()
     vim.keymap.set('n', '<leader>mc', M.clear)
@@ -92,7 +93,7 @@ local function dump_command(opts)
     if opts.args ~= "" then
         local chunk, err = load("return " .. opts.args)
         if not chunk then
-            M.append(ansi.red("Invalid expression: " .. err))
+            messages.append(ansi.red("Invalid expression: " .. err))
             return
         end
         local ok, result = pcall(chunk)
@@ -114,7 +115,7 @@ local function dump_command(opts)
         -- M.header("opts:")
         -- M.append(vim.inspect(opts))
         local selected_lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
-        M.header("Dump w/ selected lines:")
+        messages.header("Dump w/ selected lines:")
         for _, line in ipairs(selected_lines) do
             M.append(line)
         end
@@ -126,6 +127,7 @@ local function dump_command(opts)
             -- make messages module available
             "local messages = require('devtools.messages')",
             "local inspect = require('devtools.inspect')",
+            "local ansi = require('devtools.ansi')",
         }
 
         local script = table.concat(env_overrides, "\n")
