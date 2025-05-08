@@ -254,8 +254,8 @@ function M.header(...)
     ensure_buffer_exists()
 
     local header = string.format("%s", table.concat({ ... }, " "))
-    header = "\n" .. "---------- " .. header .. " ----------"
-    dump_background(header)
+    header = "---------- " .. header .. " ----------"
+    dump_background(ansi.green(header))
 
     return M
 end
