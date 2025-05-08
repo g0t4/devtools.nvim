@@ -1,10 +1,5 @@
---
--- TODOs
--- - see OSC reference in dotfiles,"Can't re-enter normal mode from terminal mode" (see full stack trace there)
--- - messages toggle where it will discard messages if buffer not open, vs accumulate them anyways...
---   might even have it off by default and require toggling it on each session
---   this would only be when the buffer is not visible in a window
---   normal behavior when open... log always
+local ansi = require('devtools.ansi')
+local inspect = require('devtools.inspect')
 
 
 -- * DumpBuffer module
@@ -93,23 +88,75 @@ local function dump_command(opts)
     --   what would a commma mean?
     --   conversely, can pass a table for multiple expressions
 
-    -- * evaluate lua expression
-    local chunk, err = load("return " .. opts.args)
-    if not chunk then
-        error("Invalid expression: " .. err)
-    end
-    local ok, result = pcall(chunk)
-    if not ok then
-        error("Error during evaluation: " .. result)
+    -- * evaluate lua expression (if passed)
+    if opts.args ~= "" then
+        local chunk, err = load("return " .. opts.args)
+        if not chunk then
+            M.append(ansi.red("Invalid expression: " .. err))
+            return
+        end
+        local ok, result = pcall(chunk)
+        if not ok then
+            M.append(ansi.red("Error during evaluation: " .. result))
+        end
+
+        M.header(":Dump " .. opts.args)
+        M.append(format_dump(result))
     end
 
-    M.header(":Dump " .. opts.args)
-    M.append(format_dump(result))
+    -- * evaluate selected lines (too or alone)
+    if opts.range > 0 then
+        -- opts.range == 1 => start line passed, end line is set to start too
+        -- opts.range == 2 => start and end lines passed
+
+        local start_line = opts.line2
+        local end_line = opts.line2
+        -- M.header("opts:")
+        -- M.append(vim.inspect(opts))
+        local selected_lines = vim.api.nvim_buf_get_lines(0, start_line - 1, end_line, false)
+        M.header("Dump w/ selected lines:")
+        for _, line in ipairs(selected_lines) do
+            M.append(line)
+        end
+
+        -- helpers to be able to use in the selected lines
+        local env_overrides = {
+            -- override print so it goes to the buffer
+            "local print = require('devtools.messages').append",
+            -- make messages module available
+            "local messages = require('devtools.messages')",
+            "local inspect = require('devtools.inspect')",
+        }
+
+        local script = table.concat(env_overrides, "\n")
+            .. "\n" .. table.concat(selected_lines, "\n")
+
+        local chunk, err = load(script)
+        if not chunk then
+            M.append(ansi.red("Invalid script: " .. err))
+            return
+        end
+        M.append("Evaluating...")
+        local ok, result = pcall(chunk)
+        if ok then
+            -- success in green
+            M.append(ansi.green("Result:"))
+        else
+            -- show failures in red (i.e. put `prin(1)` in a buffer and run Dump on it)
+            M.append(ansi.red("Error during evaluation: "))
+        end
+        M.append(format_dump(result))
+
+        -- careful, this borderline crosses into what iron.nvim does
+        --  however, iron.nvim has no way of running code inside the vim runtime
+        --  so this is justifiable to a degree
+    end
 
     -- b/c I used dump command, should I focus the window? lets not for now
 end
 
 vim.api.nvim_create_user_command("Dump", dump_command, {
+    range = true,
     nargs = '*',
     complete = "lua", -- completes like using :lua command!
 })
