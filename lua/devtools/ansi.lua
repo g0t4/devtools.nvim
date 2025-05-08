@@ -42,6 +42,7 @@ local color_keys = {
 -- print("\27[31mThis is red text\27[0m")
 function M.black(text, options)
     options = options or {}
+    options.color = options.color or true -- default is true
     if not options.color then
         return text
     end
@@ -50,6 +51,7 @@ end
 
 function M.red(text, options)
     options = options or {}
+    options.color = options.color or true -- default is true
     if not options.color then
         return text
     end
@@ -58,6 +60,7 @@ end
 
 function M.blue(text, options)
     options = options or {}
+    options.color = options.color or true -- default is true
     if not options.color then
         return text
     end
@@ -66,6 +69,7 @@ end
 
 function M.magenta(text, options)
     options = options or {}
+    options.color = options.color or true -- default is true
     if not options.color then
         return text
     end
@@ -74,6 +78,7 @@ end
 
 function M.green(text, options)
     options = options or {}
+    options.color = options.color or true -- default is true
     if not options.color then
         return text
     end
