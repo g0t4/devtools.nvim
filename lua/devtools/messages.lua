@@ -79,7 +79,7 @@ end
 --
 local reminded_once = false
 
-vim.api.nvim_create_user_command("Dump", function(opts)
+local function dump_command(opts)
     M.ensure_open()
 
     if not reminded_once then
@@ -105,11 +105,15 @@ vim.api.nvim_create_user_command("Dump", function(opts)
 
     M.header(":Dump " .. opts.args)
     M.append(format_dump(result))
-    --
-end, {
+
+    -- b/c I used dump command, should I focus the window? lets not for now
+end
+
+vim.api.nvim_create_user_command("Dump", dump_command, {
     nargs = '*',
     complete = "lua", -- completes like using :lua command!
 })
+
 -- b/c not allowed to use lowercase command names:
 vim.cmd [[ cabbrev dump Dump ]]
 vim.cmd [[ cabbrev DUmp Dump ]] -- frequently mistype, b/c I have to capitalize the goddamn D
@@ -118,8 +122,11 @@ vim.cmd [[ cabbrev DUmp Dump ]] -- frequently mistype, b/c I have to capitalize 
 --     command! -nargs=1 -complete=lua Dump lua print(vim.inspect(<args>))
 -- ]]
 
-
-
+-- abbreviated version of Dump, to be as easy as :=
+vim.api.nvim_create_user_command("D", dump_command, {
+    nargs = '*',
+    complete = "lua", -- completes like using :lua command!
+})
 
 M.dump_bufnr = nil
 M.dump_channel = nil
