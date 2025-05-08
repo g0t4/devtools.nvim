@@ -73,16 +73,9 @@ end
 -- FYI if you want an nvim user_command that takes a lua expression
 --    and it gets the evaluated value... this is how you can do it
 --
-local reminded_once = false
 
 local function dump_command(opts)
     M.ensure_open()
-
-    if not reminded_once then
-        -- PRN retire this message later on
-        M.append("FYI use `:=` command to dump to the command line, instead of here")
-        reminded_once = true
-    end
 
     -- FYI should only be one expression
     --   there wouldn't be completion for multiple
