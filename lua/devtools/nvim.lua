@@ -32,8 +32,9 @@ function M.dump_windows()
             -- local filetype = vim.bo[bufnr].filetype
             local buflines = vim.api.nvim_buf_line_count(bufnr)
             local name = vim.api.nvim_buf_get_name(bufnr)
+            local split = config and config.split or "missing config"
             local row, col = unpack(vim.api.nvim_win_get_cursor(window_id))
-            return window_id .. " " .. config.split
+            return window_id .. " " .. split
                 .. " → buf " .. bufnr .. ": " .. name
                 .. " @ row: " .. row .. "/" .. buflines
                 .. "  col: " .. col
