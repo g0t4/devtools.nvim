@@ -43,4 +43,24 @@ function M.dump_windows()
     messages.append(info)
 end
 
+-- makes a cabbrev for the given original command
+function M.alias(alias_name, original_command)
+    vim.cmd(string.format("cabbrev %s %s", alias_name, original_command))
+end
+
+function M.setup()
+    -- * :Buffers (captial B)
+    vim.api.nvim_create_user_command("Buffers", function()
+        messages.ensure_open()
+        require("devtools.nvim").dump_buffers()
+    end, {})
+
+    -- * :windows
+    vim.api.nvim_create_user_command("Windows", function()
+        messages.ensure_open()
+        require("devtools.nvim").dump_windows()
+    end, {})
+    M.alias("windows", "Windows")
+end
+
 return M
