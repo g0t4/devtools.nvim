@@ -50,6 +50,7 @@ function M.alias(alias_name, original_command)
 end
 
 function M.setup()
+    -- FYI use :buffers  ... builtin command with good details about each buffer
     -- -- * :Buffers (captial B)
     -- vim.api.nvim_create_user_command("Buffers", function()
     --     messages.ensure_open()
@@ -57,6 +58,7 @@ function M.setup()
     -- end, {})
 
     -- * :windows
+    -- there is no builtin command to list windows, other than call vim.api.nvim_list_wins() which just shows IDs
     vim.api.nvim_create_user_command("Windows", function()
         messages.ensure_open()
         require("devtools.nvim").dump_windows()
