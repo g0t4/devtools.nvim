@@ -7,6 +7,7 @@ function M.dump_buffers()
 
     local info = vim.iter(buffers)
         :map(function(bufnr)
+            -- TODO what do I want to show for :Buffers... I added this as a placeholder, I need to review what I wanna see
             local name = vim.api.nvim_buf_get_name(bufnr)
             local buftype = vim.bo[bufnr].buftype
             local filetype = vim.bo[bufnr].filetype
@@ -49,11 +50,11 @@ function M.alias(alias_name, original_command)
 end
 
 function M.setup()
-    -- * :Buffers (captial B)
-    vim.api.nvim_create_user_command("Buffers", function()
-        messages.ensure_open()
-        require("devtools.nvim").dump_buffers()
-    end, {})
+    -- -- * :Buffers (captial B)
+    -- vim.api.nvim_create_user_command("Buffers", function()
+    --     messages.ensure_open()
+    --     require("devtools.nvim").dump_buffers()
+    -- end, {})
 
     -- * :windows
     vim.api.nvim_create_user_command("Windows", function()
