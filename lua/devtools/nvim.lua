@@ -45,6 +45,33 @@ function M.dump_windows()
     messages.append(info)
 end
 
+function M.dump_highlights()
+    -- FYI first use case for this is to be able to search through the 100s of highlights!
+    --   not have to use that damn pager and then find in iterm
+
+    -- FYI right now I don't have any namespaced showing up in my initial testing
+    --  AFAICT most things use global highlights to avoid activation issues w/ using a namespace
+    local namespaced_highlights = vim.iter(vim.api.nvim_get_namespaces())
+        :map(function(name, ns_id)
+            local highlights = vim.api.nvim_get_hl(ns_id, {})
+            if #highlights == 0 then
+                return ""
+            end
+            return name .. " (" .. ns_id .. ")" ..
+                "\n  " .. vim.inspect(highlights)
+        end)
+        :filter(function(line)
+            return line ~= ""
+        end)
+        :join("\n")
+    messages.header("Namespaced Highlights")
+    messages.append(namespaced_highlights)
+
+    messages.header("Global Highlights (ns_id=0)")
+    local global_highlights = vim.api.nvim_get_hl(0, {})
+    messages.append(vim.inspect(global_highlights))
+end
+
 -- makes a cabbrev for the given original command
 function M.alias(alias_name, original_command)
     vim.cmd(string.format("cabbrev %s %s", alias_name, original_command))
