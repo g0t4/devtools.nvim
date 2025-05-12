@@ -45,6 +45,42 @@ function M.dump_windows()
     messages.append(info)
 end
 
+function M.dump_keymaps(mode)
+    mode = mode or 'n'
+    local keymaps = vim.api.nvim_get_keymap(mode)
+    local buf_keymaps = vim.api.nvim_buf_get_keymap(0, mode) -- Buffer-local keymaps
+    -- TODO create entrypoints for dumping global vs buf local keymaps?
+    keymaps = vim.list_extend(keymaps, buf_keymaps)
+
+    local info = vim.iter(keymaps)
+        :map(function(map)
+            -- TODO revisit and improve over time!
+            -- WHY? ability to search keymaps!
+            -- show more useful info (i.e. [buffer][expr], maybe even reflect for func name/body)
+            local lhs = map.lhs or "''" -- missing lhs
+            lhs = lhs:gsub(' ', '<Space>')
+            -- TODO specify what file:line defines the lua function
+            --    TODO reflect on lua func for name (if not anonymous) or other useful info?
+            --    maybe add param to expand function definitions inline?
+            local rhs = map.rhs or (map.callback and "<lua fn>" or "<???>")
+            local expr = map.expr and "[expr]" or ""
+            local noremap = map.noremap and "[noremap]" or ""
+            local buffer = map.buffer and "[buffer]" or ""
+            local row = string.format(
+                "%s %s  →  %s  %s  %s%s  ",
+                mode, lhs, rhs, expr, noremap, buffer
+            )
+            if map.desc and map.desc ~= "" then
+                row = row .. " desc: '" .. map.desc .. "'"
+            end
+            return row
+        end)
+        :join("\n")
+
+    messages.header("Keymaps for mode: " .. mode)
+    messages.append(info or "No keymaps found")
+end
+
 function M.dump_highlights()
     -- FYI first use case for this is to be able to search through the 100s of highlights!
     --   not have to use that damn pager and then find in iterm
