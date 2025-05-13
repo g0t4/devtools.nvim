@@ -14,6 +14,8 @@ Or, think of the lua REPL, and now imagine that hooked into the lua env/runtime 
 
 What if I stop using messages as a terinal buffer? I'd lose ansi colors (I could replace those with extmark highglighting)
 - then it would be easier to type into it, more intuitive (not re-inventing the typing wheel)
+- DO THE colors later, for now how about testing it as a regular (non-terminal) buffer?
+- OR I need to better understand what a terminal buffer represents (the buffer part thats in-memory, vs how previous inputs are piped to STDOUT... which is how ansi colors become possible)
 
 OR, what if had a small buffer below that took a multi line command line?
   this is basically what cmdline does... just want it to feel more like a REPL experience...
