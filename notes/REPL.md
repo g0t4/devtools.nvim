@@ -12,6 +12,9 @@ What if the messages window were a REPL:
 
 Or, think of the lua REPL, and now imagine that hooked into the lua env/runtime running in neovim
 
+What if I stop using messages as a terinal buffer? I'd lose ansi colors (I could replace those with extmark highglighting)
+- then it would be easier to type into it, more intuitive (not re-inventing the typing wheel)
+
 OR, what if had a small buffer below that took a multi line command line?
   this is basically what cmdline does... just want it to feel more like a REPL experience...
   or how about a float window with cmdline, that might be wisest way to input and then messages is never an input surface
