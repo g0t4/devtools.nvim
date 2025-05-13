@@ -22,6 +22,8 @@ function M.setup()
     vim.keymap.set('n', '<leader>mo', function()
         M.ensure_open()
     end)
+    vim.keymap.set('n', '<leader>me', M.hack_execute_last_line)
+
     -- ideas:
     --  keymap to copy :messages to messages buffer?
     --  curious... is there an event for when :messages arrive... at least smth with text changed right?
@@ -220,7 +222,9 @@ function M.create_new_buffer()
     --   STDOUT connects to the buffer so you can see the output in the buffer
     -- KEEP IN MIND: there is no shell running, nor anything else
     --   that would have to be started too, and then connected
-    M.dump_channel = vim.api.nvim_open_term(M.dump_bufnr, {})
+    M.dump_channel = vim.api.nvim_open_term(M.dump_bufnr, {
+        on_input = M.dump_buffer_on_input
+    })
     -- why use a temrinal window?
     --   doesn't have scroll issues like regular buffer
     --   not stuck with scroll until last line in buffer is at topline)
@@ -385,6 +389,74 @@ function M.get_ids()
     -- for special cases where I just wanna reuse this buffer
     -- probably shouldn't be using it for other things :)
     return M.dump_bufnr, window_id_for_buffer(M.dump_bufnr)
+end
+
+function M.hack_execute_last_line()
+    -- quick idea to allow me to type in a lua expression/statement into :messages buffer
+    -- invoke shortcut
+    -- removes the last line
+    -- executes it with Dump
+    -- TODO detect statement vs expression and don't output nil for statements?
+
+    if not vim.api.nvim_buf_get_name(0):match("buffer_dump") then
+        -- PRN switch to it?
+        return
+    end
+
+    local row_1based, col_0based = unpack(vim.api.nvim_win_get_cursor(0))
+    local row_0based = row_1based - 1
+    local line = vim.api.nvim_get_current_line()
+
+    -- -- remove last line
+    -- vim.api.nvim_buf_set_lines(0, row_0based, row_0based + 1, false, {})
+    --  PRN replace with header and code?
+
+    -- invoke line as lua code
+    local chunk, err = load(line)
+    if not chunk then
+        messages.append(ansi.red("Invalid expression: " .. err))
+        return
+    end
+    local ok, result = pcall(chunk)
+    if not ok then
+        messages.append(ansi.red("Error during evaluation: " .. result))
+    end
+
+
+    -- TODO alternate ideas/plugins:
+    --   https://github.com/mfussenegger/nlua?tab=readme-ov-file
+    --      https://zignar.net/2023/01/21/using-luarocks-as-lua-interpreter-with-luarocks/
+    --      nlua == nvim -l .. what else does this do? is it even a plugin?
+end
+
+function M.dump_buffer_on_input(_, term, bufnr, data)
+    -- first arg seems to always be "input"?
+    -- effectively make the terminal act like cat command (so terminal insert mode can work)
+    --  and thus users can type in commands to run
+
+    -- FYI! Issue is... can't modify the buffer contents as a traditional buffer, have to clear to redraw right (i.e. on delete)
+    for i = 1, #data do
+        local byte = string.byte(data, i)
+        if byte < 32 or byte > 126 then
+            print("Non-printable char detected: ", byte)
+        end
+        if byte == 13 then
+            vim.api.nvim_chan_send(M.dump_channel, "\n")
+        elseif byte == 10 then
+            vim.api.nvim_chan_send(M.dump_channel, "\r")
+        elseif byte == 8 then   -- backspace
+            vim.api.nvim_chan_send(M.dump_channel, "\b")
+        elseif byte == 127 then -- delete
+            vim.api.nvim_chan_send(M.dump_channel, "\b")
+            -- elseif byte == 27 then  -- escape
+            --     vim.api.nvim_chan_send(M.dump_channel, "\e")
+        else
+            vim.api.nvim_chan_send(M.dump_channel, string.char(byte))
+        end
+    end
+
+    vim.api.nvim_chan_send(M.dump_channel, data)
+    -- TODO add check to append/header so if I am in insert terminal mode, it won't try to exit to normal mode for scrolling... which would allow printing messages while in terminal inset mode (this callback)
 end
 
 return M
