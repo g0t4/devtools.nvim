@@ -81,6 +81,10 @@ function M.dump_keymaps(mode)
     messages.append(info or "No keymaps found")
 end
 
+function M.dump_keymaps_sorted_by_lhs()
+    -- TODO sorting? at least one sort on lhs... maybe separate command for no sort (default order is useful to see ordering IIUC its in order defined)
+end
+
 function M.dump_highlights()
     -- FYI first use case for this is to be able to search through the 100s of highlights!
     --   not have to use that damn pager and then find in iterm
