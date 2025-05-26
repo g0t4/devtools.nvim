@@ -83,6 +83,8 @@ end
 
 function M.dump_keymaps_sorted_by_lhs()
     -- TODO sorting? at least one sort on lhs... maybe separate command for no sort (default order is useful to see ordering IIUC its in order defined)
+    messages.header("Not yet implemented")
+    error("Not yet implemented")
 end
 
 function M.dump_highlights()
