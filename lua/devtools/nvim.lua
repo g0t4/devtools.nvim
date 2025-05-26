@@ -86,22 +86,25 @@ function M.dump_keymaps_sorted_by_lhs(lhs_starts_with)
 
     -- :append(vim.api.nvim_buf_get_keymap(0, 'n')) -- TODO! Buffer-local keymaps
     -- TODO! imap/vmap/cmap, etc
-    local maps = vim.iter(vim.api.nvim_get_keymap('n'))
-    maps = maps:map(function(m)
-        local lhs = m.lhs
-        lhs = string.gsub(lhs or "", '^ ', '<leader>')
-        lhs = string.gsub(lhs or "", ' ', '<Space>')
-        m.sanitized_lhs = lhs
-        return m
-    end):filter(function(m)
-        if not lhs_starts_with then
-            return true
-        end
-        return string.find(m.sanitized_lhs, "^" .. lhs_starts_with) ~= nil
-    end)
+    local n_maps = vim.iter(vim.api.nvim_get_keymap('n'))
 
-    maps = maps:totable()
+    maps = n_maps
+        :map(function(m)
+            local lhs = m.lhs
+            lhs = string.gsub(lhs or "", '^ ', '<leader>')
+            lhs = string.gsub(lhs or "", ' ', '<Space>')
+            m.sanitized_lhs = lhs
+            return m
+        end)
+        :filter(function(m)
+            if not lhs_starts_with then
+                return true
+            end
+            return string.find(m.sanitized_lhs, "^" .. lhs_starts_with) ~= nil
+        end)
+        :totable()
 
+    -- TODO add to super_iter
     -- FYI in-place
     table.sort(maps, function(a, b)
         return a.sanitized_lhs < b.sanitized_lhs
