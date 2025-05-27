@@ -82,14 +82,16 @@ function M.dump_keymaps(mode)
     messages.append(info or "No keymaps found")
 end
 
-function M.dump_keymaps_sorted_by_lhs(lhs_starts_with)
+function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
+    -- TODO abbreviations that expand into calling this OR some command I define
+    mode = mode or "n"
     messages.ensure_open()
 
     -- :append(vim.api.nvim_buf_get_keymap(0, 'n')) -- TODO! Buffer-local keymaps
     -- TODO! imap/vmap/cmap, etc
-    local n_maps = super_iter(vim.api.nvim_get_keymap('n'))
+    local mode_maps = super_iter(vim.api.nvim_get_keymap(mode))
 
-    maps = n_maps
+    maps = mode_maps
         :map(function(m)
             local lhs = m.lhs
             lhs = string.gsub(lhs or "", '^ ', '<leader>')
