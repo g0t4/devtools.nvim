@@ -38,8 +38,9 @@ describe("super_iter:sort()", function()
 
     it("sorts w/ comparator function", function()
         local unsorted = { 'a', 'c', 'b' }
-        local sorted = super_iter(unsorted):sort(function(a, b) return a < b end):totable()
-        assert.are_same({ 'a', 'b', 'c' }, sorted)
+        -- using > flips the order (reverses it)
+        local sorted = super_iter(unsorted):sort(function(a, b) return a > b end):totable()
+        assert.are_same({ 'c', 'b', 'a' }, sorted)
     end)
 
 
