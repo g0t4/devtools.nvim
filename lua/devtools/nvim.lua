@@ -107,16 +107,13 @@ function M.dump_keymaps_sorted_by_lhs(lhs_starts_with)
         :sort(function(a, b)
             return a.sanitized_lhs < b.sanitized_lhs
         end)
-
-    -- TODO drop vim.iter once super_iter.sort works
-    local info = vim.iter(maps)
         :map(function(map)
             return map.sanitized_lhs .. " → " .. (map.rhs or "")
         end)
         :join("\n")
 
     messages.header("keymaps by lhs")
-    messages.append(info)
+    messages.append(maps)
 end
 
 function M.dump_highlights()
