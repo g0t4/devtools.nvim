@@ -103,13 +103,10 @@ function M.dump_keymaps_sorted_by_lhs(lhs_starts_with)
             end
             return string.find(m.sanitized_lhs, "^" .. lhs_starts_with) ~= nil
         end)
-        :totable()
-
-    -- TODO add to super_iter
-    -- FYI in-place
-    table.sort(maps, function(a, b)
-        return a.sanitized_lhs < b.sanitized_lhs
-    end)
+        -- TODO add type def overrides for all vim.iter funcs, so :sort appears as a completion
+        :sort(function(a, b)
+            return a.sanitized_lhs < b.sanitized_lhs
+        end)
 
     -- TODO drop vim.iter once super_iter.sort works
     local info = vim.iter(maps)
