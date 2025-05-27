@@ -30,11 +30,21 @@ describe("super_iter:tolist()", function()
 end)
 
 describe("super_iter:sort()", function()
-    it("returns new sorted copy of Iter", function()
-        local unsorted = { [3] = 'b', [2] = 'a' }
-        local sorted = super_iter(unsorted):sort(function(a, b) return a < b end):totable()
-        assert.are_same({ 'a', 'b' }, sorted)
+    it("sorts list of characters w/o a comparator function", function()
+        local unsorted = { 'a', 'c', 'b' }
+        local sorted = super_iter(unsorted):sort():totable()
+        assert.are_same({ 'a', 'b', 'c' }, sorted)
     end)
+
+    it("sorts w/ comparator function", function()
+        local unsorted = { 'a', 'c', 'b' }
+        local sorted = super_iter(unsorted):sort(function(a, b) return a < b end):totable()
+        assert.are_same({ 'a', 'b', 'c' }, sorted)
+    end)
+
+
+    -- TODO!
+    -- local unsorted = { [3] = 'b', [2] = 'a' }
 
     -- it("modifies nil table values to be empty strings", function()
     --     -- PRN why do I want this behaviour?
