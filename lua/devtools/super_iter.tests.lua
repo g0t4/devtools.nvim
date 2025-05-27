@@ -30,7 +30,8 @@ describe("super_iter:tolist()", function()
 end)
 
 describe("super_iter:sort()", function()
-    it("sorts list of characters w/o a comparator function", function()
+    -- do not reproduce tests for table.sort, just test that you wired it up properly
+    it("sorts w/o a comparator function", function()
         local unsorted = { 'a', 'c', 'b' }
         local sorted = super_iter(unsorted):sort():totable()
         assert.are_same({ 'a', 'b', 'c' }, sorted)
