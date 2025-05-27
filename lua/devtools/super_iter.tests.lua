@@ -43,15 +43,4 @@ describe("super_iter:sort()", function()
         local sorted = super_iter(unsorted):sort(function(a, b) return a > b end):totable()
         assert.are_same({ 'c', 'b', 'a' }, sorted)
     end)
-
-
-    -- TODO!
-    -- local unsorted = { [3] = 'b', [2] = 'a' }
-
-    -- it("modifies nil table values to be empty strings", function()
-    --     -- PRN why do I want this behaviour?
-    --     local unsorted = { [3] = 'b', [2] = nil }
-    --     local sorted = super_iter(unsorted):sort(function(a, b) return a < b end):totable()
-    --     assert.are_same({ '', 'b' }, sorted)
-    -- end)
 end)
