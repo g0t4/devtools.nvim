@@ -85,10 +85,13 @@ end
 function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
     -- TODO abbreviations that expand into calling this OR some command I define
     mode = mode or "n"
-    messages.ensure_open()
+    local header = "keymaps by lhs, mode: " .. mode
+    if lhs_starts_with then
+        header = string.format("%s (filter: '%s')", header, lhs_starts_with)
+    end
+    messages.header(header)
 
     -- :append(vim.api.nvim_buf_get_keymap(0, 'n')) -- TODO! Buffer-local keymaps
-    -- TODO! imap/vmap/cmap, etc
     local mode_maps = super_iter(vim.api.nvim_get_keymap(mode))
 
     maps = mode_maps
@@ -114,7 +117,6 @@ function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
         end)
         :join("\n")
 
-    messages.header("keymaps by lhs")
     messages.append(maps)
 end
 
@@ -165,6 +167,12 @@ function M.setup()
         require("devtools.nvim").dump_windows()
     end, {})
     M.alias("windows", "Windows")
+
+    vim.api.nvim_create_user_command("KeymapsByLHS", function(args)
+        -- messages.append(args)
+        messages.ensure_open()
+        M.dump_keymaps_sorted_by_lhs(args.fargs[1], args.fargs[2])
+    end, { nargs = '*' })
 end
 
 return M
