@@ -8,7 +8,7 @@ function super_iter(original_table)
         -- vim.iter:totable() results in a list only if the underlying table is array like..
         --  so use tolist to make one regardless
         if self == nil then
-            error("cannot call super_iter.tolist() on nil, not possible currently")
+            error("nil passed to super_iter's tolist(), are you using .tolist() when you need to use :tolist()?")
         end
         local result = {}
         for _, v in pairs(self:totable()) do

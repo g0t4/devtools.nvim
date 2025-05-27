@@ -18,6 +18,15 @@ describe("super_iter:tolist()", function()
         local iter = super_iter({ 1, 2, 3 })
         assert.are_same({ 1, 2, 3 }, iter:tolist())
     end)
+
+    it("warn user if nil passed", function()
+        local iter = super_iter({})
+        assert.error(function()
+            -- simulate passing nil
+            iter.tolist()
+            -- s/b iter:tolist()
+        end, "nil passed to super_iter's tolist(), are you using .tolist() when you need to use :tolist()?")
+    end)
 end)
 
 describe("super_iter:sort()", function()
