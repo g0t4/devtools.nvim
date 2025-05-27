@@ -19,3 +19,18 @@ describe("super_iter:tolist()", function()
         assert.are_same({ 1, 2, 3 }, iter:tolist())
     end)
 end)
+
+describe("super_iter:sort()", function()
+    it("returns new sorted copy of Iter", function()
+        local unsorted = { [3] = 'b', [2] = 'a' }
+        local sorted = super_iter(unsorted):sort(function(a, b) return a < b end):totable()
+        assert.are_same({ 'a', 'b' }, sorted)
+    end)
+
+    -- it("modifies nil table values to be empty strings", function()
+    --     -- PRN why do I want this behaviour?
+    --     local unsorted = { [3] = 'b', [2] = nil }
+    --     local sorted = super_iter(unsorted):sort(function(a, b) return a < b end):totable()
+    --     assert.are_same({ '', 'b' }, sorted)
+    -- end)
+end)
