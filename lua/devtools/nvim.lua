@@ -83,7 +83,6 @@ function M.dump_keymaps(mode)
 end
 
 function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
-    -- TODO abbreviations that expand into calling this OR some command I define
     mode = mode or "n"
     local header = "keymaps by lhs, mode: " .. mode
     if lhs_starts_with then
@@ -91,7 +90,6 @@ function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
     end
     messages.header(header)
 
-    -- :append(vim.api.nvim_buf_get_keymap(0, 'n')) -- TODO! Buffer-local keymaps
     local mode_maps = super_iter(vim.api.nvim_get_keymap(mode))
 
     maps = mode_maps
@@ -108,7 +106,6 @@ function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
             end
             return string.find(m.sanitized_lhs, "^" .. lhs_starts_with) ~= nil
         end)
-        -- TODO add type def overrides for all vim.iter funcs, so :sort appears as a completion
         :sort(function(a, b)
             return a.sanitized_lhs < b.sanitized_lhs
         end)
