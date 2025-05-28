@@ -107,7 +107,7 @@ function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
             return string.find(m.sanitized_lhs, "^" .. lhs_starts_with) ~= nil
         end)
         :sort(function(a, b)
-            return a.sanitized_lhs < b.sanitized_lhs
+            return vim.fn.tolower(a.sanitized_lhs) < vim.fn.tolower(b.sanitized_lhs)
         end)
         :map(function(map)
             return map.sanitized_lhs .. " → " .. (map.rhs or "")
