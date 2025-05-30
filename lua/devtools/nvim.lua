@@ -172,7 +172,9 @@ function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
             return vim.fn.tolower(a.sanitized_lhs) < vim.fn.tolower(b.sanitized_lhs)
         end)
         :map(function(map)
-            return map.sanitized_lhs .. " → " .. (map.sanitized_rhs or "") .. "\t" .. map.sanitized_flags
+            -- actually not sure I wanna show "flags"... might just be useful for displaying other fields?
+            -- map.sanitized_flags
+            return map.sanitized_lhs .. " → " .. (map.sanitized_rhs or "")
         end)
         :join("\n")
 
