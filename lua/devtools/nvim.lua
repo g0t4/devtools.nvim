@@ -152,13 +152,13 @@ function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
             m.sanitized_lhs = lhs
             m.sanitized_rhs = rhs
             m.sanitized_flags = ""
-            if m.expr then m.sanitized_flags = m.sanitized_flags .. "[expr] " end
-            if m.noremap then m.sanitized_flags = m.sanitized_flags .. "[noremap] " end
-            if m.nowait then m.sanitized_flags = m.sanitized_flags .. "[nowait] " end
-            if m.script then m.sanitized_flags = m.sanitized_flags .. "[script] " end
-            if m.buffer then m.sanitized_flags = m.sanitized_flags .. "[buffer] " end
-            if m.silent then m.sanitized_flags = m.sanitized_flags .. "[silent] " end
-            if m.unique then m.sanitized_flags = m.sanitized_flags .. "[unique] " end
+            if m.expr ~= nil and m.expr == 1 then m.sanitized_flags = m.sanitized_flags .. "[expr] " end
+            if m.noremap ~= nil and m.noremap == 1 then m.sanitized_flags = m.sanitized_flags .. "[noremap] " end
+            if m.nowait ~= nil and m.nowait == 1 then m.sanitized_flags = m.sanitized_flags .. "[nowait] " end
+            if m.script ~= nil and m.script == 1 then m.sanitized_flags = m.sanitized_flags .. "[script] " end
+            if m.buffer ~= nil and m.buffer == 1 then m.sanitized_flags = m.sanitized_flags .. "[buffer] " end
+            if m.silent ~= nil and m.silent == 1 then m.sanitized_flags = m.sanitized_flags .. "[silent] " end
+            if m.unique ~= nil and m.unique == 1 then m.sanitized_flags = m.sanitized_flags .. "[unique] " end
 
             return m
         end)
@@ -172,7 +172,7 @@ function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
             return vim.fn.tolower(a.sanitized_lhs) < vim.fn.tolower(b.sanitized_lhs)
         end)
         :map(function(map)
-            return map.sanitized_lhs .. " → " .. (map.sanitized_rhs or "")
+            return map.sanitized_lhs .. " → " .. (map.sanitized_rhs or "") .. "\t" .. map.sanitized_flags
         end)
         :join("\n")
 
