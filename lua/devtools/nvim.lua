@@ -55,7 +55,7 @@ function M.dump_keymaps(mode)
 
     local info = vim.iter(keymaps)
         :map(function(map)
-            -- TODO revisit and improve over time!
+            -- TODO! use what I added for  sorted by lhs version of this
             -- WHY? ability to search keymaps!
             -- show more useful info (i.e. [buffer][expr], maybe even reflect for func name/body)
             local lhs = map.lhs or "''" -- missing lhs
@@ -82,6 +82,53 @@ function M.dump_keymaps(mode)
     messages.append(info or "No keymaps found")
 end
 
+local function inspect_fn_source_or_line(info)
+    local source_line = info.source .. ":" .. tostring(info.linedefined)
+    if not string.find(source_line, "^%@") then
+        -- return as is
+        return info.source
+    end
+    source_line = source_line:gsub("^@", "") -- strip '@' from filename
+
+    -- to save space, look for cwd
+    --  i.e. cwd = /foo/bar/
+    --       source = /foo/bar/bam/test.lua
+    --       =>       bam/test.lua
+    local cwd = vim.fn.getcwd()                               -- PRN pass cwd and home, if expensive to lookup on each iteration
+    if string.find(source_line, "^" .. cwd) then
+        source_line = source_line:gsub("^" .. cwd .. "/", "") -- strip cwd from filename
+    end
+
+    -- to save space, look for home dir
+    --  i.e. /home/wes/foo/bar.lua
+    --    => ~/foo/bar.lua
+    local home = vim.fn.getenv("HOME")
+    if string.find(source_line, "^/") then
+        source_line = source_line:gsub(home, "~")
+    end
+
+    return source_line
+end
+
+local function inspect_fn(fn)
+    -- debug return type: https://www.lua.org/manual/5.1/manual.html#3.8
+    local info = debug.getinfo(fn, "nS") -- n = name, S = source info
+    local what = info.what
+    if what == "Lua" then
+        -- not that useful to show "Lua"
+        what = nil
+    end
+    local source_or_line = inspect_fn_source_or_line(info)
+    -- BTW by logging entire object, its clear what is what, field wise...
+    --   AND, if a field is nil it won't take up any space!
+    return {
+        name = info.name,
+        what = what,      -- "Lua", "C", "main", etc.
+        func = info.func, -- name of function or nil
+        source_line = source_or_line
+    }
+end
+
 function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
     mode = mode or "n"
     local header = "keymaps by lhs, mode: " .. mode
@@ -97,7 +144,22 @@ function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
             local lhs = m.lhs
             lhs = string.gsub(lhs or "", '^ ', '<leader>')
             lhs = string.gsub(lhs or "", ' ', '<Space>')
+            rhs = m.rhs or m.callback
+            if type(rhs) == "function" then
+                -- rhs = string.gsub(tostring(rhs), "%s+", "") -- trim whitespace in body
+                rhs = vim.inspect(inspect_fn(rhs))
+            end
             m.sanitized_lhs = lhs
+            m.sanitized_rhs = rhs
+            m.sanitized_flags = ""
+            if m.expr then m.sanitized_flags = m.sanitized_flags .. "[expr] " end
+            if m.noremap then m.sanitized_flags = m.sanitized_flags .. "[noremap] " end
+            if m.nowait then m.sanitized_flags = m.sanitized_flags .. "[nowait] " end
+            if m.script then m.sanitized_flags = m.sanitized_flags .. "[script] " end
+            if m.buffer then m.sanitized_flags = m.sanitized_flags .. "[buffer] " end
+            if m.silent then m.sanitized_flags = m.sanitized_flags .. "[silent] " end
+            if m.unique then m.sanitized_flags = m.sanitized_flags .. "[unique] " end
+
             return m
         end)
         :filter(function(m)
@@ -110,7 +172,7 @@ function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
             return vim.fn.tolower(a.sanitized_lhs) < vim.fn.tolower(b.sanitized_lhs)
         end)
         :map(function(map)
-            return map.sanitized_lhs .. " → " .. (map.rhs or "")
+            return map.sanitized_lhs .. " → " .. (map.sanitized_rhs or "")
         end)
         :join("\n")
 
