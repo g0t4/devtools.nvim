@@ -1,3 +1,9 @@
+## zeta 
+
+- zeta.nvim was original home to the diff algorithms and tests
+- there are still plenty of "learning" files over there, if needed
+  - only move if useful here
+
 ## diff_match_patch
 
 - stumbled on this gem!
