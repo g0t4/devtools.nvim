@@ -1,8 +1,6 @@
-require('zeta.helpers.testing')
 local histogram = require('devtools.diff.histogram')
 local should = require('devtools.tests.should')
-local files = require('zeta.helpers.files')
-local combined = require('zeta.diff.combined')
+local combined = require('devtools.diff.combined')
 local _describe = require('devtools.tests._describe')
 
 -- TODO revisit this idea in devtools.tests and find a clean way to handle this
@@ -10,6 +8,7 @@ local _describe = require('devtools.tests._describe')
 -- FYI some logic to limit which tests run w/o changing it on all of them:
 function ignore(a, b)
 end
+
 only = it
 -- it = ignore  -- uncomment to run "only" tests, otherwise, comment out to run all again (regardless if marked only/it)
 
@@ -91,7 +90,7 @@ return N
             {
                 { '=', '    return a + b' }, -- implicit \n
                 { '=', 'end' },
-            }, -- implicit \n
+            },                               -- implicit \n
 
             -- STEP2 LCS input:
             -- FYI implicit new lines:
@@ -162,47 +161,6 @@ end]]
             { '+', 'function M.add(a, b, c, d)' },
             { '=', '    return a + b' },
             { '=', 'end' },
-        }
-
-        should.be_same(expected, diffs)
-    end)
-end)
-
-_describe('test using combined_diff', function()
-    local old_text = files.read_example_editable_only('01_request.json')
-    local new_text = files.read_example_editable_only('03_response.json')
-
-    it('test histogram alone', function()
-        local diffs = histogram.split_then_diff_lines(old_text, new_text)
-
-        local expected = {
-            { '=', 'local M = {}' },
-            { '=', '' },
-            { '-', 'function M.add(a, b)' },
-            { '-', '    return a + b' },
-            { '+', 'function M.adder(a, b, c)' },
-            { '+', '    return a + b + c' },
-            { '=', 'end' },
-            { '=', '' },
-            { '+', 'function M.subtract(a, b)' },
-            { '+', '    return a - b' },
-            { '+', 'end' },
-            { '=', '' },
-            { '+', 'function M.multiply(a, b)' },
-            { '+', '    return a * b' },
-            { '+', 'end' },
-            { '=', '' },
-            { '+', 'function M.divide(a, b)' },
-            { '+', '    if b == 0 then' },
-            { '+', '        error(\"Division by zero\")' },
-            { '+', '    end' },
-            { '+', '    return a / b' },
-            { '+', 'end' },
-            { '=', '' },
-            { '=', '' },
-            { '+', '' },
-            { '=', 'return M' },
-            { '=', '' },
         }
 
         should.be_same(expected, diffs)
