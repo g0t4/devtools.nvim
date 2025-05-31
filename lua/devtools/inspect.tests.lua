@@ -1,4 +1,4 @@
-require("zeta.helpers.inspect")
+require("devtools.inspect")
 
 -- lists:
 assert(tbl_is_list({ 1, 2, 3 }))
