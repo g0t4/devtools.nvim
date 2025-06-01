@@ -4,9 +4,11 @@ local super_iter = require("devtools.super_iter")
 
 local M = {}
 
--- vim.print(_G) is useful to inspect modules
 function M.dump_globals()
+    -- reminder... vim.print(_G) can be useful to inspect module state
     messages.ensure_open()
+    -- TODO way too much stuff, need bigger buffer or filter this somehow
+    --  PRN maybe add pattern based filters like w/ dump_packages_loaded?
     messages.append(vim.inspect(_G))
 end
 
@@ -19,7 +21,8 @@ function M.dump_packages_loaded(name_pattern)
         :join("\n")
 
     messages.ensure_open()
-    messages.append("Loaded packages:\n" .. names)
+    messages.header("Packages Loaded")
+    messages.append(names)
 end
 
 function M.setup()
