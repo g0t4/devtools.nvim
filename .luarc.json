@@ -3,7 +3,7 @@
     // example: https://github.com/LuaLS/lua-language-server/blob/master/.luarc.json
 
     "diagnostics": {
-        "globals": [ "vim", "describe", "it", "assert" ],
+        "globals": [ "vim" ],
         "disable": [
             "lowercase-global",
             "need-check-nil",
@@ -19,7 +19,7 @@
         "${3rd}/luv/library", // vim.uv
         "${3rd}/luassert/library",
 
-        "~/.local/share/nvim/lazy/plenary.nvim/lua",
+        "~/.local/share/nvim/lazy/plenary.nvim/lua", // fixes globals: describe, it, before_each, etc (don't need to add them above now)
     ],
 
     "workspace.checkThirdParty": "Disable"
