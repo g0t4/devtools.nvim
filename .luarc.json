@@ -18,6 +18,8 @@
         // bundled type defs:
         "${3rd}/luv/library", // vim.uv
         "${3rd}/luassert/library",
+
+        "~/.local/share/nvim/lazy/plenary.nvim/lua",
     ],
 
     "workspace.checkThirdParty": "Disable"
