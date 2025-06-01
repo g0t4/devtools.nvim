@@ -216,20 +216,21 @@ end
 function M.setup()
     -- FYI use :buffers  ... builtin command with good details about each buffer
     -- -- * :Buffers (captial B)
-    -- vim.api.nvim_create_user_command("Buffers", function()
+    -- vim.api.nvim_create_user_command("DevBuffers", function()
     --     messages.ensure_open()
     --     require("devtools.nvim").dump_buffers()
     -- end, {})
 
     -- * :windows
     -- there is no builtin command to list windows, other than call vim.api.nvim_list_wins() which just shows IDs
-    vim.api.nvim_create_user_command("Windows", function()
+    vim.api.nvim_create_user_command("DevWindows", function()
         messages.ensure_open()
         require("devtools.nvim").dump_windows()
     end, {})
-    M.alias("windows", "Windows")
+    M.alias("windows", "DevWindows")
+    M.alias("Windows", "DevWindows")
 
-    vim.api.nvim_create_user_command("KeymapsByLHS", function(args)
+    vim.api.nvim_create_user_command("DevKeymapsByLHS", function(args)
         -- messages.append(args)
         messages.ensure_open()
         M.dump_keymaps_sorted_by_lhs(args.fargs[1], args.fargs[2])
