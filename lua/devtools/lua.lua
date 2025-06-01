@@ -29,10 +29,10 @@ function M.setup()
     -- FYI use :buffers  ... builtin command with good details about each buffer
     -- for now, no command, just really wanted the function reminder
     -- and then eventually find a better way to inspect _G (globals)
-    vim.api.nvim_create_user_command("DevtoolsDumpGlobals", M.dump_globals, {})
-    vim.api.nvim_create_user_command("DevtoolsDumpPackagesLoaded", function(args)
+    vim.api.nvim_create_user_command("DevDumpGlobals", M.dump_globals, {})
+    vim.api.nvim_create_user_command("DevDumpPackagesLoaded", function(args)
         -- USAGE:
-        --   :DevtoolsDumpPackagesLoaded ^vim.lsp
+        --   :DevDumpPackagesLoaded ^vim.lsp
 
         local name_pattern = args.fargs[1]
         print("filter: " .. tostring(name_pattern))
