@@ -147,6 +147,17 @@ end
 
 -- TODO later you can cleanup duplication
 
+function M.black_bold(text, options)
+    options = options or {}
+    options.color = options.color or true -- default is true
+    if not options.color then
+        return text
+    end
+    local bold_text =
+        "\27[" .. color_keys.bright .. ";" .. color_keys.black .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return bold_text
+end
+
 function M.white_bold(text, options)
     options = options or {}
     options.color = options.color or true -- default is true
@@ -203,6 +214,10 @@ end
 
 function M.cyan_bg(text, options)
     return M.color(text, 'cyan_bg', options)
+end
+
+function M.white_bg(text, options)
+    return M.color(text, 'white_bg', options)
 end
 
 function M.show_colors()
