@@ -77,6 +77,13 @@ local color_keys = {
 
 }
 
+function M.clear(n)
+    -- CSI n J
+    --   ED (Erase in Display)
+    n = n or 3
+    return "\27[" .. n .. "J"
+end
+
 -- TODO rewrite this to cover all colors... and be reusable.
 -- Try using your new AI tools to do this (zed predicts too)
 
