@@ -60,23 +60,21 @@ local color_keys = {
 -- TODO rewrite this to cover all colors... and be reusable.
 -- Try using your new AI tools to do this (zed predicts too)
 
--- print("\27[31mThis is red text\27[0m")
-function M.black(text, options)
+function M.color(text, color, options)
     options = options or {}
-    options.color = options.color or true -- default is true
+    options.color = options.color or true
     if not options.color then
         return text
     end
-    return "\27[" .. color_keys.black .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return "\27[" .. color_keys[color] .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+end
+
+function M.black(text, options)
+    return M.color(text, 'black', options)
 end
 
 function M.cyan(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.cyan .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'cyan', options)
 end
 
 function M.red_bold(text, options)
