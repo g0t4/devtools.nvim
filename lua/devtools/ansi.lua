@@ -2,48 +2,48 @@ local M = {}
 
 local color_keys = {
     -- reset
-    reset     = 0,
+    reset             = 0,
 
     -- misc
-    bright    = 1,
-    dim       = 2,
-    underline = 4,
-    blink     = 5,
-    reverse   = 7,
-    hidden    = 8,
+    bright            = 1,
+    dim               = 2,
+    underline         = 4,
+    blink             = 5,
+    reverse           = 7,
+    hidden            = 8,
 
     -- foreground colors
-    black     = 30,
-    red       = 31,
-    green     = 32,
-    yellow    = 33,
-    blue      = 34,
-    magenta   = 35,
-    cyan      = 36,
-    white     = 37,
+    black             = 30,
+    red               = 31,
+    green             = 32,
+    yellow            = 33,
+    blue              = 34,
+    magenta           = 35,
+    cyan              = 36,
+    white             = 37,
 
     -- background colors
-    blackbg   = 40,
-    redbg     = 41,
-    greenbg   = 42,
-    yellowbg  = 43,
-    bluebg    = 44,
-    magentabg = 45,
-    cyanbg    = 46,
-    whitebg   = 47,
+    black_bg          = 40,
+    red_bg            = 41,
+    green_bg          = 42,
+    yellow_bg         = 43,
+    blue_bg           = 44,
+    magenta_bg        = 45,
+    cyan_bg           = 46,
+    white_bg          = 47,
 
     -- bright fg colors:
-    bright_black  = 90,
-    bright_red    = 91,
-    bright_green  = 92,
-    bright_yellow = 93,
-    bright_blue   = 94,
-    bright_magenta= 95,
-    bright_cyan   = 96,
-    bright_white  = 97,
+    bright_black      = 90,
+    bright_red        = 91,
+    bright_green      = 92,
+    bright_yellow     = 93,
+    bright_blue       = 94,
+    bright_magenta    = 95,
+    bright_cyan       = 96,
+    bright_white      = 97,
 
     -- bright bg colors:
-    bright_black_bg  = 100,
+    bright_black_bg   = 100,
     bright_red_bg     = 101,
     bright_green_bg   = 102,
     bright_yellow_bg  = 103,
@@ -174,7 +174,7 @@ function M.black_bg(text, options)
     if not options.color then
         return text
     end
-    return "\27[" .. color_keys.blackbg .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return "\27[" .. color_keys.black_bg .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
 function M.red_bg(text, options)
@@ -183,7 +183,7 @@ function M.red_bg(text, options)
     if not options.color then
         return text
     end
-    return "\27[" .. color_keys.redbg .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return "\27[" .. color_keys.red_bg .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
 function M.blue_bg(text, options)
@@ -192,7 +192,23 @@ function M.blue_bg(text, options)
     if not options.color then
         return text
     end
-    return "\27[" .. color_keys.bluebg .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return "\27[" .. color_keys.blue_bg .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+end
+
+function M.magenta_bg(text, options)
+    return M.color(text, 'magenta_bg', options)
+end
+
+function M.green_bg(text, options)
+    return M.color(text, 'green_bg', options)
+end
+
+function M.yellow_bg(text, options)
+    return M.color(text, 'yellow_bg', options)
+end
+
+function M.cyan_bg(text, options)
+    return M.color(text, 'cyan_bg', options)
 end
 
 return M
