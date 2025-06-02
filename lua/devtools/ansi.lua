@@ -46,8 +46,6 @@ local color_keys = {
     bright_white_bg   = 107,
 
 
-    -- 3 and 4 bit color:
-    --   https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit
 
     -- misc
     reset     = 0,
@@ -57,6 +55,26 @@ local color_keys = {
     blink     = 5,
     reverse   = 7,
     hidden    = 8,
+
+
+    -- SGR (Select Graphic Rendition) codes
+    --   SGR is formatted with CSI, for example:
+    --     \27[nm
+    --   CSI n m
+    --   `m` is the CSI char that indicates SGR
+    --   `n` is the SGR parameter (SGR code)
+    --       SGR table: https://en.wikipedia.org/wiki/ANSI_escape_code#SGR
+    --       sometimes n is followed by futher parameters
+    --       i.e. n=38;5;n (for 8-bit color, 256 values)
+    --         or n=38;2;r;g;b (for 24-bit color)
+    --            use 48 (instead of 38) for background colors
+    --
+    -- Escape (ASCII 1B) is the "[I]ntroducer" in CSI (Control Sequence Introducer)
+    --   \27[ comes before CSI parameters, in lua
+    --   \27 in lua strings, where \ is your escape char
+    --   AFAICT lua doesn't have a hex code variant so you have to use decimal \ddd (up to 3 digits)
+    --
+
 }
 
 -- TODO rewrite this to cover all colors... and be reusable.
