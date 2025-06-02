@@ -77,6 +77,8 @@ function M.cyan(text, options)
     return M.color(text, 'cyan', options)
 end
 
+-- TODO come back to this when I finish my AskRewrite code (accept is not fully finished)
+
 function M.red_bold(text, options)
     options = options or {}
     options.color = options.color or true -- default is true
