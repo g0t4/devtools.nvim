@@ -160,12 +160,7 @@ function M.white_bold(text, options)
 end
 
 function M.white(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.white .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'white', options)
 end
 
 function M.black_bg(text, options)
