@@ -205,12 +205,17 @@ function M.cyan_bg(text, options)
     return M.color(text, 'cyan_bg', options)
 end
 
--- make me a tester function that shows the colors all 8 in a row per type
 function M.show_colors()
     local text = ''
+    local i = 0
     for k, v in pairs(color_keys) do
-        if type(v) == "number" then -- TODO I dont know how to get the keys of a table... so this is a hacky workaround
-            text = text .. "\27[" .. v .. "m" .. k .. "\27[0m "
+        if type(v) == "number" then
+            i = i + 1
+            if i % 8 == 0 then
+                text = text .. "\27[" .. v .. "m" .. k .. "\27[0m\n"
+            else
+                text = text .. "\27[" .. v .. "m" .. k .. "\27[0m "
+            end
         end
     end
     return text
