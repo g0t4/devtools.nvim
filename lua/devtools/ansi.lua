@@ -30,7 +30,28 @@ local color_keys = {
     bluebg    = 44,
     magentabg = 45,
     cyanbg    = 46,
-    whitebg   = 47
+    whitebg   = 47,
+
+    -- bright fg colors:
+    bright_black  = 90,
+    bright_red    = 91,
+    bright_green  = 92,
+    bright_yellow = 93,
+    bright_blue   = 94,
+    bright_magenta= 95,
+    bright_cyan   = 96,
+    bright_white  = 97,
+
+    -- bright bg colors:
+    bright_black_bg  = 100,
+    bright_red_bg     = 101,
+    bright_green_bg   = 102,
+    bright_yellow_bg  = 103,
+    bright_blue_bg    = 104,
+    bright_magenta_bg = 105,
+    bright_cyan_bg    = 106,
+    bright_white_bg   = 107,
+
 
     -- 3 and 4 bit color:
     --   https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit
