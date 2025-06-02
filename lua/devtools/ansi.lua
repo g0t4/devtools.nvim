@@ -1,16 +1,6 @@
 local M = {}
 
 local color_keys = {
-    -- reset
-    reset             = 0,
-
-    -- misc
-    bright            = 1,
-    dim               = 2,
-    underline         = 4,
-    blink             = 5,
-    reverse           = 7,
-    hidden            = 8,
 
     -- foreground colors
     black             = 30,
@@ -55,6 +45,15 @@ local color_keys = {
 
     -- 3 and 4 bit color:
     --   https://en.wikipedia.org/wiki/ANSI_escape_code#3-bit_and_4-bit
+
+    -- misc
+    reset     = 0,
+    bright    = 1,
+    dim       = 2,
+    underline = 4,
+    blink     = 5,
+    reverse   = 7,
+    hidden    = 8,
 }
 
 -- TODO rewrite this to cover all colors... and be reusable.
@@ -204,6 +203,17 @@ end
 
 function M.cyan_bg(text, options)
     return M.color(text, 'cyan_bg', options)
+end
+
+-- make me a tester function that shows the colors all 8 in a row per type
+function M.show_colors()
+    local text = ''
+    for k, v in pairs(color_keys) do
+        if type(v) == "number" then -- TODO I dont know how to get the keys of a table... so this is a hacky workaround
+            text = text .. "\27[" .. v .. "m" .. k .. "\27[0m "
+        end
+    end
+    return text
 end
 
 return M
