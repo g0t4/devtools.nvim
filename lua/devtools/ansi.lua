@@ -1,5 +1,8 @@
 local M = {}
 
+-- TODO switch to using 8-bit color (256 colors)
+-- https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+
 local color_keys = {
 
     -- foreground colors
