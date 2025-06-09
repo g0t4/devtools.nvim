@@ -16,11 +16,10 @@ function M.get_coc_symbols()
     messages.header('coc symbols')
     -- :echo json_encode(CocAction('documentSymbols'))
 
-
     -- documentSymbols
     -- getCurrentFunctionSymbol
     --
-    local symbols = vim.fn.CocActionAsync('documentSymbols', function(err, symbols)
+    vim.fn.CocActionAsync('documentSymbols', function(err, symbols)
         if not symbols then
             messages.message('No symbols found')
             return
