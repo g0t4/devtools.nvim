@@ -9,28 +9,27 @@ function M.get_coc_symbols()
     -- local pos = vim.api.nvim_win_get_cursor(0)
 
     -- vim.fn.CocActionAsync('sendRequest', "lua", 'textDocument/completion',
-    vim.fn.CocActionAsync('sendRequest', {
-            id = "lua",
-            method = 'textDocument/completion',
-        }, -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_completion
+    -- vim.fn.CocActionAsync('sendRequest', {
+    --         id = "lua",
+    --         method = 'textDocument/completion',
+    --     }, -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_completion
+    --
+    --     function(err, result)
+    --         if err then
+    --             messages.append("Error:", err.message or err)
+    --             return
+    --         end
+    --
+    --         -- local items = result.items or result
+    --         -- for _, item in ipairs(items or {}) do
+    --         --     print(item.label)
+    --         -- end
+    --     end
+    -- )
 
-        function(err, result)
-            -- messages.append("FUCK")
-            if err then
-                messages.append("Error:", err.message or err)
-                return
-            end
+    -- TODO! use coc pum buffer to get completions since I can't find an API to do so
 
-            -- local items = result.items or result
-            -- for _, item in ipairs(items or {}) do
-            --     print(item.label)
-            -- end
-        end
-    )
-
-    do return end
-
-    vim.fn.CocActionAsync('completeList', function(err, symbols)
+    vim.fn.CocActionAsync('getWorkspaceSymbols', function(err, symbols)
         if err ~= vim.NIL and err ~= nil then
             messages.append("ERROR:", err)
         end
