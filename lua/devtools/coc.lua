@@ -2,6 +2,7 @@ local messages = require("devtools.messages")
 local M = {}
 
 vim.keymap.set({ 'i', 'c' }, '<C-;>', function()
+    messages.ensure_open()
     vim.defer_fn(function()
         -- TODO I would like to have a keymap to dump this for many different cases, maybe conditionally loaded keymap?
         --  I am using this to find the buffer/window floating with coc completion items... to read manually
