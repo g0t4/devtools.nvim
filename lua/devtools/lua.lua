@@ -59,6 +59,24 @@ function M.inspect_fn_source_or_line(info)
     return source_line
 end
 
+function M.inspect_userdata_WIP(data)
+    -- TODO probably move this to inspect module...org
+    --   I would like a one-stop inspect_wtf... when I have no idea what it is and wanna test a bunch of normal things
+    --     i.e. if userdata => check for :type .type... or other methods and/or call as it makes sense
+    --      then, for example, call out to my ts.inspect_ts func if it is treesitter
+
+
+    -- TODO is json serialization another vector to dump details? chatgpt keep suggesting this... need to find actual examples... if so I can have pcall to json_encode be an option too to check
+    local ok, encoded = pcall(vim.fn.json_encode, data)
+    if not ok then
+        print("Failed to encode userdata: " .. tostring(encoded))
+        return
+    end
+
+    local decoded = vim.fn.json_decode(encoded)
+    print(vim.inspect(decoded))
+end
+
 function M.dump_globals()
     -- reminder... vim.print(_G) can be useful to inspect module state
     messages.ensure_open()
