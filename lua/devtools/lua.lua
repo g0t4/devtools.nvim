@@ -98,7 +98,7 @@ function M.dump_packages_loaded(name_pattern)
     messages.append(names)
 end
 
-function M.dump_which_module(module_name)
+function M.which_module(module_name)
     -- USAGE:
     --   which_module("vim.iter")
     --   which_module("devtools.messages")
@@ -124,7 +124,11 @@ function M.dump_which_module(module_name)
         messages.append(looked)
         return
     end
+    return path
+end
 
+function M.dump_which_module(module_name)
+    local path = M.which_module(module_name)
     messages.append(path)
 end
 
