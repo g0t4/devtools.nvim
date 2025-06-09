@@ -1,6 +1,5 @@
 local require_parser = require("devtools.ts.require_parser")
 local should = require("devtools.tests.should")
-local eq = should.be_equal
 
 describe("require_parser", function()
     it("extracts require paths from local declarations", function()
@@ -14,10 +13,10 @@ describe("require_parser", function()
         local results = require_parser.get_static_requires_lua(buf)
         -- print(vim.inspect(results))
 
-        eq(#results, 2)
-        eq(results[1].var, "x")
-        eq(results[1].path, '"foo.bar"')
-        eq(results[2].var, "y")
-        eq(results[2].path, '"baz"')
+        should.be_equal(#results, 2)
+        should.be_equal(results[1].var, "x")
+        should.be_equal(results[1].path, '"foo.bar"')
+        should.be_equal(results[2].var, "y")
+        should.be_equal(results[2].path, '"baz"')
     end)
 end)
