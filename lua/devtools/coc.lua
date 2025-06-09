@@ -1,44 +1,42 @@
 local messages = require("devtools.messages")
 local M = {}
 
-if false then
-    vim.keymap.set({ 'i', 'c' }, '<C-;>', function()
-        vim.defer_fn(function()
-            -- TODO I would like to have a keymap to dump this for many different cases, maybe conditionally loaded keymap?
-            --  I am using this to find the buffer/window floating with coc completion items... to read manually
-            require("devtools.nvim").dump_windows()
-            require("devtools.nvim").dump_buffers()
-            -- TODO! finish finding coc buffer for PUM and read the completion items from it since it seems there's no API to get them?
+vim.keymap.set({ 'i', 'c' }, '<C-;>', function()
+    vim.defer_fn(function()
+        -- TODO I would like to have a keymap to dump this for many different cases, maybe conditionally loaded keymap?
+        --  I am using this to find the buffer/window floating with coc completion items... to read manually
+        require("devtools.nvim").dump_windows()
+        require("devtools.nvim").dump_buffers()
+        -- TODO! finish finding coc buffer for PUM and read the completion items from it since it seems there's no API to get them?
 
 
 
-            -- works if:
-            -- C-N (while coc pum not open) then defers to nvim's ins completion picker
-            --  => then complete_info() works to return items!
-            --  but, I think I can get basically the same info
-            --    via documentSymbols/getWorkspaceSymbols
-            --  so lets go that route next
+        -- works if:
+        -- C-N (while coc pum not open) then defers to nvim's ins completion picker
+        --  => then complete_info() works to return items!
+        --  but, I think I can get basically the same info
+        --    via documentSymbols/getWorkspaceSymbols
+        --  so lets go that route next
 
-            -- local info = vim.fn.complete_info({ 'items', 'selected', 'pum_visible' })
-            local info = vim.fn.complete_info()
-            messages.append("items", info)
+        -- local info = vim.fn.complete_info({ 'items', 'selected', 'pum_visible' })
+        local info = vim.fn.complete_info()
+        messages.append("items", info)
 
-            if info.pum_visible == 1 then
-                vim.fn.setreg('"', "") -- clear unnamed register
-                local lines = {}
-                for _, item in ipairs(info.items) do
-                    local word = item.word or item.abbr or ""
-                    table.insert(lines, word)
-                end
-                local text = table.concat(lines, "\n")
-                vim.fn.setreg('"', text)
-                messages.append("Yanked " .. #lines .. " completion items")
-            else
-                messages.append("No visible completion menu")
+        if info.pum_visible == 1 then
+            vim.fn.setreg('"', "") -- clear unnamed register
+            local lines = {}
+            for _, item in ipairs(info.items) do
+                local word = item.word or item.abbr or ""
+                table.insert(lines, word)
             end
-        end, 0)
-    end, { desc = "Yank visible completion items" })
-end
+            local text = table.concat(lines, "\n")
+            vim.fn.setreg('"', text)
+            messages.append("Yanked " .. #lines .. " completion items")
+        else
+            messages.append("No visible completion menu")
+        end
+    end, 0)
+end, { desc = "Yank visible completion items" })
 
 function M.get_coc_symbols()
     messages.ensure_open()
