@@ -43,6 +43,10 @@ function M.get_static_requires_lua(bufnr)
             end
         end
         if var and path then
+            -- strip '' and "" surrounding path
+            --  "foo.bar" => foo.bar
+            --  'foo.bar' => foo.bar
+            path = string.match(path, "^[%s\"']*([^\"']*)['\"]*$")
             table.insert(results, { var = var, path = path })
         end
     end
