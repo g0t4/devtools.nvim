@@ -4,8 +4,11 @@ local M = {}
 if false then
     vim.keymap.set({ 'i', 'c' }, '<C-;>', function()
         vim.defer_fn(function()
+            -- TODO I would like to have a keymap to dump this for many different cases, maybe conditionally loaded keymap?
+            --  I am using this to find the buffer/window floating with coc completion items... to read manually
             require("devtools.nvim").dump_windows()
             require("devtools.nvim").dump_buffers()
+            -- TODO! finish finding coc buffer for PUM and read the completion items from it since it seems there's no API to get them?
 
 
 
