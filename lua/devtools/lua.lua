@@ -80,6 +80,34 @@ function M.dump_packages_loaded(name_pattern)
     messages.append(names)
 end
 
+function M.which_module(module_name)
+    -- USAGE:
+    --   which_module("vim.iter")
+    --   which_module("devtools.messages")
+
+    -- PRN should I just use this?
+    --   one benefit, this can return all matches
+    -- vim.api.nvim_get_runtime_file("lua/", true)
+
+    local paths = {}
+    -- search vim's runtimepath
+    --   PRN should I include other path(s)? i.e. package.path?
+    for _, rtp in ipairs(vim.opt.runtimepath:get()) do
+        table.insert(paths, rtp .. "/lua/?.lua")
+        table.insert(paths, rtp .. "/lua/?/init.lua")
+    end
+    local search_path = table.concat(paths, ";")
+
+    local path, looked = package.searchpath(module_name, search_path)
+    if path == nil then
+        messages.append("module not found, checked in:")
+        messages.append(looked)
+        return
+    end
+
+    messages.append(path)
+end
+
 function M.setup()
     -- FYI use :buffers  ... builtin command with good details about each buffer
     -- for now, no command, just really wanted the function reminder
@@ -106,6 +134,13 @@ function M.setup()
         local func_inspected = M.inspect_fn(func)
         messages.header(func_expression)
         messages.append(func_inspected)
+    end, { nargs = "*", complete = "lua", })
+
+    vim.api.nvim_create_user_command("DevWhichModule", function(args)
+        messages.ensure_open()
+
+        local module_name = args.fargs[1]
+        M.which_module(module_name)
     end, { nargs = "*", complete = "lua", })
 end
 
