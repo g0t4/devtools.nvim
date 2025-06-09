@@ -5,6 +5,14 @@ local super_iter = require("devtools.super_iter")
 local M = {}
 
 function M.inspect_fn(fn)
+    if type(fn) == "table" then
+        -- PRN any false positives here? that would work w/ below code as is?
+        -- example: (table w/ __call, aka callable)
+        --   DevDumpLuaFunction vim.iter
+        messages.append("inspect_fn: fn is a table, fallback to __call")
+        fn = getmetatable(vim.iter).__call
+    end
+
     -- debug return type: https://www.lua.org/manual/5.1/manual.html#3.8
     local info = debug.getinfo(fn, "nS") -- n = name, S = source info
     local what = info.what
@@ -17,7 +25,7 @@ function M.inspect_fn(fn)
     --   AND, if a field is nil it won't take up any space!
     return {
         name = info.name,
-        what = what,      -- "Lua", "C", "main", etc.
+        what = what, -- "Lua", "C", "main", etc.
         func = info.func, -- name of function or nil
         source_line = source_or_line
     }
@@ -35,7 +43,7 @@ function M.inspect_fn_source_or_line(info)
     --  i.e. cwd = /foo/bar/
     --       source = /foo/bar/bam/test.lua
     --       =>       bam/test.lua
-    local cwd = vim.fn.getcwd()                               -- PRN pass cwd and home, if expensive to lookup on each iteration
+    local cwd = vim.fn.getcwd() -- PRN pass cwd and home, if expensive to lookup on each iteration
     if string.find(source_line, "^" .. cwd) then
         source_line = source_line:gsub("^" .. cwd .. "/", "") -- strip cwd from filename
     end
@@ -84,7 +92,21 @@ function M.setup()
         local name_pattern = args.fargs[1]
         print("filter: " .. tostring(name_pattern))
         return M.dump_packages_loaded(name_pattern)
-    end, { nargs = "*" })
+    end, { nargs = "*", complete = "lua", })
+
+    vim.api.nvim_create_user_command("DevDumpLuaFunction", function(args)
+        --   :DevDumpLuaFunction vim.iter
+        messages.ensure_open()
+
+        local func_expression = args.fargs[1]
+        local func, err = load("return " .. func_expression)()
+        if not func then
+            print("function expression failed to load", err)
+        end
+        local func_inspected = M.inspect_fn(func)
+        messages.header(func_expression)
+        messages.append(func_inspected)
+    end, { nargs = "*", complete = "lua", })
 end
 
 return M
