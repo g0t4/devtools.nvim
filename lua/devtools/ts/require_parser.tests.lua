@@ -1,5 +1,6 @@
 local require_parser = require("devtools.ts.require_parser")
-local eq = assert.are.same
+local should = require("devtools.tests.should")
+local eq = should.be_equal
 
 describe("require_parser", function()
     it("extracts require paths from local declarations", function()
