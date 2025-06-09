@@ -2,6 +2,11 @@ local assert = require('luassert')
 
 local M = {}
 
+function M.be_greater_than(expected, actual)
+    local is_greater_than = actual > expected
+    assert.is_true(is_greater_than)
+end
+
 function M.be_equal(expected, actual)
     assert.are.equal(expected, actual)
 end

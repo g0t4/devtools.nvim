@@ -9,7 +9,10 @@ function M.get_imported_symbols(bufnr)
         local var = r["var"] -- TODO what to do w/ this? ... so LLM knows this is name of imported module?
         local file_path = lua.which_module(path)
         print(file_path)
-        return file_path
+
+        get_document_symbols_coc(file_path, function(symbols)
+            print(vim.inspect(symbols))
+        end)
     end)
     return requires
 end

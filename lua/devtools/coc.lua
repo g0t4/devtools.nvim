@@ -1,6 +1,48 @@
 local messages = require("devtools.messages")
 local M = {}
 
+function M.get_workspace_symbols(callback)
+    -- TODO add caching? per time or ?
+    vim.fn.CocActionAsync('getWorkspaceSymbols', function(err, symbols)
+        if err ~= vim.NIL and err ~= nil then
+            messages.append("ERROR:", err)
+        end
+        if not symbols then
+            messages.message('No symbols found')
+            return
+        end
+        -- FYI kind is str w/ documentSymbols, integer for getWorkspaceSymbols ??
+        -- TODO filter on URI?
+        callback(symbols)
+    end)
+end
+
+function M.get_document_symbols_by_path(filepath)
+    local cur_win = vim.api.nvim_get_current_win()
+    local cur_buf = vim.api.nvim_get_current_buf()
+
+    -- Open the file in a hidden buffer
+    vim.cmd("keepalt keepjumps silent edit " .. vim.fn.fnameescape(filepath))
+    local temp_buf = vim.api.nvim_get_current_buf()
+
+    -- Wait for LSP attach (CoC will usually attach immediately, but just in case)
+    vim.cmd("doautocmd User CocNvimInit") -- optional safeguard
+
+    -- Call Coc to get symbols
+    local ok, symbols = pcall(vim.fn["CocAction"], "documentSymbols")
+
+    -- Restore original buffer and window
+    vim.api.nvim_set_current_win(cur_win)
+    vim.api.nvim_set_current_buf(cur_buf)
+
+    -- Close buffer if it's not the original one
+    if temp_buf ~= cur_buf then
+        vim.cmd("bdelete! " .. temp_buf)
+    end
+
+    return ok and symbols or {}
+end
+
 function M.get_coc_symbols()
     messages.ensure_open()
     messages.header('coc symbols')
