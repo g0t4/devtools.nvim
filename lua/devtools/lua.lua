@@ -91,12 +91,14 @@ function M.which_module(module_name)
 
     local paths = {}
     -- search vim's runtimepath
-    --   PRN should I include other path(s)? i.e. package.path?
+    --   PRN should I include other path(s)?
     for _, rtp in ipairs(vim.opt.runtimepath:get()) do
         table.insert(paths, rtp .. "/lua/?.lua")
         table.insert(paths, rtp .. "/lua/?/init.lua")
     end
-    local search_path = table.concat(paths, ";")
+
+    --   DevWhichModule rx   -- FYI this is in package.path, not RTP
+    local search_path = table.concat(paths, ";") .. ";" .. package.path
 
     local path, looked = package.searchpath(module_name, search_path)
     if path == nil then
