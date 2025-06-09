@@ -6,32 +6,27 @@ function M.get_coc_symbols()
     messages.header('coc symbols')
     -- :echo json_encode(CocAction('documentSymbols'))
 
-    local function send_lsp_completion_request()
-        -- local pos = vim.api.nvim_win_get_cursor(0)
+    -- local pos = vim.api.nvim_win_get_cursor(0)
 
+    -- vim.fn.CocActionAsync('sendRequest', "lua", 'textDocument/completion',
+    vim.fn.CocActionAsync('sendRequest', {
+            id = "lua",
+            method = 'textDocument/completion',
+        }, -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_completion
 
-        -- vim.fn.CocActionAsync('sendRequest', "lua", 'textDocument/completion',
-        vim.fn.CocActionAsync('sendRequest', {
-                id = "lua",
-                method = 'textDocument/completion',
-            }, -- https://microsoft.github.io/language-server-protocol/specifications/lsp/3.17/specification/#textDocument_completion
-
-            function(err, result)
-                -- messages.append("FUCK")
-                if err then
-                    messages.append("Error:", err.message or err)
-                    return
-                end
-
-                -- local items = result.items or result
-                -- for _, item in ipairs(items or {}) do
-                --     print(item.label)
-                -- end
+        function(err, result)
+            -- messages.append("FUCK")
+            if err then
+                messages.append("Error:", err.message or err)
+                return
             end
-        )
-    end
 
-    send_lsp_completion_request()
+            -- local items = result.items or result
+            -- for _, item in ipairs(items or {}) do
+            --     print(item.label)
+            -- end
+        end
+    )
 
     do return end
 
