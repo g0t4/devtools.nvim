@@ -1,7 +1,7 @@
 local messages = require("devtools.messages")
 local M = {}
 
-vim.keymap.set({ 'i', 'c' }, '<C-;>', function()
+function M.dump_current_windows_and_buffers()
     messages.ensure_open()
     vim.defer_fn(function()
         -- TODO I would like to have a keymap to dump this for many different cases, maybe conditionally loaded keymap?
@@ -37,7 +37,9 @@ vim.keymap.set({ 'i', 'c' }, '<C-;>', function()
             messages.append("No visible completion menu")
         end
     end, 0)
-end, { desc = "Yank visible completion items" })
+end
+
+vim.keymap.set({ 'i', 'c' }, '<C-;>', M.dump_current_windows_and_buffers, { desc = "Yank visible completion items" })
 
 function M.get_coc_symbols()
     messages.ensure_open()
