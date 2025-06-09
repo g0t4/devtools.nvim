@@ -98,7 +98,7 @@ function M.dump_packages_loaded(name_pattern)
     messages.append(names)
 end
 
-function M.which_module(module_name)
+function M.dump_which_module(module_name)
     -- USAGE:
     --   which_module("vim.iter")
     --   which_module("devtools.messages")
@@ -162,7 +162,7 @@ function M.setup()
         local module_name = args.fargs[1]
         messages.header("which_module(" .. module_name .. ")")
 
-        M.which_module(module_name)
+        M.dump_which_module(module_name)
     end, { nargs = "*", complete = "lua", })
 end
 
