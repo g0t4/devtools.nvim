@@ -95,6 +95,13 @@ function M.inspect(object, opts, current_depth)
     end
 end
 
+--- use this for a thorough search to find what it is
+--- not at all performant for production, volume logging
+--- used for debugging mostly
+function M.wtf(object)
+    return tostring(object)
+end
+
 function M.print(object, opts)
     print(M.inspect(object, opts))
 end

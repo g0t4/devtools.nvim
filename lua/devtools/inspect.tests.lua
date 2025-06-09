@@ -13,9 +13,15 @@ describe("exploratory", function()
     it("inspect", function()
         -- TODO add assertions and make into real tests?
         -- TODO flesh out more inspect testing!
-        inspect({})          -- "{ }"
+        inspect({}) -- "{ }"
         inspect({ 1, 2, 3 }) --  == "{ 1, 2, 3, }"
         inspect({ a = 1, b = 2, [3] = 4 })
         inspect({ a = 'foo" the bar' })
+    end)
+
+
+    it("inspect.wtf", function()
+        local result = inspect.wtf("wtf")
+        assert(result == "wtf")
     end)
 end)
