@@ -1,40 +1,41 @@
 local messages = require("devtools.messages")
 local M = {}
 
-vim.keymap.set({ 'i', 'c' }, '<C-;>', function()
-    vim.defer_fn(function()
-        require("devtools.nvim").dump_windows()
-        require("devtools.nvim").dump_buffers()
+if false then
+    vim.keymap.set({ 'i', 'c' }, '<C-;>', function()
+        vim.defer_fn(function()
+            require("devtools.nvim").dump_windows()
+            require("devtools.nvim").dump_buffers()
 
 
 
-        -- works if:
-        -- C-N (while coc pum not open) then defers to nvim's ins completion picker
-        --  => then complete_info() works to return items!
-        --  but, I think I can get basically the same info
-        --    via documentSymbols/getWorkspaceSymbols
-        --  so lets go that route next
+            -- works if:
+            -- C-N (while coc pum not open) then defers to nvim's ins completion picker
+            --  => then complete_info() works to return items!
+            --  but, I think I can get basically the same info
+            --    via documentSymbols/getWorkspaceSymbols
+            --  so lets go that route next
 
-        -- local info = vim.fn.complete_info({ 'items', 'selected', 'pum_visible' })
-        local info = vim.fn.complete_info()
-        messages.append("items", info)
+            -- local info = vim.fn.complete_info({ 'items', 'selected', 'pum_visible' })
+            local info = vim.fn.complete_info()
+            messages.append("items", info)
 
-        if info.pum_visible == 1 then
-            vim.fn.setreg('"', "") -- clear unnamed register
-            local lines = {}
-            for _, item in ipairs(info.items) do
-                local word = item.word or item.abbr or ""
-                table.insert(lines, word)
+            if info.pum_visible == 1 then
+                vim.fn.setreg('"', "") -- clear unnamed register
+                local lines = {}
+                for _, item in ipairs(info.items) do
+                    local word = item.word or item.abbr or ""
+                    table.insert(lines, word)
+                end
+                local text = table.concat(lines, "\n")
+                vim.fn.setreg('"', text)
+                messages.append("Yanked " .. #lines .. " completion items")
+            else
+                messages.append("No visible completion menu")
             end
-            local text = table.concat(lines, "\n")
-            vim.fn.setreg('"', text)
-            messages.append("Yanked " .. #lines .. " completion items")
-        else
-            messages.append("No visible completion menu")
-        end
-    end, 0)
-end, { desc = "Yank visible completion items" })
-
+        end, 0)
+    end, { desc = "Yank visible completion items" })
+end
 
 function M.get_coc_symbols()
     messages.ensure_open()
@@ -108,7 +109,7 @@ end
 
 function M.setup()
     -- FYI localleader shouldn't be used globally ;)
-    vim.keymap.set('n', '<LocalLeader>ss', ':lua require("devtools.coc").get_coc_symbols()<CR>', { noremap = true, silent = true })
+    vim.keymap.set('n', '<LocalLeader>ss', M.get_coc_symbols, { noremap = true, silent = true })
 end
 
 return M
