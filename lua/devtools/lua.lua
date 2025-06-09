@@ -91,7 +91,7 @@ function M.which_module(module_name)
 
     local paths = {}
     -- search vim's runtimepath
-    --   PRN should I include other path(s)?
+    --   PRN should I include other path(s)? package.cpath?
     for _, rtp in ipairs(vim.opt.runtimepath:get()) do
         table.insert(paths, rtp .. "/lua/?.lua")
         table.insert(paths, rtp .. "/lua/?/init.lua")
@@ -142,6 +142,8 @@ function M.setup()
         messages.ensure_open()
 
         local module_name = args.fargs[1]
+        messages.header("which_module(" .. module_name .. ")")
+
         M.which_module(module_name)
     end, { nargs = "*", complete = "lua", })
 end
