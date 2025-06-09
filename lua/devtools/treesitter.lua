@@ -21,7 +21,7 @@ local query_string = [[
   (#eq? @func "require")
 ]]
 
-function M.get_requires(bufnr)
+function M.get_static_imports_lua(bufnr)
     bufnr = bufnr or vim.api.nvim_get_current_buf()
     local parser = ts.get_parser(bufnr, "lua")
     local tree = parser:parse()[1]
