@@ -22,12 +22,28 @@ function M.get_static_requires_lua(bufnr)
     local results = {}
 
     for _pattern, match, _metadata in query:iter_matches(root, bufnr) do
-        for id, nodes in pairs(match) do
-            -- local name = query.captures[id]
-            for _id, node in ipairs(nodes) do
-                -- local name = query.captures[_id]
-                table.insert(results, node)
+        local var = nil
+        local path = nil
+        for _id_outer, nodes in ipairs(match) do
+            local name = query.captures[_id_outer]
+            -- print("id_outer: " .. _id_outer)
+            -- print("name_outer: " .. name)
+            for _id_inner, node in ipairs(nodes) do
+                if name == "import_path" then
+                    path = vim.treesitter.get_node_text(node, bufnr)
+                end
+                if name == "var" then
+                    var = vim.treesitter.get_node_text(node, bufnr)
+                end
+                -- print("  id: " .. _id_inner)
+                -- print("  name: " .. name)
+                -- print("  type: " .. node:type())
+                -- local text = vim.treesitter.get_node_text(node, bufnr)
+                -- print("  text: " .. text)
             end
+        end
+        if var and path then
+            table.insert(results, { var = var, path = path })
         end
     end
 
