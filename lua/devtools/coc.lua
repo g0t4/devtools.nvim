@@ -1,24 +1,5 @@
 local messages = require("devtools.messages")
-local nvim = require("devtools.nvim")
 local M = {}
-
-function M.dump_current_windows_and_buffers(hardcore_probe)
-    messages.ensure_open()
-    vim.defer_fn(function()
-        -- TODO I would like to have a keymap to dump this for many different cases, maybe conditionally loaded keymap?
-        --  I am using this to find the buffer/window floating with coc completion items... to read manually
-        require("devtools.nvim").dump_windows()
-        -- TODO! finish finding coc buffer for PUM and read the completion items from it since it seems there's no API to get them?
-        if hardcore_probe then
-            nvim.dump_buffers(true)
-        else
-            nvim.dump_buffers()
-        end
-    end, 0)
-end
-
-vim.keymap.set({ 'i', 'c' }, '<C-;>', M.dump_current_windows_and_buffers, { desc = "Yank visible completion items" })
-vim.keymap.set({ 'i', 'c' }, '<C-.>', function() M.dump_current_windows_and_buffers(true) end, { desc = "Yank visible completion items" })
 
 function M.get_coc_symbols()
     messages.ensure_open()
