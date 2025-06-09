@@ -1,5 +1,5 @@
 local require_parser = require("devtools.ts.require_parser")
-local dev_ts = require("devtools.dev_ts")
+local dev_ts = require("devtools.ts")
 local eq = assert.are.same
 
 describe("require_parser", function()
@@ -12,6 +12,7 @@ describe("require_parser", function()
         vim.api.nvim_set_current_buf(buf)
 
         local results = require_parser.get_static_requires_lua(buf)
+        dev_ts.inspect_ts(results)
 
 
         eq(#results, 2)
