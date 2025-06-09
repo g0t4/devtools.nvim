@@ -16,7 +16,9 @@ messages.ensure_open()
 --             messages.append(symbol)
 --         end)
 -- end)
-
+-- GOTTA MANUALLY TEST... I HAVE NO F'in IDEA WTF THIS means... documentSymbols is not doing what I would thinks
+-- sometimes its NOTHING in a file that has shit
+-- other times its 2500 lines of crap...
 
 function test_load_path_document_symbols()
     local symbols = coc.get_document_symbols_by_path("./lua/devtools/messages.lua")
