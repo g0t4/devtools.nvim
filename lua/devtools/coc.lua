@@ -29,7 +29,7 @@ function M.get_coc_symbols()
 
     -- TODO! use coc pum buffer to get completions since I can't find an API to do so
 
-    vim.fn.CocActionAsync('getWorkspaceSymbols', function(err, symbols)
+    vim.fn.CocActionAsync('documentSymbols', function(err, symbols)
         if err ~= vim.NIL and err ~= nil then
             messages.append("ERROR:", err)
         end
@@ -37,15 +37,12 @@ function M.get_coc_symbols()
             messages.message('No symbols found')
             return
         end
-        messages.append(symbols)
-
-        -- inspect_userdata(symbols)
+        -- FYI kind is str w/ documentSymbols, integer for getWorkspaceSymbols ??
+        -- messages.append(symbols)
         -- messages.append(vim.fn.json_decode(vim.fn.json_encode(symbols)))
-        do return end
 
         for _, symbol in pairs(symbols) do
-            -- print(string.format("[%s] %s (%d:%d)", symbol.kind, symbol.name, symbol.range.start.line + 1, symbol.range.start.character + 1))
-            messages.message(string.format("[%s] %s (%d:%d)", symbol.kind, symbol.name, symbol.range.start.line + 1, symbol.range.start.character + 1))
+            messages.append(vim.fn.json_decode(vim.fn.json_encode(symbol)))
         end
     end)
 
