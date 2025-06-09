@@ -1,45 +1,24 @@
 local messages = require("devtools.messages")
+local nvim = require("devtools.nvim")
 local M = {}
 
-function M.dump_current_windows_and_buffers()
+function M.dump_current_windows_and_buffers(hardcore_probe)
     messages.ensure_open()
     vim.defer_fn(function()
         -- TODO I would like to have a keymap to dump this for many different cases, maybe conditionally loaded keymap?
         --  I am using this to find the buffer/window floating with coc completion items... to read manually
         require("devtools.nvim").dump_windows()
-        require("devtools.nvim").dump_buffers()
         -- TODO! finish finding coc buffer for PUM and read the completion items from it since it seems there's no API to get them?
-
-
-
-        -- works if:
-        -- C-N (while coc pum not open) then defers to nvim's ins completion picker
-        --  => then complete_info() works to return items!
-        --  but, I think I can get basically the same info
-        --    via documentSymbols/getWorkspaceSymbols
-        --  so lets go that route next
-
-        -- local info = vim.fn.complete_info({ 'items', 'selected', 'pum_visible' })
-        local info = vim.fn.complete_info()
-        messages.append("items", info)
-
-        if info.pum_visible == 1 then
-            vim.fn.setreg('"', "") -- clear unnamed register
-            local lines = {}
-            for _, item in ipairs(info.items) do
-                local word = item.word or item.abbr or ""
-                table.insert(lines, word)
-            end
-            local text = table.concat(lines, "\n")
-            vim.fn.setreg('"', text)
-            messages.append("Yanked " .. #lines .. " completion items")
+        if hardcore_probe then
+            nvim.dump_buffers(true)
         else
-            messages.append("No visible completion menu")
+            nvim.dump_buffers()
         end
     end, 0)
 end
 
 vim.keymap.set({ 'i', 'c' }, '<C-;>', M.dump_current_windows_and_buffers, { desc = "Yank visible completion items" })
+vim.keymap.set({ 'i', 'c' }, '<C-.>', function() M.dump_current_windows_and_buffers(true) end, { desc = "Yank visible completion items" })
 
 function M.get_coc_symbols()
     messages.ensure_open()

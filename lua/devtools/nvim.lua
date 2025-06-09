@@ -4,7 +4,7 @@ local lua = require('devtools.lua')
 
 local M = {}
 
-function M.dump_buffers()
+function M.dump_buffers(hardcore_probe)
     local buffers = vim.api.nvim_list_bufs()
 
     local info = vim.iter(buffers)
@@ -14,7 +14,16 @@ function M.dump_buffers()
             local buftype = vim.bo[bufnr].buftype
             local filetype = vim.bo[bufnr].filetype
             local buflines = vim.api.nvim_buf_line_count(bufnr)
-            return bufnr .. ": " .. name .. " (" .. buftype .. "/" .. filetype .. ") " .. buflines .. " lines"
+            local result = bufnr .. ": " .. name .. " (" .. buftype .. "/" .. filetype .. ") " .. buflines .. " lines"
+            if not hardcore_probe then
+                return result
+            end
+            local lines = vim.api.nvim_buf_get_lines(bufnr, 0, -1, true)
+            local preview = ""
+            if #lines > 0 then
+                preview = " [preview] " .. lines[1] .. (lines[2] and " ... " .. lines[2])
+            end
+            return result .. preview
         end)
         :join("\n")
 
