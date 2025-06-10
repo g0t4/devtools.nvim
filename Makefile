@@ -19,3 +19,8 @@ tests:
 clean:
 		rm -f tags
 
+
+# TODO build a special tags file for ask-openai? or let it cache what it needs?
+# ask.tags:
+# 		ctags -R
+
