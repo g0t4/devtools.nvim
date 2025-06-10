@@ -24,6 +24,19 @@ function super_iter(original_table)
         return super_iter(sorted)
     end
 
+    iter.group_by = function(self, key_fn)
+        local groups = {}
+        for _, v in pairs(self:totable()) do
+            local key = key_fn(v)
+            if groups[key] == nil then
+                groups[key] = {}
+            end
+            table.insert(groups[key], v)
+        end
+        -- retain super_iter interface:
+        return super_iter(groups)
+    end
+
     return iter
 end
 

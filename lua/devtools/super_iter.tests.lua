@@ -44,3 +44,26 @@ describe("super_iter:sort()", function()
         assert.are_same({ 'c', 'b', 'a' }, sorted)
     end)
 end)
+
+
+describe("super_iter:group_by()", function()
+    it("groups list by a key function", function()
+        local iter = super_iter({
+            { id = 1, name = 'Bob' },
+            { id = 2, name = 'Alice' },
+            { id = 1, name = 'John' },
+            { id = 3, name = 'Bob' },
+        })
+        local grouped = iter:group_by(function(x) return x.id end):totable()
+        assert.are_same({
+            { id = 1, name = 'Bob' },
+            { id = 1, name = 'John' },
+        }, grouped[1])
+        assert.are_same({
+            { id = 2, name = 'Alice' },
+        }, grouped[2])
+        assert.are_same({
+            { id = 3, name = 'Bob' },
+        }, grouped[3])
+    end)
+end)
