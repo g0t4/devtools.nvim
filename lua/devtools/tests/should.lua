@@ -47,7 +47,32 @@ function expect(truthy)
     -- vim.print("expect failed:", line)
 
     -- use \n so explanation stands out (much like builtin string comparison passedin/actual)
-    error("\nassertion failed:\n" .. line)
+    -- error("\nassertion failed:\n" .. line)
+
+    -- Collect local variables from the calling frame
+    local locals = {}
+    local num_locals = 1
+    while true do
+        print("locals[" .. num_locals .. "]=" .. tostring(debug.getlocal(2, num_locals)))
+        local name, value = debug.getlocal(2, num_locals)
+        if not name then break end
+        locals[name] = tostring(value)
+        num_locals = num_locals + 1
+    end
+
+    if num_locals == 1 then
+        error("\nassertion failed:\n  Source: " .. line)
+        return
+    end
+
+    -- Substitute local variable names with their values in the line
+    local substituted_line = line
+    for name, value in pairs(locals) do
+        -- Simple pattern: replace whole word matches of the variable name
+        substituted_line = substituted_line:gsub("%f[%w]" .. name .. "%f[%W]", value)
+    end
+
+    error("\nassertion failed:\n  Source: " .. line .. "\n  Values: " .. substituted_line)
 end
 
 return M
