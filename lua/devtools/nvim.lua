@@ -216,6 +216,25 @@ function M.setup()
         messages.ensure_open()
         M.dump_keymaps_sorted_by_lhs(args.fargs[1], args.fargs[2])
     end, { nargs = '*' })
+
+    vim.api.nvim_create_user_command("DevDumpRuntimePaths", function(args)
+        local path_filter = args.fargs[1]
+        local header = "Runtime Paths"
+        if path_filter then
+            header = header .. " (" .. path_filter .. ")"
+        end
+        messages.header(header)
+
+        messages.ensure_open()
+        vim.iter(vim.opt.runtimepath:get())
+            :filter(function(path)
+                return path_filter == nil
+                    or string.find(path, path_filter) ~= nil
+            end)
+            :each(function(path)
+                messages.append(path)
+            end)
+    end, { nargs = "?" })
 end
 
 return M
