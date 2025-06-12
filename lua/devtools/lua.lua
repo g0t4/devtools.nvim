@@ -168,6 +168,25 @@ function M.setup()
 
         M.dump_which_module(module_name)
     end, { nargs = "*", complete = "lua", })
+
+    vim.api.nvim_create_user_command("DevDumpRuntimePaths", function(args)
+        local path_filter = args.fargs[1]
+        local header = "Runtime Paths"
+        if path_filter then
+            header = header .. " (" .. path_filter .. ")"
+        end
+        messages.header(header)
+
+        messages.ensure_open()
+        vim.iter(vim.opt.runtimepath:get())
+            :filter(function(path)
+                return path_filter == nil
+                    or string.find(path, path_filter) ~= nil
+            end)
+            :each(function(path)
+                messages.append(path)
+            end)
+    end, { nargs = "?" })
 end
 
 return M
