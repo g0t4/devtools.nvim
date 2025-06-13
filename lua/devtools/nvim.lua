@@ -1,6 +1,8 @@
 local messages = require('devtools.messages')
 local super_iter = require('devtools.super_iter')
 local lua = require('devtools.lua')
+local ansi = require('devtools.ansi')
+
 
 local M = {}
 
@@ -45,8 +47,20 @@ function M.dump_windows()
             local name = vim.api.nvim_buf_get_name(bufnr)
             local split = config and config.split or "missing config"
             local row, col = unpack(vim.api.nvim_win_get_cursor(window_id))
-            return window_id .. " " .. split
-                .. " → buf " .. bufnr .. ": " .. name
+
+            -- if name is a path, then take last component and make it yellow
+            if string.find(name, "/") then
+                -- basename = name:match("/([^/]+$)")
+                -- name = name:gsub(basename .. '$', ansi.yellow(basename))
+                name = string.gsub(name, "/([^/]+)$", function(capture1)
+                    return "/" .. ansi.yellow(capture1)
+                end)
+            end
+
+            return ansi.cyan(window_id)
+                .. " " .. split
+                .. " → buf " .. ansi.yellow(bufnr)
+                .. ": " .. name
                 .. " @ row: " .. row .. "/" .. buflines
                 .. "  col: " .. col
         end)
