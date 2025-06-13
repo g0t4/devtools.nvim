@@ -190,6 +190,7 @@ function M.dump_highlights()
     messages.header("Global Highlights (ns_id=0)")
     local global_highlights = vim.api.nvim_get_hl(0, {})
     messages.append(vim.inspect(global_highlights))
+    messages.scroll_back_before_last_append()
 end
 
 -- makes a cabbrev for the given original command
@@ -244,7 +245,6 @@ function M.setup()
     vim.api.nvim_create_user_command("DevKeymapsByLHS", dump_keymaps_by_lhs, { nargs = '*' })
     vim.api.nvim_create_user_command("DevDumpRuntimePaths", dump_runtime_paths, { nargs = "?" })
     vim.api.nvim_create_user_command("DevDumpHighlights", M.dump_highlights, { nargs = '?' })
-
 end
 
 return M

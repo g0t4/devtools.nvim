@@ -263,6 +263,13 @@ function M.execute_in_dump_window(command)
     vim.fn.win_execute(dump_window_id, command)
 end
 
+function M.scroll_back_before_last_append()
+    -- FYI I am not sure I like this as is... but for now it can undo scroll to bottom and there's no flicker
+    --   TODO probably need to add parameter to append so it doesn't scroll to bottom if set
+    -- jumps back to start of append
+    messages.execute_in_dump_window("2normal <C-O>")
+end
+
 local function scroll_to_bottom()
     -- if window is open, scroll to bottom
     M.execute_in_dump_window("normal G")
