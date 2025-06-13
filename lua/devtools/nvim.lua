@@ -191,6 +191,30 @@ function M.alias(alias_name, original_command)
     vim.cmd(string.format("cabbrev %s %s", alias_name, original_command))
 end
 
+local function dump_keymaps_by_lhs(args)
+    messages.ensure_open()
+    M.dump_keymaps_sorted_by_lhs(args.fargs[1], args.fargs[2])
+end
+
+local function dump_runtime_paths(args)
+    local path_filter = args.fargs[1]
+    local header = "Runtime Paths"
+    if path_filter then
+        header = header .. " (" .. path_filter .. ")"
+    end
+    messages.header(header)
+
+    messages.ensure_open()
+    vim.iter(vim.opt.runtimepath:get())
+        :filter(function(path)
+            return path_filter == nil
+                or string.find(path, path_filter) ~= nil
+        end)
+        :each(function(path)
+            messages.append(path)
+        end)
+end
+
 function M.setup()
     vim.keymap.set({ 'i', 'c' }, '<C-;>', M.dump_current_windows_and_buffers, { desc = "Yank visible completion items" })
     vim.keymap.set({ 'i', 'c' }, '<C-.>', function() M.dump_current_windows_and_buffers(true) end, { desc = "Yank visible completion items" })
@@ -211,34 +235,8 @@ function M.setup()
     M.alias("windows", "DevWindows")
     M.alias("Windows", "DevWindows")
 
-
-
     vim.api.nvim_create_user_command("DevKeymapsByLHS", dump_keymaps_by_lhs, { nargs = '*' })
     vim.api.nvim_create_user_command("DevDumpRuntimePaths", dump_runtime_paths, { nargs = "?" })
-
-    function dump_keymaps_by_lhs(args)
-        messages.ensure_open()
-        M.dump_keymaps_sorted_by_lhs(args.fargs[1], args.fargs[2])
-    end
-
-    function dump_runtime_paths(args)
-        local path_filter = args.fargs[1]
-        local header = "Runtime Paths"
-        if path_filter then
-            header = header .. " (" .. path_filter .. ")"
-        end
-        messages.header(header)
-
-        messages.ensure_open()
-        vim.iter(vim.opt.runtimepath:get())
-            :filter(function(path)
-                return path_filter == nil
-                    or string.find(path, path_filter) ~= nil
-            end)
-            :each(function(path)
-                messages.append(path)
-            end)
-    end
 end
 
 return M
