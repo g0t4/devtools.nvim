@@ -255,6 +255,15 @@ local function ensure_buffer_is_open()
     vim.api.nvim_set_current_win(original_window_id)
 end
 
+local function scroll_to_bottom()
+    -- if window is open, scroll to bottom
+    local dump_window_id = window_id_for_buffer(M.dump_bufnr)
+    if dump_window_id == nil then
+        return
+    end
+    vim.fn.win_execute(dump_window_id, "normal G")
+end
+
 local function dump_background(...)
     -- TMP this is not here long term, just for now since my original code all assumes buffer opens if not already
     ensure_buffer_exists()
@@ -282,17 +291,6 @@ local function dump_background(...)
         --   vim.api.nvim_buf_set_text(dump_bufnr, -1, 0, { arg })
         -- FYI, this can still work on a terminal backed buffer, if it is modifiable
         --   issue is it won't go through the terminal instance for ANSI color sequences to work
-    end
-
-    -- TODO not working with term backed buffer?
-    -- if window is open, scroll to bottom
-
-    local function scroll_to_bottom()
-        local dump_window_id = window_id_for_buffer(M.dump_bufnr)
-        if dump_window_id == nil then
-            return
-        end
-        vim.fn.win_execute(dump_window_id, "normal G")
     end
 
     scroll_to_bottom()
