@@ -211,13 +211,17 @@ function M.setup()
     M.alias("windows", "DevWindows")
     M.alias("Windows", "DevWindows")
 
-    vim.api.nvim_create_user_command("DevKeymapsByLHS", function(args)
-        -- messages.append(args)
+
+
+    vim.api.nvim_create_user_command("DevKeymapsByLHS", dump_keymaps_by_lhs, { nargs = '*' })
+    vim.api.nvim_create_user_command("DevDumpRuntimePaths", dump_runtime_paths, { nargs = "?" })
+
+    function dump_keymaps_by_lhs(args)
         messages.ensure_open()
         M.dump_keymaps_sorted_by_lhs(args.fargs[1], args.fargs[2])
-    end, { nargs = '*' })
+    end
 
-    vim.api.nvim_create_user_command("DevDumpRuntimePaths", function(args)
+    function dump_runtime_paths(args)
         local path_filter = args.fargs[1]
         local header = "Runtime Paths"
         if path_filter then
@@ -234,7 +238,7 @@ function M.setup()
             :each(function(path)
                 messages.append(path)
             end)
-    end, { nargs = "?" })
+    end
 end
 
 return M
