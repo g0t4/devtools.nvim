@@ -160,6 +160,7 @@ function M.dump_keymaps_sorted_by_lhs(mode, lhs_starts_with)
 end
 
 function M.dump_highlights()
+    messages.ensure_open()
     -- FYI first use case for this is to be able to search through the 100s of highlights!
     --   not have to use that damn pager and then find in iterm
 
@@ -237,6 +238,8 @@ function M.setup()
 
     vim.api.nvim_create_user_command("DevKeymapsByLHS", dump_keymaps_by_lhs, { nargs = '*' })
     vim.api.nvim_create_user_command("DevDumpRuntimePaths", dump_runtime_paths, { nargs = "?" })
+    vim.api.nvim_create_user_command("DevDumpHighlights", M.dump_highlights, { nargs = '?' })
+
 end
 
 return M
