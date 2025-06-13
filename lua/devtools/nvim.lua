@@ -180,9 +180,7 @@ function M.dump_highlights()
         end)
         :join("\n")
 
-    if namespaced_highlights == "" then
-        messages.append("No Namespaced Highlights Found")
-    else
+    if namespaced_highlights ~= "" then
         messages.header("Namespaced Highlights")
         messages.append(namespaced_highlights)
     end
