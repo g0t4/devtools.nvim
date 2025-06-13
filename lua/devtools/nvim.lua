@@ -179,8 +179,13 @@ function M.dump_highlights()
             return line ~= ""
         end)
         :join("\n")
-    messages.header("Namespaced Highlights")
-    messages.append(namespaced_highlights)
+
+    if namespaced_highlights == "" then
+        messages.append("No Namespaced Highlights Found")
+    else
+        messages.header("Namespaced Highlights")
+        messages.append(namespaced_highlights)
+    end
 
     messages.header("Global Highlights (ns_id=0)")
     local global_highlights = vim.api.nvim_get_hl(0, {})
