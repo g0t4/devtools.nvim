@@ -255,7 +255,7 @@ local function ensure_buffer_is_open()
     vim.api.nvim_set_current_win(original_window_id)
 end
 
-local function execute_in_dump_window(command)
+function M.execute_in_dump_window(command)
     local dump_window_id = window_id_for_buffer(M.dump_bufnr)
     if dump_window_id == nil then
         return
@@ -265,7 +265,7 @@ end
 
 local function scroll_to_bottom()
     -- if window is open, scroll to bottom
-    execute_in_dump_window("normal G")
+    M.execute_in_dump_window("normal G")
 end
 
 local function dump_background(...)
