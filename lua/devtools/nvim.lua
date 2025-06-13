@@ -235,7 +235,7 @@ function M.setup()
     -- there is no builtin command to list windows, other than call vim.api.nvim_list_wins() which just shows IDs
     vim.api.nvim_create_user_command("DevWindows", function()
         messages.ensure_open()
-        require("devtools.nvim").dump_windows()
+        M.dump_windows()
     end, {})
     M.alias("windows", "DevWindows")
     M.alias("Windows", "DevWindows")
