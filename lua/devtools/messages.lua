@@ -317,6 +317,16 @@ function M.header(...)
     return M
 end
 
+function M.divider(...)
+    ensure_buffer_exists()
+
+    local header = string.format("%s", table.concat({ ... }, " "))
+    header = "--------------------------------------------------------------------------------------"
+    dump_background(ansi.green(header))
+
+    return M
+end
+
 function M.clear()
     if M.dump_bufnr == nil then
         return
