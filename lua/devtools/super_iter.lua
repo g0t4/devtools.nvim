@@ -1,6 +1,8 @@
 -- FYI! this is a very early idea, might scrap this... we shall see...
 --  basically leaving this as a placeholder to revisit for later
 
+-- TODO! can I redo all of vim.iter with type hints?  so you can chain funcs together and have implicit type hints carry through the chain?!
+
 function super_iter(original_table)
     local iter = vim.iter(original_table)
 
