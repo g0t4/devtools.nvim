@@ -45,7 +45,7 @@ function M.dump_windows()
             -- local filetype = vim.bo[bufnr].filetype
             local buflines = vim.api.nvim_buf_line_count(bufnr)
             local name = vim.api.nvim_buf_get_name(bufnr)
-            local split = config and config.split or "missing config"
+            local split = config and config.split or "missing split"
             local row, col = unpack(vim.api.nvim_win_get_cursor(window_id))
 
             -- if name is a path, then take last component and make it yellow
