@@ -33,8 +33,9 @@ function M.dump_buffers(hardcore_probe)
     messages.append(info)
 end
 
-function M.dump_windows()
+function M.dump_windows(args)
     local windows = vim.api.nvim_list_wins()
+    verbose = args.fargs[1] == "-v"
 
     local info = vim.iter(windows)
         :map(function(window_id)
@@ -57,16 +58,22 @@ function M.dump_windows()
                 end)
             end
 
-            return ansi.cyan(window_id)
+            summary =  ansi.cyan(window_id)
                 .. " " .. split
                 .. " → buf " .. ansi.yellow(bufnr)
                 .. ": " .. name
                 .. " @ row: " .. row .. "/" .. buflines
                 .. "  col: " .. col
+
+            if verbose then
+                summary = "\n" .. summary .. "\nconfig: " .. vim.inspect(config)
+            end
+
+            return summary
         end)
         :join("\n")
 
-    messages.header("Windows")
+    messages.header("Windows" .. (verbose and " (verbose)" or ""))
     messages.append(info)
 end
 
@@ -247,10 +254,10 @@ function M.setup()
 
     -- * :windows
     -- there is no builtin command to list windows, other than call vim.api.nvim_list_wins() which just shows IDs
-    vim.api.nvim_create_user_command("DevWindows", function()
+    vim.api.nvim_create_user_command("DevWindows", function(args)
         messages.ensure_open()
-        M.dump_windows()
-    end, {})
+        M.dump_windows(args)
+    end, { nargs = '?' })
     M.alias("windows", "DevWindows")
     M.alias("Windows", "DevWindows")
 
