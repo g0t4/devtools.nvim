@@ -35,7 +35,7 @@ end
 
 function M.dump_windows(args)
     local windows = vim.api.nvim_list_wins()
-    verbose = args.fargs[1] == "-v"
+    verbose = args.fargs[1] == "--verbose"
 
     local info = vim.iter(windows)
         :map(function(window_id)
@@ -58,7 +58,7 @@ function M.dump_windows(args)
                 end)
             end
 
-            summary =  ansi.cyan(window_id)
+            summary = ansi.cyan(window_id)
                 .. " " .. split
                 .. " → buf " .. ansi.yellow(bufnr)
                 .. ": " .. name
@@ -75,6 +75,16 @@ function M.dump_windows(args)
 
     messages.header("Windows" .. (verbose and " (verbose)" or ""))
     messages.append(info)
+end
+
+function dev_windows_complete(arg_lead, cmd_line, cursor_pos)
+    local options = { "--verbose" }
+    -- doesn't check if already provided
+    -- PRN rewrite as generic completion provider so I can reuse on other commands?
+    --    take a list of valid options and allow any
+    return vim.tbl_filter(function(item)
+        return item:find("^" .. arg_lead)
+    end, options)
 end
 
 function M.dump_current_windows_and_buffers(hardcore_probe)
@@ -257,7 +267,7 @@ function M.setup()
     vim.api.nvim_create_user_command("DevWindows", function(args)
         messages.ensure_open()
         M.dump_windows(args)
-    end, { nargs = '?' })
+    end, { nargs = '?', complete = dev_windows_complete })
     M.alias("windows", "DevWindows")
     M.alias("Windows", "DevWindows")
 
