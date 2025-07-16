@@ -181,31 +181,7 @@ vim.api.nvim_create_user_command("Pbcopy", pbcopy_command, {
     range = true,
     nargs = '*',
     complete = "lua", -- completes like using :lua command!
-
-    -- alternative (expand into equivalent ex command, or lua command)
-    --   so I get familiar with the vimscript/lua to set registers for the clipboard
-    --   BUT, AFAICT you can't tab complete aliases...
-    --   which means I have to fully type out pbcopy
-    --     and that means I have to remember it too!
-    --   as a command I can type pb<TAB> :)
-    --     just have to recall I setup pbcopy like command :)...
-    --     and since I am so conditioned to do that already, that's perfect!
-    -- M.alias("pbcopy", "let @+ = ")
 })
-
-vim.cmd [[
-    " b/c not allowed to use lowercase command names:
-
-
-    cabbrev pbcopy Pbcopy
-
-    cabbrev dump Dump
-    cabbrev DUmp Dump
-]] -- frequently mistype, b/c I have to capitalize the goddamn D
--- FYI original vimscript definition:
--- vim.cmd [[
---     command! -nargs=1 -complete=lua Dump lua print(vim.inspect(<args>))
--- ]]
 
 -- abbreviated version of Dump, to be as easy as :=
 vim.api.nvim_create_user_command("D", dump_command, {
