@@ -97,7 +97,7 @@ local function dump_command(opts)
         table.insert(env_overrides, "return " .. opts.args)
         local chunk, err = load(table.concat(env_overrides, "\n"))
         if not chunk then
-            messages.append(ansi.red("Invalid expression: " .. err))
+            M.append(ansi.red("Invalid expression: " .. err))
             return
         end
         local ok, result = pcall(chunk)
@@ -157,9 +157,51 @@ vim.api.nvim_create_user_command("Dump", dump_command, {
     complete = "lua", -- completes like using :lua command!
 })
 
--- b/c not allowed to use lowercase command names:
-vim.cmd [[ cabbrev dump Dump ]]
-vim.cmd [[ cabbrev DUmp Dump ]] -- frequently mistype, b/c I have to capitalize the goddamn D
+
+function pbcopy_command(opts)
+    if opts.args ~= "" then
+        local chunk, err = loadstring("return " .. opts.args)
+        if not chunk then
+            M.append(ansi.red("Invalid expression: " .. err))
+            return
+        end
+        local ok, result = pcall(chunk)
+        if not ok then
+            M.append(ansi.red("Error during evaluation: " .. result))
+        end
+
+        -- also dump to messages for troubleshooting
+        M.header(":Pbcopy " .. opts.args)
+        M.append(format_dump(result))
+        vim.fn.setreg("+", result, "c")
+    end
+end
+
+vim.api.nvim_create_user_command("Pbcopy", pbcopy_command, {
+    range = true,
+    nargs = '*',
+    complete = "lua", -- completes like using :lua command!
+
+    -- alternative (expand into equivalent ex command, or lua command)
+    --   so I get familiar with the vimscript/lua to set registers for the clipboard
+    --   BUT, AFAICT you can't tab complete aliases...
+    --   which means I have to fully type out pbcopy
+    --     and that means I have to remember it too!
+    --   as a command I can type pb<TAB> :)
+    --     just have to recall I setup pbcopy like command :)...
+    --     and since I am so conditioned to do that already, that's perfect!
+    -- M.alias("pbcopy", "let @+ = ")
+})
+
+vim.cmd [[
+    " b/c not allowed to use lowercase command names:
+
+
+    cabbrev pbcopy Pbcopy
+
+    cabbrev dump Dump
+    cabbrev DUmp Dump
+]] -- frequently mistype, b/c I have to capitalize the goddamn D
 -- FYI original vimscript definition:
 -- vim.cmd [[
 --     command! -nargs=1 -complete=lua Dump lua print(vim.inspect(<args>))
