@@ -1,0 +1,8 @@
+#!/usr/bin/env fish
+
+echo "$(status current-filename) $argv"
+
+# TODO skip for rebase
+
+make clean && make tags
+rag_indexer --githook
