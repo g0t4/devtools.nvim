@@ -17,11 +17,10 @@ _describe('tiny, no shared prefix/suffix words', function()
     end)
 
     it('split code into words (i.e. dot(.) whitespace underscore are all separators', function()
-        local before_tokens = splitter.split_code_into_words("a.b.c")
-        should.be_same({ 'a', '.', 'b', '.', 'c' }, before_tokens)
+        local code = splitter.split_code_into_words("sse.timings.predicted")
+        should.be_same({ "sse", ".", "timings", ".", "predicted" }, code)
 
-        -- local after_tokens = splitter.split_on_whitespace(after_text)
-        -- should.be_same({ 'b,', ' ', 'c,', ' ', 'd)' }, after_tokens)
+        -- code = splitter.split_code_into_words("sse.timings.predicted_per_second * 10 + 0.5")
     end)
 end)
 
