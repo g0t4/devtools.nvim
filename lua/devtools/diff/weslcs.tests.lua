@@ -31,6 +31,9 @@ _describe('tiny, no shared prefix/suffix words', function()
         should.be_same({
             "sse", ".", "timings", ".", "predicted", "_", "per", "_", "second", " ", "*", " ", "10", " ", "+", " ", "0.5"
         }, code)
+
+        -- test "price+tax+shipping"
+        -- test "price*quantity"
     end)
 end)
 
