@@ -17,23 +17,34 @@ _describe('tiny, no shared prefix/suffix words', function()
     end)
 
     it('split code into words (i.e. dot(.) whitespace underscore are all separators', function()
+        -- dots only
         local code = splitter.split_code_into_words("sse.timings.predicted")
         should.be_same({ "sse", ".", "timings", ".", "predicted" }, code)
 
-        -- underscores too
+        -- underscores only
         code = splitter.split_code_into_words("predicted_per_second")
         should.be_same({ "predicted", "_", "per", "_", "second" }, code)
 
+        -- dots and underscores
         code = splitter.split_code_into_words("sse.timings.predicted_per_second")
         should.be_same({ "sse", ".", "timings", ".", "predicted", "_", "per", "_", "second" }, code)
+
+        -- spaces only
+        code = splitter.split_code_into_words("if not chunk then return end") -- lua code
+        should.be_same({ "if", "not", "chunk", "then", "return", "end" }, code)
 
         code = splitter.split_code_into_words("sse.timings.predicted_per_second * 10 + 0.5")
         should.be_same({
             "sse", ".", "timings", ".", "predicted", "_", "per", "_", "second", " ", "*", " ", "10", " ", "+", " ", "0.5"
         }, code)
 
-        -- test "price+tax+shipping"
-        -- test "price*quantity"
+        -- test price+tax+shipping
+        -- test price*quantity
+        -- test , () = % ^ etc
+        -- foo=bar
+        -- foo="bar"
+        -- foo='bar'
+        -- print("failure")
     end)
 end)
 
