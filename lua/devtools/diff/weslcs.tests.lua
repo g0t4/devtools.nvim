@@ -57,6 +57,7 @@ _describe('tiny, no shared prefix/suffix words', function()
         code = splitter.split_code_into_words("price/rate")
         should.be_same({ "price", "/", "rate" }, code)
 
+        -- =
         code = splitter.split_code_into_words("foo=bar")
         should.be_same({ "foo", "=", "bar" }, code)
 
