@@ -20,6 +20,9 @@ local function tokenize(code)
     -- FYI timing for 3 through 4 (not 5) is 0.11ms (worst case) and often 0.04ms
     -- medium size is 0.5ms worst case and on down to 0.3ms
     -- so very likely I could support this but I would want it to prove much more effective than a simple regex style (lua pattern) split
+    -- ***! OOH crap... don't forget this is all within a small set of lines and there's no guarnatee any of it is complete, let alone valid code!
+    --    good news is timing would mostly be on the order of a single line so < 0.04ms often I bet
+    --    ***! BUT, I don't know if treesitter is going to prove remarkably more effective with such a narrow, often incomplepte focus!
 
     -- 3. parse it
     local parser = ts.get_parser(bufnr, ft)
