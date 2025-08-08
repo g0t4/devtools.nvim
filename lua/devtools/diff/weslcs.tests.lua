@@ -31,7 +31,7 @@ _describe('tiny, no shared prefix/suffix words', function()
 
         -- spaces only
         code = splitter.split_code_into_words("if not chunk then return end") -- lua code
-        should.be_same({ "if", "not", "chunk", "then", "return", "end" }, code)
+        should.be_same({ "if", " ", "not", " ", "chunk", " ", "then", " ", "return", " ", "end" }, code)
 
         code = splitter.split_code_into_words("sse.timings.predicted_per_second * 10 + 0.5")
         should.be_same({
