@@ -20,6 +20,11 @@ _describe('tiny, no shared prefix/suffix words', function()
         local code = splitter.split_code_into_words("sse.timings.predicted")
         should.be_same({ "sse", ".", "timings", ".", "predicted" }, code)
 
+        -- underscores too
+        code = splitter.split_code_into_words("predicted_per_second")
+        should.be_same({ "predicted", "_", "per", "_", "second" }, code)
+
+        -- code = splitter.split_code_into_words("sse.timings.predicted_per_second")
         -- code = splitter.split_code_into_words("sse.timings.predicted_per_second * 10 + 0.5")
     end)
 end)
