@@ -353,7 +353,7 @@ _describe('can convert to sign types', function()
             { '+', 'A' },
         }
 
-        local actual_diff = weslcs.lcs_diff_with_sign_types_from_text(before_text, after_text, true)
+        local actual_diff = weslcs.lcs_diff_with_sign_types_from_text(before_text, after_text)
 
         should.be_same(expected_diff, actual_diff)
     end)
