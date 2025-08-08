@@ -55,8 +55,8 @@ function M.split_code_into_words(text)
     --   AND then once underscore is included, you should simply see `_parsed` as added!
     --
     -- FYI goal is to use %W or [^%w] (not word char) after examples covered
-    -- return split_internal(text, "%W", KEEP_SEPARATORS)
-    return split_internal(text, "[._%s+*-/=\"\']", KEEP_SEPARATORS)
+    return split_internal(text, "%W", KEEP_SEPARATORS)
+    -- return split_internal(text, "[._%s+*-/=\"\']", KEEP_SEPARATORS)
 end
 
 return M

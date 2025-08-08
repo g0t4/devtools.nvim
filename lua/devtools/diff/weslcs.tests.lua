@@ -67,9 +67,11 @@ _describe('tiny, no shared prefix/suffix words', function()
         code = splitter.split_code_into_words("foo='bar'")
         should.be_same({ "foo", "=", "'", "bar", "'" }, code)
 
-        -- test , () = % ^ etc
-        -- print("failure")
-        -- choices[0].delta
+        -- also really, anything on num/special keys around qwerty keys:
+        --    !@#$%^&*()-_=+[]{}\|;:'"/?.>,<`~
+        --  stop for now and swap in %w as most other keys would have a similar style of rationale to those above
+        --  having separators split onto own chars every time should make matching easier: even with 4 spaces in a row, that's fine... and that would mostly be start of line!
+        --  *** my diffs will look WAY better I suspect with splitting on more than just whitespace!
     end)
 end)
 
