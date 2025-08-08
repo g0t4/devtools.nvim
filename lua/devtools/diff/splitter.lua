@@ -4,16 +4,10 @@ local STRIP_SEPARATORS = true
 local KEEP_SEPARATORS = false
 
 
------------------------------------------------------------------------------
--- FYI this came from
---     https://github.com/LuaDist/diff/blob/master/lua/diff.lua#L26
---     Adapted from Gavin Kistner's split on http://lua-users.org/wiki/SplitJoin.
---
 ---@param text string
----@param separator_pattern string  #separator pattern (defaults to any white space - %s+).
+---@param separator_pattern string
 ---@param skip_separator boolean # don't include the sepator in the results.
 ---@return table<string>
------------------------------------------------------------------------------
 local function split_internal(text, separator_pattern, skip_separator)
     if separator_pattern == nil or separator_pattern == '' then
         error('separator cannot be nil or empty string')
@@ -22,7 +16,6 @@ local function split_internal(text, separator_pattern, skip_separator)
     local parts = {}
     local start = 1
     local split_start, split_end = text:find(separator_pattern, start)
-    print("split_start=" .. split_start .. " split_end=" .. split_end .. " text=" .. text)
     while split_start do
         table.insert(parts, text:sub(start, split_start - 1))
         if not skip_separator then
