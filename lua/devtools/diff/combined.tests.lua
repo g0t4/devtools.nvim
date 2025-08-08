@@ -166,3 +166,40 @@ end]]
         should.be_same(expected, diffs)
     end)
 end)
+
+
+it("combined should allow passing new word level split w/ char by char separators too", function()
+    it("test rename with dot notation", function()
+        local before_rename_text = [[
+local pps = math.floor(sse.timings.predicted_per_second * 10 + 0.5) / 10
+print("tokens/sec", pps, "predicted_n", sse.timings.predicted_n)
+log:info("Tokens/sec: ", pps, " predicted n: ", sse.timings.predicted_n)]]
+
+        local after_rename_text = [[
+local pps = math.floor(sse_parsed.timings.predicted_per_second * 10 + 0.5) / 10
+print("tokens/sec", pps, "predicted_n", sse_parsed.timings.predicted_n)
+log:info("Tokens/sec: ", pps, " predicted n: ", sse_parsed.timings.predicted_n)]]
+
+        local combined_diff = combined.combined_diff(before_rename_text, after_rename_text)
+
+        local expected_groups = {
+
+            -- line one
+            { '=', 'local pps = math.floor(sse' },
+            { '+', '_parsed' },
+            { '=', '.timings.predicted_per_second * 10 + 0.5) / 10' },
+
+            -- line two
+            { '=', 'print("tokens/sec", pps, "predicted_n", sse' },
+            { '+', '_parsed' },
+            { '=', '.timings.predicted_n)' },
+
+            -- line three
+            { '=', 'log:info("Tokens/sec: ", pps, " predicted n: ", sse' },
+            { '+', '_parsed' },
+            { '=', '.timings.predicted_n' },
+        }
+
+        should.be_same(expected_groups, combined_diff)
+    end)
+end)
