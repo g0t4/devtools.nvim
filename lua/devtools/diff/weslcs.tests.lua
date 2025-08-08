@@ -16,8 +16,8 @@ _describe('tiny, no shared prefix/suffix words', function()
         should.be_same({ 'b,', ' ', 'c,', ' ', 'd)' }, after_tokens)
     end)
 
-    it('split words on . only, keeps .', function()
-        local before_tokens = splitter.split_on_dot("a.b.c")
+    it('split code into words (i.e. dot(.) whitespace underscore are all separators', function()
+        local before_tokens = splitter.split_code_into_words("a.b.c")
         should.be_same({ 'a', '.', 'b', '.', 'c' }, before_tokens)
 
         -- local after_tokens = splitter.split_on_whitespace(after_text)

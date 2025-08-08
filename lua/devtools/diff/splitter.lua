@@ -47,17 +47,12 @@ function M.split_on_whitespace(text)
     return split_internal(text, SPLIT_ON_WHITESPACE, KEEP_SEPARATORS)
 end
 
-function M.split_on_dot(text)
+function M.split_code_into_words(text)
+    -- goal here is to better split words in code to enhance diff comparisons
+    --  i.e. if I have sse.choices[0].delta.content and I rename `sse` to `sse_parsed`
+    --   then IMO you should only see `sse` as removed and `sse_parsed` added ...
+    --   AND then once underscore is included, you should simply see `_parsed` as added!
     return split_internal(text, "%.", KEEP_SEPARATORS)
-end
-
-function M.TODO_split_code_on_words(text)
-    -- include splits on:
-    --   TLDR my thought is split on regex \b ... maybe %S in lua patterns?
-    --   '.' which is a legit boundary in code diffs, i.e. renaming a variable that later is used with dot notation, the entire path is treated as one word!
-    --   '_' maybe - i.e. used in function/variable names, multipart names that are renamed could better be diff'd if this was a split point
-    --   '%s'  whitespace
-    -- PERHAPS some sort of language specific tokenizer/splitter?
 end
 
 return M
