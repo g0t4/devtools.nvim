@@ -16,7 +16,7 @@ local KEEP_SEPARATORS = false
 -- @param skip_separator [optional] don't include the sepator in the results.
 -- @return               A list of tokens.
 -----------------------------------------------------------------------------
-local function split_internal(text, separator, skip_separator)
+local function split_consecutive_separators_grouped_into_one_array_element(text, separator, skip_separator)
     if separator == nil or separator == '' then
         error('separator cannot be nil or empty string')
     end
@@ -39,18 +39,18 @@ local function split_internal(text, separator, skip_separator)
 end
 
 function M.split_on_whitespace_then_skip_the_whitespace(text)
-    return split_internal(text, SPLIT_ON_WHITESPACE, STRIP_SEPARATORS)
+    return split_consecutive_separators_grouped_into_one_array_element(text, SPLIT_ON_WHITESPACE, STRIP_SEPARATORS)
 end
 
 function M.split_on_whitespace(text)
-    return split_internal(text, SPLIT_ON_WHITESPACE, KEEP_SEPARATORS)
+    return split_consecutive_separators_grouped_into_one_array_element(text, SPLIT_ON_WHITESPACE, KEEP_SEPARATORS)
 end
 
 ---@param text string
 ---@param separator_pattern string
 ---@param skip_separator boolean # don't include the sepator in the results.
 ---@return table<string>
-local function split_sepators_char_by_char(text, separator_pattern, skip_separator)
+local function split_separators_char_by_char(text, separator_pattern, skip_separator)
     if separator_pattern == nil or separator_pattern == '' then
         error('separator cannot be nil or empty string')
     end
@@ -89,7 +89,7 @@ function M.split_code_into_words(text)
     --   AND then once underscore is included, you should simply see `_parsed` as added!
     --
     -- FYI goal is to use %W or [^%w] (not word char) after examples covered
-    return split_sepators_char_by_char(text, "%W", KEEP_SEPARATORS)
+    return split_separators_char_by_char(text, "%W", KEEP_SEPARATORS)
     -- return split_internal(text, "[._%s+*-/=\"\']", KEEP_SEPARATORS)
 end
 
