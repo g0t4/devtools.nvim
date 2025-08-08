@@ -33,6 +33,10 @@ _describe('tiny, no shared prefix/suffix words', function()
         code = splitter.split_code_into_words("if not chunk then return end") -- lua code
         should.be_same({ "if", " ", "not", " ", "chunk", " ", "then", " ", "return", " ", "end" }, code)
 
+        -- back to back separators, for now lets not expect consecutive whitespace to be grouped, I don't think I would want that anyways
+        code = splitter.split_code_into_words("foo bar    baz")
+        should.be_same({ "foo", " ", "bar", " ", " ", " ", " ", "baz" }, code)
+
         -- dots, underscores and spaces
         -- ALSO handles back to back separators " + " => ensure no empty matches in between (or other funky output)
         code = splitter.split_code_into_words("sse.timings.predicted_per_second * 10 + 0.5")
