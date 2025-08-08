@@ -200,9 +200,10 @@ function M.get_token_diff(before_tokens, after_tokens)
     return builder.token_diff
 end
 
-function M.lcs_diff_from_text(before_text, after_text)
-    local before_tokens = splitter.split_on_whitespace(before_text)
-    local after_tokens  = splitter.split_on_whitespace(after_text)
+function M.lcs_diff_from_text(before_text, after_text, split_func)
+    split_func = split_func or splitter.split_on_whitespace
+    local before_tokens = split_func(before_text)
+    local after_tokens  = split_func(after_text)
     -- dump.append("before_tokens", inspect(before_tokens))
     -- dump.append("after_tokens", inspect(after_tokens))
 
@@ -210,8 +211,8 @@ function M.lcs_diff_from_text(before_text, after_text)
     return diff
 end
 
-function M.lcs_diff_with_sign_types_from_text(before_text, after_text)
-    local diff = M.lcs_diff_from_text(before_text, after_text)
+function M.lcs_diff_with_sign_types_from_text(before_text, after_text, split_func)
+    local diff = M.lcs_diff_from_text(before_text, after_text, split_func)
     for _, change in pairs(diff) do
         change[1] = change[1] == 'add' and '+' or change[1] == 'del' and '-' or '=' or change[1]
     end

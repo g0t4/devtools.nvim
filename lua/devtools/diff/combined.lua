@@ -6,7 +6,7 @@ local M = {}
 
 ---@param histogram_line_diff {type: string, line: string}[]
 ---@return {type: string, chunks: string}[]
-function M.step2_lcs_diffs(histogram_line_diff)
+function M.step2_lcs_diffs(histogram_line_diff, split_func)
     -- FYI, "=" lines are Anchors (they're already matched up)
     -- - "-" and "+" are line level changes, but they might have word level overlap
     -- - so, for every set of "-"/"+" between "=" anchors... run LCS diff on them
@@ -64,7 +64,7 @@ function M.step2_lcs_diffs(histogram_line_diff)
                 return line .. '\n'
             end)
             :join('')
-        local lcs_diff = weslcs.lcs_diff_from_text(before_text_string, after_text_string)
+        local lcs_diff = weslcs.lcs_diff_from_text(before_text_string, after_text_string, split_func)
         table.insert(groups, lcs_diff)
         -- FYI get_diff (lcs) aggregates consecutive tokens of the same type
         --  so, the result here is ready to be turned into extmarks (for the LCS diff'd lines)
