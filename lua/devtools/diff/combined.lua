@@ -134,9 +134,9 @@ function M.step3_final_aggregate_and_standardize(groups)
     return final_diff
 end
 
-function M.combined_diff(old_text, new_text)
+function M.combined_diff(old_text, new_text, split_func)
     local histogram_line_diff = histogram.split_then_diff_lines(old_text, new_text)
-    local groups = M.step2_lcs_diffs(histogram_line_diff)
+    local groups = M.step2_lcs_diffs(histogram_line_diff, split_func)
     local final_diff = M.step3_final_aggregate_and_standardize(groups)
     return final_diff
 end
