@@ -52,7 +52,7 @@ function M.split_code_into_words(text)
     --  i.e. if I have sse.choices[0].delta.content and I rename `sse` to `sse_parsed`
     --   then IMO you should only see `sse` as removed and `sse_parsed` added ...
     --   AND then once underscore is included, you should simply see `_parsed` as added!
-    return split_internal(text, "[._]", KEEP_SEPARATORS)
+    return split_internal(text, "[._%s]", KEEP_SEPARATORS)
 end
 
 return M
