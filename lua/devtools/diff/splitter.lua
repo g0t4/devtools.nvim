@@ -21,13 +21,16 @@ local function split_internal(text, separator_pattern, skip_separator)
         if not char:match(separator_pattern) then
             local word_start = position
             while position <= text_length and not text:sub(position, position):match(separator_pattern) do
+                -- skip over characters (non separators) until we hit a separator (or end of text)
                 position = position + 1
             end
             -- print('a: "' .. char .. '"' .. 'position=' .. position .. ' text_len=' .. text_length)
+            -- insert the word:
             table.insert(parts, text:sub(word_start, position - 1))
         else
             -- print('b: "' .. char .. '"')
             if not skip_separator then
+                -- insert separator
                 table.insert(parts, char)
             end
             position = position + 1
