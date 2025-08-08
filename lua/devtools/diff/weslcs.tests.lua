@@ -33,9 +33,10 @@ _describe('tiny, no shared prefix/suffix words', function()
         code = splitter.split_code_into_words("if not chunk then return end") -- lua code
         should.be_same({ "if", " ", "not", " ", "chunk", " ", "then", " ", "return", " ", "end" }, code)
 
+        -- dots, underscores and spaces
         code = splitter.split_code_into_words("sse.timings.predicted_per_second * 10 + 0.5")
         should.be_same({
-            "sse", ".", "timings", ".", "predicted", "_", "per", "_", "second", " ", "*", " ", "10", " ", "+", " ", "0.5"
+            "sse", ".", "timings", ".", "predicted", "_", "per", "_", "second", " ", "*", " ", "10", " ", "+", " ", "0", ".", "5"
         }, code)
 
         -- test price+tax+shipping
@@ -45,6 +46,7 @@ _describe('tiny, no shared prefix/suffix words', function()
         -- foo="bar"
         -- foo='bar'
         -- print("failure")
+        -- choices[0].delta
     end)
 end)
 
