@@ -188,17 +188,11 @@ log:info("Tokens/sec: ", pps, " predicted n: ", sse_parsed.timings.predicted_n)]
             -- line one
             { '=', 'local pps = math.floor(sse' },
             { '+', '_parsed' },
-            { '=', '.timings.predicted_per_second * 10 + 0.5) / 10' },
-
-            -- line two
-            { '=', 'print("tokens/sec", pps, "predicted_n", sse' },
+            { '=', '.timings.predicted_per_second * 10 + 0.5) / 10\nprint("tokens/sec", pps, "predicted_n", sse' },
             { '+', '_parsed' },
-            { '=', '.timings.predicted_n)' },
-
-            -- line three
-            { '=', 'log:info("Tokens/sec: ", pps, " predicted n: ", sse' },
+            { '=', '.timings.predicted_n)\nlog:info("Tokens/sec: ", pps, " predicted n: ", sse' },
             { '+', '_parsed' },
-            { '=', '.timings.predicted_n' },
+            { '=', '.timings.predicted_n)\n' },
         }
 
         should.be_same(expected_groups, combined_diff)
