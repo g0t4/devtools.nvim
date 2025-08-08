@@ -47,13 +47,26 @@ _describe('tiny, no shared prefix/suffix words', function()
         -- + w/o spaces (so the spaces don't obviate this test, and b/c this is a reason why you want to split on +)
         code = splitter.split_code_into_words("price+tax+shipping")
         should.be_same({ "price", "+", "tax", "+", "shipping" }, code)
+        -- -
+        code = splitter.split_code_into_words("price-tax-shipping")
+        should.be_same({ "price", "-", "tax", "-", "shipping" }, code)
+        --
+        code = splitter.split_code_into_words("price*rate")
+        should.be_same({ "price", "*", "rate" }, code)
+        -- /
+        code = splitter.split_code_into_words("price/rate")
+        should.be_same({ "price", "/", "rate" }, code)
 
+        code = splitter.split_code_into_words("foo=bar")
+        should.be_same({ "foo", "=", "bar" }, code)
 
-        -- test price*quantity
+        -- quotes
+        code = splitter.split_code_into_words("foo=\"bar\"")
+        should.be_same({ "foo", "=", "\"", "bar", "\"" }, code)
+        code = splitter.split_code_into_words("foo='bar'")
+        should.be_same({ "foo", "=", "'", "bar", "'" }, code)
+
         -- test , () = % ^ etc
-        -- foo=bar
-        -- foo="bar"
-        -- foo='bar'
         -- print("failure")
         -- choices[0].delta
     end)
