@@ -15,6 +15,14 @@ _describe('tiny, no shared prefix/suffix words', function()
         local after_tokens = splitter.split_on_whitespace(after_text)
         should.be_same({ 'b,', ' ', 'c,', ' ', 'd)' }, after_tokens)
     end)
+
+    it('split words on . only, keeps .', function()
+        local before_tokens = splitter.split_on_whitespace("a.b.c")
+        should.be_same({ 'a', '.', 'b', '.', 'c' }, before_tokens)
+
+        -- local after_tokens = splitter.split_on_whitespace(after_text)
+        -- should.be_same({ 'b,', ' ', 'c,', ' ', 'd)' }, after_tokens)
+    end)
 end)
 
 _describe('my paper example', function()
