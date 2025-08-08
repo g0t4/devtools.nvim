@@ -14,19 +14,26 @@ local function split_internal(text, separator_pattern, skip_separator)
     end
 
     local parts = {}
-    local start = 1
-    local split_start, split_end = text:find(separator_pattern, start)
-    while split_start do
-        table.insert(parts, text:sub(start, split_start - 1))
-        if not skip_separator then
-            table.insert(parts, text:sub(split_start, split_end))
+    local position, text_length = 1, #text
+
+    while position <= text_length do
+        local char = text:sub(position, position)
+        if not char:match(separator_pattern) then
+            local word_start = position
+            while position <= text_length and not text:sub(position, position):match(separator_pattern) do
+                position = position + 1
+            end
+            -- print('a: "' .. char .. '"' .. 'position=' .. position .. ' text_len=' .. text_length)
+            table.insert(parts, text:sub(word_start, position - 1))
+        else
+            -- print('b: "' .. char .. '"')
+            if not skip_separator then
+                table.insert(parts, char)
+            end
+            position = position + 1
         end
-        start = split_end + 1
-        split_start, split_end = text:find(separator_pattern, start)
     end
-    if text:sub(start) ~= '' then
-        table.insert(parts, text:sub(start))
-    end
+
     return parts
 end
 
