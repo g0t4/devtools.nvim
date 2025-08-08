@@ -34,6 +34,7 @@ _describe('tiny, no shared prefix/suffix words', function()
         should.be_same({ "if", " ", "not", " ", "chunk", " ", "then", " ", "return", " ", "end" }, code)
 
         -- dots, underscores and spaces
+        -- ALSO handles back to back separators " + " => ensure no empty matches in between (or other funky output)
         code = splitter.split_code_into_words("sse.timings.predicted_per_second * 10 + 0.5")
         should.be_same({
             "sse", ".", "timings", ".", "predicted", "_", "per", "_", "second", " ", "*", " ", "10", " ", "+", " ", "0", ".", "5"
