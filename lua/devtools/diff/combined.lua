@@ -1,5 +1,6 @@
 local histogram = require('devtools.diff.histogram')
 local weslcs = require('devtools.diff.weslcs')
+local splitter = require('devtools.diff.splitter')
 require('devtools.inspect')
 
 local M = {}
@@ -139,6 +140,10 @@ function M.combined_diff(old_text, new_text, split_func)
     local groups = M.step2_lcs_diffs(histogram_line_diff, split_func)
     local final_diff = M.step3_final_aggregate_and_standardize(groups)
     return final_diff
+end
+
+function M.combined_word_diff(old_text, new_text)
+    return M.combined_diff(old_text, new_text, splitter.split_code_into_words)
 end
 
 return M

@@ -2,7 +2,6 @@ local histogram = require('devtools.diff.histogram')
 local should = require('devtools.tests.should')
 local combined = require('devtools.diff.combined')
 local _describe = require('devtools.tests._describe')
-local splitter = require('devtools.diff.splitter')
 
 -- TODO revisit this idea in devtools.tests and find a clean way to handle this
 --  perhaps add your own _it and _only? and override clear registraiton on an _only? and then on the only replace _it() func with nothing after that point...?
@@ -91,7 +90,7 @@ return N
             {
                 { '=', '    return a + b' }, -- implicit \n
                 { '=', 'end' },
-            },                               -- implicit \n
+            }, -- implicit \n
 
             -- STEP2 LCS input:
             -- FYI implicit new lines:
@@ -181,7 +180,7 @@ local pps = math.floor(sse_parsed.timings.predicted_per_second * 10 + 0.5) / 10
 print("tokens/sec", pps, "predicted_n", sse_parsed.timings.predicted_n)
 log:info("Tokens/sec: ", pps, " predicted n: ", sse_parsed.timings.predicted_n)]]
 
-        local combined_diff = combined.combined_diff(before_rename_text, after_rename_text, splitter.split_code_into_words)
+        local combined_diff = combined.combined_word_diff(before_rename_text, after_rename_text)
 
         local expected_groups = {
 
