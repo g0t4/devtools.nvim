@@ -4,8 +4,9 @@ local lua = require("devtools.lua")
 
 local M = {}
 
-function M.setup()
-    messages.setup()
+function M.setup(opts)
+
+    messages.setup(opts)
     nvim.setup()
     lua.setup()
 end

@@ -6,7 +6,13 @@ local inspect = require('devtools.inspect')
 local M = {}
 local messages = M
 
-function M.setup()
+local default_messages_options = {
+    open_on_startup = false,
+}
+
+function M.setup(opts)
+    opts.messages = opts.messages or default_messages_options
+
     vim.keymap.set('n', '<leader>mc', M.clear)
     vim.keymap.set('n', '<leader>mcc', function()
         M.clear()
@@ -22,6 +28,14 @@ function M.setup()
     vim.keymap.set('n', '<leader>mo', function()
         M.ensure_open()
     end)
+
+    if opts.messages.open_on_startup then
+        -- open messages automatically for testing
+        vim.schedule(function()
+            M.ensure_open()
+        end)
+    end
+
     -- ideas:
     --  keymap to copy :messages to messages buffer?
     --  curious... is there an event for when :messages arrive... at least smth with text changed right?
