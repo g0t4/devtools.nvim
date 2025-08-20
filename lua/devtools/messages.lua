@@ -195,6 +195,12 @@ function pbcopy_command(opts)
     end
 end
 
+function path_copy_command()
+    pbcopy_command({ args = 'vim.fn.expand("%")' })
+end
+
+vim.api.nvim_create_user_command("DevPathCopy", path_copy_command, {})
+
 vim.api.nvim_create_user_command("Pbcopy", pbcopy_command, {
     range = true,
     nargs = '*',
