@@ -195,20 +195,20 @@ function pbcopy_command(opts)
     end
 end
 
-function path_copy_command()
+function copy_path_of_current_file()
     pbcopy_command({ args = 'vim.fn.expand("%")' })
 end
 
-vim.api.nvim_create_user_command("DevPathCopy", path_copy_command, {})
+vim.api.nvim_create_user_command("DevPathCopy", copy_path_of_current_file, {})
 
-function copy_current_line_to_clipboard()
+function copy_cmdline()
     local line = vim.fn.getcmdline()
     copy_to_clipboard(line)
 end
 
 -- use ctrl-y as backup... maybe I should have m-k as kill too?
-vim.keymap.set('c', '<C-y>', copy_current_line_to_clipboard)
-vim.keymap.set('c', '<M-k>', copy_current_line_to_clipboard)
+vim.keymap.set('c', '<C-y>', copy_cmdline)
+vim.keymap.set('c', '<M-k>', copy_cmdline)
 -- i use esc-k in my shells to "kill_all_lines" ... and i use alt+k in shells... so lets use that since esc-k won't work without delaying recognizing escape alone and i don't want that
 
 vim.api.nvim_create_user_command("Pbcopy", pbcopy_command, {
