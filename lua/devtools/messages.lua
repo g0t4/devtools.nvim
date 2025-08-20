@@ -172,6 +172,10 @@ vim.api.nvim_create_user_command("Dump", dump_command, {
 })
 
 
+function copy_to_clipboard(text)
+    vim.fn.setreg("+", text, "c")
+end
+
 function pbcopy_command(opts)
     if opts.args ~= "" then
         local chunk, err = loadstring("return " .. opts.args)
@@ -187,7 +191,7 @@ function pbcopy_command(opts)
         -- also dump to messages for troubleshooting
         M.header(":Pbcopy " .. opts.args)
         M.append(format_dump(result))
-        vim.fn.setreg("+", result, "c")
+        copy_to_clipboard(result)
     end
 end
 
