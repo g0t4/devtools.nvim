@@ -1,4 +1,6 @@
 local assert = require('luassert')
+local combined = require('devtools.diff.combined')
+local ansi = require('devtools.ansi')
 
 local M = {}
 
@@ -14,6 +16,42 @@ end
 
 function M.be_same(expected, actual)
     assert.are.same(expected, actual)
+end
+
+function M.be_same_diff(expected, actual)
+    xpcall(function()
+        assert.are.same(expected, actual)
+    end, function(err)
+        print(vim.inspect(err))
+
+        expected_text = vim.inspect(expected)
+        actual_text = vim.inspect(actual)
+
+        local diff = combined.combined_word_diff(expected_text, actual_text)
+        -- inspect_diff looks GREAT in plenary's float window test results!
+        print("diff:\n" .. inspect_diff(diff))
+    end)
+end
+
+-- show test diffs in a console/log with ansi color sequnces!
+function inspect_diff(diff)
+    -- TODO can I update this for the new code based word splitter? what was that
+    local lines = {}
+    for _, v in ipairs(diff) do
+        local type = v[1]
+        local text = v[2]
+        if type == "+" then
+            text = ansi.green(text)
+        elseif type == '-' then
+            text = ansi.red(text)
+        else
+            text = ansi.white(text)
+        end
+        type = ansi.black(ansi.white_bg(type))
+        local line = type .. " " .. text
+        table.insert(lines, line)
+    end
+    return table.concat(lines, "\n")
 end
 
 function M.be_nil(actual)
