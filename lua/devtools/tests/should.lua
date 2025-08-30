@@ -33,6 +33,7 @@ function M.be_same_diff(expected, actual)
         local diff = combined.combined_word_diff(expected_text, actual_text)
         -- inspect_diff looks GREAT in plenary's float window test results!
         print("diff:\n" .. inspect_diff(diff))
+        -- TODO! how do I fail the test now?
     end)
 end
 
