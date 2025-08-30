@@ -20,21 +20,19 @@ end
 
 --- show a diff if they're not the same by vim.inspecting each input and then diff that (great for table values)
 function M.be_same_diff(expected, actual)
-    -- TODO this was a quick hack, any changes I want to diff or how this is generated?
-    xpcall(function()
-        assert.are.same(expected, actual)
-    end, function(err)
-        print(vim.inspect(err))
+    -- use diff to compare and show mismatch
+    expected_text = vim.inspect(expected)
+    actual_text = vim.inspect(actual)
+    if actual_text == expected_text then
+        -- nothing to show
+        return
+    end
 
-        expected_text = vim.inspect(expected)
-        actual_text = vim.inspect(actual)
-
-        -- TODO can I update this for the new code based word splitter? what was that
-        local diff = combined.combined_word_diff(expected_text, actual_text)
-        -- inspect_diff looks GREAT in plenary's float window test results!
-        print("diff:\n" .. inspect_diff(diff))
-        -- TODO! how do I fail the test now?
-    end)
+    local diff_message = combined.combined_word_diff(expected_text, actual_text)
+    -- inspect_diff looks GREAT in plenary's float window test results!
+    print("diff:\n" .. inspect_diff(diff_message))
+    -- call assert.are.same to fail this
+    assert.are.same(expected, actual, "see colorful diff above")
 end
 
 -- show test diffs in a console/log with ansi color sequnces!
