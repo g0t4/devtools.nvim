@@ -19,7 +19,7 @@ function M.be_same(expected, actual)
 end
 
 --- show a diff if they're not the same by vim.inspecting each input and then diff that (great for table values)
-function M.be_same_diff(expected, actual)
+function M.be_same_colorful_diff(expected, actual)
     -- use diff to compare and show mismatch
     expected_text = vim.inspect(expected)
     actual_text = vim.inspect(actual)
