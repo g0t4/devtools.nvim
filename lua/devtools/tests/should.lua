@@ -20,6 +20,7 @@ end
 
 --- show a diff if they're not the same by vim.inspecting each input and then diff that (great for table values)
 function M.be_same_diff(expected, actual)
+    -- TODO this was a quick hack, any changes I want to diff or how this is generated?
     xpcall(function()
         assert.are.same(expected, actual)
     end, function(err)
@@ -28,6 +29,7 @@ function M.be_same_diff(expected, actual)
         expected_text = vim.inspect(expected)
         actual_text = vim.inspect(actual)
 
+        -- TODO can I update this for the new code based word splitter? what was that
         local diff = combined.combined_word_diff(expected_text, actual_text)
         -- inspect_diff looks GREAT in plenary's float window test results!
         print("diff:\n" .. inspect_diff(diff))
@@ -36,7 +38,6 @@ end
 
 -- show test diffs in a console/log with ansi color sequnces!
 function inspect_diff(diff)
-    -- TODO can I update this for the new code based word splitter? what was that
     local lines = {}
     for _, v in ipairs(diff) do
         local type = v[1]
