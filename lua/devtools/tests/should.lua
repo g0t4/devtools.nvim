@@ -18,6 +18,7 @@ function M.be_same(expected, actual)
     assert.are.same(expected, actual)
 end
 
+--- show a diff if they're not the same by vim.inspecting each input and then diff that (great for table values)
 function M.be_same_diff(expected, actual)
     xpcall(function()
         assert.are.same(expected, actual)
