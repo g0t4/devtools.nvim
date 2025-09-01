@@ -1,5 +1,12 @@
 -- PRN setup a timing module? and pass a block of code to be timed?
-function get_time()
+
+---@return number seconds
+function get_time_in_seconds()
+    return vim.loop.hrtime() / 1e9
+end
+
+---@return integer nanoseconds
+function get_time_in_ns()
     return vim.loop.hrtime()
 end
 
