@@ -1,6 +1,6 @@
 -- PRN setup a timing module? and pass a block of code to be timed?
 function get_time()
-    return hs.timer.secondsSinceEpoch()
+    return vim.loop.hrtime()
 end
 
 function get_elapsed_time_since(start_time)
