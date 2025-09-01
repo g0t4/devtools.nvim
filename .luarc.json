@@ -19,6 +19,7 @@
         "${3rd}/luv/library", // vim.uv
         "${3rd}/luassert/library",
 
+        "~/.luarocks/share/lua/5.1", // nvim uses lua 5.1
         "~/.local/share/nvim/lazy/plenary.nvim/lua", // fixes globals: describe, it, before_each, etc (don't need to add them above now)
     ],
 
