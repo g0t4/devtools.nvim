@@ -10,24 +10,31 @@ function get_time_in_ns()
     return vim.loop.hrtime()
 end
 
+---@param start_time integer nanoseconds
+---@return integer nanoseconds elapsed
 function get_elapsed_time_since(start_time)
-    return get_time() - start_time
+    return get_time_in_ns() - start_time
 end
 
+---@param start_time integer nanoseconds
+---@return number milliseconds rounded to 1 decimal place
 function get_elapsed_time_in_milliseconds(start_time)
-    local elapsed_time_seconds = get_elapsed_time_since(start_time)
-    -- round to 1 decimal place
-    return math.floor(elapsed_time_seconds * 10000 + 0.5) / 10
+    local elapsed_ns = get_elapsed_time_since(start_time)
+    local ms = elapsed_ns / 1e6
+    return math.floor(ms * 10 + 0.5) / 10
 end
 
+---@param start_time integer nanoseconds
+---@return integer nanoseconds
 function get_elapsed_time_in_nanoseconds(start_time)
-    local elapsed_time_seconds = get_elapsed_time_since(start_time)
-    return math.floor(elapsed_time_seconds * 1000000000)
+    return get_elapsed_time_since(start_time)
 end
 
+---@param message string
+---@param start_time integer nanoseconds
 function print_took(message, start_time)
-    local elapsed_time_milliseconds = get_elapsed_time_in_milliseconds(start_time)
-    print(message .. " took " .. elapsed_time_milliseconds .. " ms")
+    local elapsed_ms = get_elapsed_time_in_milliseconds(start_time)
+    print(message .. " took " .. elapsed_ms .. " ms")
 end
 
 function start_profiler()
