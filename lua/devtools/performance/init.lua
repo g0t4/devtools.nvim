@@ -10,8 +10,8 @@ end
 function get_elapsed_time_in_rounded_ms(start_time)
     local elapsed_ns = get_time_in_ns() - start_time
     local ms = elapsed_ns / 1e6
-    local ms_rounded_3_digits = math.floor(ms * 1000 + 0.5) / 1000
-    return ms_rounded_3_digits
+    local ms_rounded_1_digit = math.floor(ms * 10 + 0.5) / 10
+    return ms_rounded_1_digit
 end
 
 function start_profiler()
