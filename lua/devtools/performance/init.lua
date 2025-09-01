@@ -5,7 +5,7 @@ end
 
 ---@param start_time integer nanoseconds
 ---@return number milliseconds rounded to 1 decimal place
-function get_elapsed_time_in_ms(start_time)
+function get_elapsed_time_in_rounded_ms(start_time)
     local elapsed_ns = get_time_in_ns() - start_time
     local ms = elapsed_ns / 1e6
     local ms_rounded_3_digits = math.floor(ms * 1000 + 0.5) / 1000
@@ -15,7 +15,7 @@ end
 ---@param message string
 ---@param start_time integer nanoseconds
 function print_took(message, start_time)
-    local elapsed_ms = get_elapsed_time_in_ms(start_time)
+    local elapsed_ms = get_elapsed_time_in_rounded_ms(start_time)
     print(message .. " took " .. elapsed_ms .. " ms")
 end
 
