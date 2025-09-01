@@ -132,6 +132,18 @@ function M.dump_which_module(module_name)
     messages.append(path)
 end
 
+function M.try_require_luarocks_dependency(mod)
+    local ok, lib = pcall(require, mod)
+    if ok then return lib end
+    -- PRN warn about others?
+
+    -- FYI 5.4 has loader, not 5.1 though... 5.1 seems to get short end of stick:
+    --  /opt/homebrew/Cellar/luarocks/3.11.1/share/lua/5.4/luarocks/loader.lua
+    local message = ("Module %q not found. If using LuaRocks,:\n"
+        .. "  extend package.path/cpath\n"):format(mod)
+    error(message)
+end
+
 function M.setup()
     -- FYI use :buffers  ... builtin command with good details about each buffer
     -- for now, no command, just really wanted the function reminder
@@ -168,7 +180,6 @@ function M.setup()
 
         M.dump_which_module(module_name)
     end, { nargs = "*", complete = "lua", })
-
 end
 
 return M
