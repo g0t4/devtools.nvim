@@ -3,21 +3,20 @@ local M = {}
 --- Add commas to a number. e.g. 1234567 -> 1,234,567
 ---@param amount integer|number|string -- numeric value
 ---@return string
-function M.comma_delimit(amount)
-    -- from http://lua-users.org/wiki/FormattingNumbers
-    local formatted = amount
-    while true do
-        -- match leading digits only (optional - in front)
-        -- capture 1: %d+ is greedy, matches all but the last three digits
-        -- capture 2: "(%d%d%d)" three digits
-        -- on a match, comma delimits the least significant digits
-        formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
-        if (k == 0) then
-            break
-        end
-    end
-    ---@type string
-    return formatted
+function M.comma_delimit(amount) -- credit http://richard.warburton.it
+    -- `left`/`right` capture groups grab the prefix and suffix around the number
+    --   `right` includes decimal places
+    --   `left` is any prefix that is not a number (i.e. -) or USD
+    --   `right` is the non-numeric suffix (.123 or USD or 1.23 dollars)
+    -- middle capture group `num` => %d* hoovers up all numbers possible...
+    --   then first non-number starts the `right` capture group (.-)
+    --   `right` is non-greedy and just takes to end of line
+    -- `num` contains the integer to comma delimit
+    -- reverse it and match on sets of three digits
+    --   reversed so you can match left to right repeatedly
+    --   then undo the reverse and insert comma delimited between left/right
+    local left, num, right = string.match(amount, '^([^%d]*%d)(%d*)(.-)$')
+    return left .. (num:reverse():gsub('(%d%d%d)', '%1,'):reverse()) .. right
 end
 
 function M.round(val, decimal)
