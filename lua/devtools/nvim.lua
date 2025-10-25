@@ -222,11 +222,6 @@ function M.dump_highlights()
     messages.scroll_back_before_last_append()
 end
 
--- makes a cabbrev for the given original command
-function M.alias(alias_name, original_command)
-    vim.cmd(string.format("cabbrev %s %s", alias_name, original_command))
-end
-
 local function dump_keymaps_by_lhs(args)
     messages.ensure_open()
     M.dump_keymaps_sorted_by_lhs(args.fargs[1], args.fargs[2])
@@ -268,8 +263,6 @@ function M.setup()
         messages.ensure_open()
         M.dump_windows(args)
     end, { nargs = '?', complete = dev_windows_complete })
-    M.alias("windows", "DevWindows")
-    M.alias("Windows", "DevWindows")
 
     vim.api.nvim_create_user_command("DevKeymapsByLHS", dump_keymaps_by_lhs, { nargs = '*' })
     vim.api.nvim_create_user_command("DevDumpRuntimePaths", dump_runtime_paths, { nargs = "?" })
