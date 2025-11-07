@@ -218,6 +218,8 @@ function M.dump_highlights()
 
     messages.header("Global Highlights (ns_id=0)")
     local global_highlights = vim.api.nvim_get_hl(0, {})
+    -- TODO show hlgroup coloring on the results! like you get with :highlights command
+    --   TODO add messages.append w/ an hlgroup! or table of tables where each line is a series of text/hlgroup table pairs like with extmarks API
     messages.append(vim.inspect(global_highlights))
     messages.scroll_back_before_last_append()
 end
