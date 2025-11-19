@@ -11,7 +11,7 @@ describe("StringAsserts -", function()
     end)
 
     describe("forwards select string methods", function()
-        it("forwards string methods like len and sub", function()
+        it("forwards string methods like find", function()
             expect(str("hello"):find() == 5)
             --TODO add as needed
             -- expect(str("hello"):sub(1, 3) == "hel")
