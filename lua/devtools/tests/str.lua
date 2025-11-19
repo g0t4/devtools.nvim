@@ -1,3 +1,5 @@
+local combined = require("devtools.diff.combined")
+
 -- *** STRINGS
 --   FYI (monkey patch for a readable API)
 --   alternative:
