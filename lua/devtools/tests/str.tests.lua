@@ -2,11 +2,14 @@ local should = require("devtools.tests.should")
 local str = require("devtools.tests.str")
 
 describe("str", function()
+    it("double wrapping should work", function()
+        str(str("hello world")):should_start_with("hello")
+    end)
+
     it("string:should_start_with", function()
         str("hello world"):should_start_with("hello")
         str("test"):should_start_with("")
         str(""):should_start_with("")
-
         assert.error(function() str(""):should_start_with("nonempty") end)
         assert.error(function() str("foobar"):should_start_with("bar") end)
     end)
