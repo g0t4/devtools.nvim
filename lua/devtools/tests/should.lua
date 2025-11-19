@@ -151,6 +151,10 @@ end
 ---@param expected_substring string
 function string:should_contain(expected_substring)
     if self:find(expected_substring, 1, true) then return end
+
+    local diff_message = combined.combined_word_diff(self, expected_substring)
+    print("diff:\n" .. inspect_diff(diff_message))
+
     error(string.format("expected string %q to contain %q", self, expected_substring))
 end
 
