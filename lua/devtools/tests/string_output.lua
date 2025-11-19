@@ -17,9 +17,12 @@ local StringOutput = {}
 
 ---@param value any
 function StringOutput.str(value)
-    return setmetatable({
-        _str = value
-    }, { __index = StringOutput })
+    return setmetatable(
+        {
+            _str = value
+        },
+        { __index = StringOutput }
+    )
 end
 
 ---@param self StringOutput
