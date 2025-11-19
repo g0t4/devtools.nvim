@@ -70,10 +70,10 @@ end
 
 ---@param value any
 function StringAsserts.new(value)
-    local fields = {
+    local instance = {
         _str = value
     }
-    local instance = setmetatable(fields, instance_mt)
+    setmetatable(instance, instance_mt)
     return instance
 end
 
