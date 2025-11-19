@@ -14,14 +14,13 @@
 ---@class StringOutput
 ---@field private _str string
 local StringOutput = {}
-StringOutput.str = function(value) return StringOutput:new(value) end
+StringOutput.str = function(value) return StringOutput.new(value) end
 
 ---@param value any
-function StringOutput:new(value)
-    -- TODO? assertions about str?
-    self = setmetatable(self or {}, { __index = StringOutput })
-    self._str = value
-    return self
+function StringOutput.new(value)
+    return setmetatable({
+        _str = value
+    }, { __index = StringOutput })
 end
 
 ---@param self StringOutput
