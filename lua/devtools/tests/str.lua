@@ -42,7 +42,7 @@ local combined = require("devtools.diff.combined")
 --   ! this is the KEY to clarity!
 
 ---@class StringOutput
----@field private _str string
+---@field _str string
 local StringAsserts = {}
 
 -- * Using a class_mt instances makes it CLEAR what the class has for metamethods/metatable (separate of instance metamethods)
@@ -60,15 +60,20 @@ local instance_mt = {
     -- by the way if you want subclassing, this has to be created in the ctor (where self==subclass usually... so { __index = self }
     --    this assumes subclass's __index points to the parent class and so on
 }
+
+---@param self StringOutput
+---@param right StringOutput
 function instance_mt.__add(self, right)
     return StringAsserts.new(self._str .. right._str)
 end
 
+---@param self StringOutput
 function instance_mt.__tostring(self)
     return string.format("StringAsserts(%q)", self._str)
 end
 
 ---@param value any
+---@return StringOutput
 function StringAsserts.new(value)
     local instance = {
         _str = value
