@@ -84,10 +84,15 @@ function instance_mt.__lt(self, right)
     return self.str < right.str
 end
 
+---@param what any
+local function is_str(what)
+    return getmetatable(what) == instance_mt
+end
+
 ---@param self StringOutput
 ---@param other
 function instance_mt.__concat(self, other)
-    if getmetatable(other) == instance_mt then
+    if is_str(other) then
         return str(self.str .. other.str)
     end
     return str(self.str .. tostring(other))
@@ -108,7 +113,7 @@ end
 ---@param value any
 ---@return StringOutput
 function StringAsserts.new(value)
-    if getmetatable(value) == instance_mt then
+    if is_str(value) then
         return value
     end
 
