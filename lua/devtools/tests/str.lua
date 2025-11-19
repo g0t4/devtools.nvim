@@ -70,12 +70,13 @@ end
 
 ---@param value any
 function StringAsserts.new(value)
-    return setmetatable(
+    local instance = setmetatable(
         {
             _str = value
         },
-        instance_mt -- prototype for instances
+        instance_mt
     )
+    return instance
 end
 
 ---@param self StringOutput
