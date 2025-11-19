@@ -10,14 +10,38 @@ describe("StringAsserts -", function()
         expect(tostring(str("foo")) == "foo")
     end)
 
-    describe("equality", function()
+    describe("relational operations", function()
         -- FYI CANNOT mix types with relational operations
         --  hence limited test cases:
+
+        -- __eq
         it("str == str", function()
             expect(str("hello") == str("hello"))
         end)
         it("str ~= str", function()
             expect(str("hello") ~= str("world"))
+        end)
+
+        -- __le
+        it("str <= str (less than)", function()
+            expect(str("apple") <= str("banana"))
+        end)
+        it("str <= str (equal)", function()
+            expect(str("apple") <= str("apple"))
+        end)
+        it("not str <= str", function()
+            expect(not (str("zebra") <= str("apple")))
+        end)
+
+        -- __lt
+        it("str < str", function()
+            expect(str("alpha") < str("beta"))
+        end)
+        it("not str < str (same strings)", function()
+            expect(not (str("gamma") < str("gamma")))
+        end)
+        it("not str < str (greater)", function()
+            expect(not (str("zebra") < str("apple")))
         end)
     end)
 

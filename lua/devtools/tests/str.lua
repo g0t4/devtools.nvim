@@ -64,9 +64,23 @@ local instance_mt = {
 ---@param self StringOutput
 ---@param right StringOutput
 function instance_mt.__eq(self, right)
-    -- FYI lua does not allow mixing types with relational operations (unlike w/ airthmetic operations like add)
+    -- FYI Lua does not allow mixing types with relational operations; ensure both are StringOutput
     --   TLDR always wrap "foo" in str("foo") to compare to another str
     return self.str == right.str
+end
+
+---@param self StringOutput
+---@param right StringOutput
+function instance_mt.__le(self, right)
+    -- FYI Lua does not allow mixing types with relational operations; ensure both are StringOutput
+    return self.str <= right.str
+end
+
+---@param self StringOutput
+---@param right StringOutput
+function instance_mt.__lt(self, right)
+    -- FYI Lua does not allow mixing types with relational operations; ensure both are StringOutput
+    return self.str < right.str
 end
 
 -- PRN concat? .. (str, also string?)
