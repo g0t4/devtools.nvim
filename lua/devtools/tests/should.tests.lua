@@ -1,4 +1,5 @@
 local should = require("devtools.tests.should")
+local StringOutput = require("devtools.tests.string_output")
 
 --TODO! see if someone already made a library for this idea?
 
@@ -38,26 +39,26 @@ describe("expect", function()
 end)
 
 it("string:should_start_with", function()
-    ("hello world"):should_start_with("hello");
-    ("test"):should_start_with("");
-    (""):should_start_with("");
+    StringOutput:new("hello world"):should_start_with("hello")
+    StringOutput:new("test"):should_start_with("")
+    StringOutput:new(""):should_start_with("")
 
-    assert.error(function() (""):should_start_with("nonempty") end);
-    assert.error(function() ("foobar"):should_start_with("bar") end);
+    assert.error(function() StringOutput:new(""):should_start_with("nonempty") end)
+    assert.error(function() StringOutput:new("foobar"):should_start_with("bar") end)
 end)
 
 it("string:should_end_with", function()
-    ("hello world"):should_end_with("world");
-    ("test"):should_end_with("");
-    (""):should_end_with("");
-    assert.error(function() (""):should_end_with("nonempty") end);
-    assert.error(function() ("foobar"):should_end_with("foo") end);
+    StringOutput:new("hello world"):should_end_with("world")
+    StringOutput:new("test"):should_end_with("")
+    StringOutput:new(""):should_end_with("")
+    assert.error(function() StringOutput:new(""):should_end_with("nonempty") end)
+    assert.error(function() StringOutput:new("foobar"):should_end_with("foo") end)
 end)
 
 it("string:should_contain", function()
-    ("hello world"):should_contain("hello");
-    ("test"):should_contain("");
-    (""):should_contain("");
-    assert.error(function() (""):should_contain("nonempty") end);
-    assert.error(function() ("foobar"):should_contain("rab") end);
+    StringOutput:new("hello world"):should_contain("hello")
+    StringOutput:new("test"):should_contain("")
+    StringOutput:new(""):should_contain("")
+    assert.error(function() StringOutput:new(""):should_contain("nonempty") end)
+    assert.error(function() StringOutput:new("foobar"):should_contain("rab") end)
 end)
