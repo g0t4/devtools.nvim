@@ -44,6 +44,7 @@ local combined = require("devtools.diff.combined")
 ---@class StringOutput
 ---@field str string
 local StringAsserts = {}
+local str = StringAsserts
 
 -- * Using a class_mt instances makes it CLEAR what the class has for metamethods/metatable (separate of instance metamethods)
 local class_mt = {
@@ -87,9 +88,9 @@ end
 ---@param other
 function instance_mt.__concat(self, other)
     if getmetatable(other) == instance_mt then
-        return StringAsserts(self.str .. other.str)
+        return str(self.str .. other.str)
     end
-    return StringAsserts(self.str .. tostring(other))
+    return str(self.str .. tostring(other))
 end
 
 ---@param self StringOutput
