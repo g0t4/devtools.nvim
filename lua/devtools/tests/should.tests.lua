@@ -1,6 +1,6 @@
 local should = require("devtools.tests.should")
 local StringOutput = require("devtools.tests.string_output")
-local s = function(value) return StringOutput:new(value) end
+local str = function(value) return StringOutput:new(value) end
 
 --TODO! see if someone already made a library for this idea?
 
@@ -40,26 +40,26 @@ describe("expect", function()
 end)
 
 it("string:should_start_with", function()
-    s("hello world"):should_start_with("hello")
-    s("test"):should_start_with("")
-    s(""):should_start_with("")
+    str("hello world"):should_start_with("hello")
+    str("test"):should_start_with("")
+    str(""):should_start_with("")
 
-    assert.error(function() s(""):should_start_with("nonempty") end)
-    assert.error(function() s("foobar"):should_start_with("bar") end)
+    assert.error(function() str(""):should_start_with("nonempty") end)
+    assert.error(function() str("foobar"):should_start_with("bar") end)
 end)
 
 it("string:should_end_with", function()
-    s("hello world"):should_end_with("world")
-    s("test"):should_end_with("")
-    s(""):should_end_with("")
-    assert.error(function() s(""):should_end_with("nonempty") end)
-    assert.error(function() s("foobar"):should_end_with("foo") end)
+    str("hello world"):should_end_with("world")
+    str("test"):should_end_with("")
+    str(""):should_end_with("")
+    assert.error(function() str(""):should_end_with("nonempty") end)
+    assert.error(function() str("foobar"):should_end_with("foo") end)
 end)
 
 it("string:should_contain", function()
-    s("hello world"):should_contain("hello")
-    s("test"):should_contain("")
-    s(""):should_contain("")
-    assert.error(function() s(""):should_contain("nonempty") end)
-    assert.error(function() s("foobar"):should_contain("rab") end)
+    str("hello world"):should_contain("hello")
+    str("test"):should_contain("")
+    str(""):should_contain("")
+    assert.error(function() str(""):should_contain("nonempty") end)
+    assert.error(function() str("foobar"):should_contain("rab") end)
 end)
