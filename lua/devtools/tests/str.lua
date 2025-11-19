@@ -42,7 +42,7 @@ local combined = require("devtools.diff.combined")
 --   ! this is the KEY to clarity!
 
 ---@class StringOutput
----@field _str string
+---@field str string
 local StringAsserts = {}
 
 -- * Using a class_mt instances makes it CLEAR what the class has for metamethods/metatable (separate of instance metamethods)
@@ -64,19 +64,20 @@ local instance_mt = {
 ---@param self StringOutput
 ---@param right StringOutput
 function instance_mt.__add(self, right)
-    return StringAsserts.new(self._str .. right._str)
+    return StringAsserts.new(self.str .. right.str)
 end
 
 ---@param self StringOutput
 function instance_mt.__tostring(self)
-    return string.format("StringAsserts(%q)", self._str)
+    return string.format("StringAsserts(%q)", self.str)
 end
 
 ---@param value any
 ---@return StringOutput
 function StringAsserts.new(value)
+    ---@type StringOutput
     local instance = {
-        _str = value
+        str = value
     }
     setmetatable(instance, instance_mt)
     return instance
@@ -85,7 +86,7 @@ end
 ---@param self StringOutput
 ---@param expected_prefix string
 function StringAsserts:should_start_with(expected_prefix)
-    local actual_prefix = self._str:sub(1, #expected_prefix)
+    local actual_prefix = self.str:sub(1, #expected_prefix)
     if actual_prefix == expected_prefix then return end
 
     error(string.format("expected string %q… to start with %q", actual_prefix, expected_prefix))
@@ -96,7 +97,7 @@ end
 function StringAsserts:should_end_with(expected_suffix)
     if expected_suffix == "" then return end
 
-    local actual_suffix = self._str:sub(- #expected_suffix)
+    local actual_suffix = self.str:sub(- #expected_suffix)
     if actual_suffix == expected_suffix then return end
 
     error(string.format("expected string %q… to end with %q", actual_suffix, expected_suffix))
@@ -105,12 +106,12 @@ end
 ---@param self StringOutput
 ---@param expected_substring string
 function StringAsserts:should_contain(expected_substring)
-    if self._str:find(expected_substring, 1, true) then return end
+    if self.str:find(expected_substring, 1, true) then return end
 
-    local diff_message = combined.combined_word_diff(self._str, expected_substring)
+    local diff_message = combined.combined_word_diff(self.str, expected_substring)
     print("diff:\n" .. inspect_diff(diff_message))
 
-    error(string.format("expected string %q to contain %q", self._str, expected_substring))
+    error(string.format("expected string %q to contain %q", self.str, expected_substring))
 end
 
 -- -- vim.inspect/print is a great way to see the prototype chain and metatables:
