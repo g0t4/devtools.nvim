@@ -75,6 +75,10 @@ end
 ---@param value any
 ---@return StringOutput
 function StringAsserts.new(value)
+    if getmetatable(value) == instance_mt then
+        return value
+    end
+
     ---@type StringOutput
     local instance = {
         str = value
