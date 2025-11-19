@@ -1,9 +1,24 @@
 local should = require("devtools.tests.should")
 local str = require("devtools.tests.str")
 
-describe("str", function()
+describe("StringAsserts -", function()
     it("double wrapping should work", function()
         str(str("hello world")):should_start_with("hello")
+    end)
+
+    it("tostring(str) is transparent, appears as a string", function()
+        expect(tostring(str("foo")) == "foo")
+    end)
+
+    describe("equality", function()
+        -- FYI CANNOT mix types with relational operations
+        --  hence limited test cases:
+        it("str == str", function()
+            expect(str("hello") == str("hello"))
+        end)
+        it("str ~= str", function()
+            expect(str("hello") ~= str("world"))
+        end)
     end)
 
     it("string:should_start_with", function()

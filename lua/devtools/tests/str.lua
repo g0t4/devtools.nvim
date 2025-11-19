@@ -63,13 +63,17 @@ local instance_mt = {
 
 ---@param self StringOutput
 ---@param right StringOutput
-function instance_mt.__add(self, right)
-    return StringAsserts.new(self.str .. right.str)
+function instance_mt.__eq(self, right)
+    -- FYI lua does not allow mixing types with relational operations (unlike w/ airthmetic operations like add)
+    --   TLDR always wrap "foo" in str("foo") to compare to another str
+    return self.str == right.str
 end
+
+-- PRN concat? .. (str, also string?)
 
 ---@param self StringOutput
 function instance_mt.__tostring(self)
-    return string.format("StringAsserts(%q)", self.str)
+    return self.str
 end
 
 ---@param value any
