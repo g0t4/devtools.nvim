@@ -14,10 +14,9 @@
 ---@class StringOutput
 ---@field private _str string
 local StringOutput = {}
-StringOutput.str = function(value) return StringOutput.new(value) end
 
 ---@param value any
-function StringOutput.new(value)
+function StringOutput.str(value)
     return setmetatable({
         _str = value
     }, { __index = StringOutput })
