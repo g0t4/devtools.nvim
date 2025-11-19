@@ -37,6 +37,9 @@ local combined = require("devtools.diff.combined")
 --         if so, what operations?
 --      b. did you set `instance_mt.__index = class`
 --         this is how instances inherit class's members
+--
+--   !!! define class_mt and instance_mt EXPLICITLY, not INLINE... then set each separately of course...
+--   ! this is the KEY to clarity!
 
 ---@class StringOutput
 ---@field private _str string
