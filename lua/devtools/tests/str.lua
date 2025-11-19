@@ -13,21 +13,21 @@
 
 ---@class StringOutput
 ---@field private _str string
-local StringOutput = {}
+local StringAsserts = {}
 
 ---@param value any
-function StringOutput.str(value)
+function StringAsserts.str(value)
     return setmetatable(
         {
             _str = value
         },
-        { __index = StringOutput }
+        { __index = StringAsserts }
     )
 end
 
 ---@param self StringOutput
 ---@param expected_prefix string
-function StringOutput:should_start_with(expected_prefix)
+function StringAsserts:should_start_with(expected_prefix)
     local actual_prefix = self._str:sub(1, #expected_prefix)
     if actual_prefix == expected_prefix then return end
 
@@ -36,7 +36,7 @@ end
 
 ---@param self StringOutput
 ---@param expected_suffix string
-function StringOutput:should_end_with(expected_suffix)
+function StringAsserts:should_end_with(expected_suffix)
     if expected_suffix == "" then return end
 
     local actual_suffix = self._str:sub(- #expected_suffix)
@@ -47,7 +47,7 @@ end
 
 ---@param self StringOutput
 ---@param expected_substring string
-function StringOutput:should_contain(expected_substring)
+function StringAsserts:should_contain(expected_substring)
     if self._str:find(expected_substring, 1, true) then return end
 
     local diff_message = combined.combined_word_diff(self._str, expected_substring)
@@ -56,4 +56,4 @@ function StringOutput:should_contain(expected_substring)
     error(string.format("expected string %q to contain %q", self._str, expected_substring))
 end
 
-return StringOutput.str
+return StringAsserts.str
