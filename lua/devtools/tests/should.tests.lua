@@ -36,3 +36,20 @@ describe("expect", function()
         end)
     end)
 end)
+
+it("string:should_start_with", function()
+    ("hello world"):should_start_with("hello");
+    ("test"):should_start_with("");
+    (""):should_start_with("");
+
+    assert.error(function() (""):should_start_with("nonempty") end);
+    assert.error(function() ("foobar"):should_start_with("bar") end);
+end)
+
+it("string:should_end_with", function()
+    ("hello world"):should_end_with("world");
+    ("test"):should_end_with("");
+    (""):should_end_with("");
+    assert.error(function() (""):should_end_with("nonempty") end);
+    assert.error(function() ("foobar"):should_end_with("foo") end);
+end)
