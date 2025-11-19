@@ -13,17 +13,65 @@ local combined = require("devtools.diff.combined")
 --     assert.starts_with(token, prompt) ... which comes first MATTERS for both READABILITY and the COMPARISON!
 --     ... which order is right? have to look at docs to figure it out! Or, try to follow an _arbitrary_ convention
 
+
+-- *** CLASS/INHERITANCE in LUA
+--
+--   Keep in mind:
+--   - metatable defines special operations (i.e. __add, __call, and __index) ... aka metamethods
+--   - __index = function|table
+--     - table is a shortcut, to establish prototype chain (inheritance)
+--   - * metatable ~= __index  (do not conflate them)
+--     - flexible b/c these are separate and b/c every object can be customized with both
+--     - this flexibility can easily be confusing in a given codebase depending on how it's used
+--
+--   1. what is the `class` instance? (i.e. StringAsserts)
+--      a. does it have a custom metatable `class_mt`?
+--         `setmetatable(class, class_mt)`
+--         if so, what operations?
+--         if want class to be callable... implement `class_mt.__call = function(self, ...) ... end`
+--      b. does it subclass another type class?
+--         aka => `class_mt.__index = ?`
+--   2. is there a ctor (i.e. `:new()` or `.new()`) to make instances?
+--      a. do instances have a metatable?
+--         `setmetatable(instance, instance_mt)`
+--         if so, what operations?
+--      b. did you set `instance_mt.__index = class`
+--         this is how instances inherit class's members
+
 ---@class StringOutput
 ---@field private _str string
 local StringAsserts = {}
 
+-- * Using a class_mt instances makes it CLEAR what the class has for metamethods/metatable (separate of instance metamethods)
+local class_mt = {
+    -- make StringAsserts callable: StringAsserts("foo") == StringAsserts.new("foo")
+    __call = function(self, value)
+        return StringAsserts.new(value)
+    end
+}
+setmetatable(StringAsserts, class_mt)
+
+-- * clearly see metamethods for instances
+local instance_mt = {
+    __index = StringAsserts -- so instances can inherit class members (key)... i.e. should_start_with
+    -- by the way if you want subclassing, this has to be created in the ctor (where self==subclass usually... so { __index = self }
+    --    this assumes subclass's __index points to the parent class and so on
+}
+function instance_mt.__add(self, right)
+    return StringAsserts.new(self._str .. right._str)
+end
+
+function instance_mt.__tostring(self)
+    return string.format("StringAsserts(%q)", self._str)
+end
+
 ---@param value any
-function StringAsserts.str(value)
+function StringAsserts.new(value)
     return setmetatable(
         {
             _str = value
         },
-        { __index = StringAsserts }
+        instance_mt -- prototype for instances
     )
 end
 
@@ -58,4 +106,12 @@ function StringAsserts:should_contain(expected_substring)
     error(string.format("expected string %q to contain %q", self._str, expected_substring))
 end
 
-return StringAsserts.str
+-- -- vim.inspect/print is a great way to see the prototype chain and metatables:
+-- print('class: ' .. vim.inspect(StringAsserts))
+-- print('instance: ' .. vim.inspect(StringAsserts("foo")))
+
+-- returns callable!
+return StringAsserts
+-- intended usage:
+--   local str = require("devtools.tests.str")
+--   str("FOO")
