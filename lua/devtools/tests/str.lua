@@ -83,7 +83,14 @@ function instance_mt.__lt(self, right)
     return self.str < right.str
 end
 
--- PRN concat? .. (str, also string?)
+---@param self StringOutput
+---@param other
+function instance_mt.__concat(self, other)
+    if getmetatable(other) == instance_mt then
+        return StringAsserts(self.str .. other.str)
+    end
+    return StringAsserts(self.str .. tostring(other))
+end
 
 ---@param self StringOutput
 function instance_mt.__tostring(self)

@@ -18,6 +18,18 @@ describe("StringAsserts -", function()
         end)
     end)
 
+    describe("__concat", function()
+        it("with str", function()
+            local result = str("hello") .. str(" world")
+            expect(result == str("hello world"))
+        end)
+
+        it("with string", function()
+            local result = str("hello") .. " world"
+            expect(result == str("hello world"))
+        end)
+    end)
+
     describe("relational operations", function()
         -- FYI CANNOT mix types with relational operations
         --  hence limited test cases:
