@@ -1,6 +1,5 @@
 local should = require("devtools.tests.should")
-local StringOutput = require("devtools.tests.string_output")
-local str = StringOutput.str
+local str = require("devtools.tests.string_output")
 
 --TODO! see if someone already made a library for this idea?
 

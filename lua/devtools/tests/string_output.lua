@@ -53,4 +53,4 @@ function StringOutput:should_contain(expected_substring)
     error(string.format("expected string %q to contain %q", self._str, expected_substring))
 end
 
-return StringOutput
+return StringOutput.str
