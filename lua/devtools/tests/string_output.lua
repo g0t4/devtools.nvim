@@ -12,21 +12,22 @@
 --     ... which order is right? have to look at docs to figure it out! Or, try to follow an _arbitrary_ convention
 
 ---@class StringOutput
----@field private str string
+---@field private _str string
 local StringOutput = {}
+StringOutput.str = function(value) return StringOutput:new(value) end
 
 ---@param value any
 function StringOutput:new(value)
     -- TODO? assertions about str?
     self = setmetatable(self or {}, { __index = StringOutput })
-    self.str = value
+    self._str = value
     return self
 end
 
 ---@param self StringOutput
 ---@param expected_prefix string
 function StringOutput:should_start_with(expected_prefix)
-    local actual_prefix = self.str:sub(1, #expected_prefix)
+    local actual_prefix = self._str:sub(1, #expected_prefix)
     if actual_prefix == expected_prefix then return end
 
     error(string.format("expected string %q… to start with %q", actual_prefix, expected_prefix))
@@ -37,7 +38,7 @@ end
 function StringOutput:should_end_with(expected_suffix)
     if expected_suffix == "" then return end
 
-    local actual_suffix = self.str:sub(- #expected_suffix)
+    local actual_suffix = self._str:sub(- #expected_suffix)
     if actual_suffix == expected_suffix then return end
 
     error(string.format("expected string %q… to end with %q", actual_suffix, expected_suffix))
@@ -46,12 +47,12 @@ end
 ---@param self StringOutput
 ---@param expected_substring string
 function StringOutput:should_contain(expected_substring)
-    if self.str:find(expected_substring, 1, true) then return end
+    if self._str:find(expected_substring, 1, true) then return end
 
-    local diff_message = combined.combined_word_diff(self.str, expected_substring)
+    local diff_message = combined.combined_word_diff(self._str, expected_substring)
     print("diff:\n" .. inspect_diff(diff_message))
 
-    error(string.format("expected string %q to contain %q", self.str, expected_substring))
+    error(string.format("expected string %q to contain %q", self._str, expected_substring))
 end
 
 return StringOutput
