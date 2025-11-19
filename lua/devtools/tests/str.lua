@@ -90,6 +90,13 @@ function instance_mt.__tostring(self)
     return self.str
 end
 
+function StringAsserts.find(self, pattern, init, plain)
+    if pattern == nil then
+        return #self.str
+    end
+    return self.str:find(pattern, init, plain)
+end
+
 ---@param value any
 ---@return StringOutput
 function StringAsserts.new(value)

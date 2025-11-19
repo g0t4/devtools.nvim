@@ -10,6 +10,13 @@ describe("StringAsserts -", function()
         expect(tostring(str("foo")) == "foo")
     end)
 
+    describe("forwards select string methods", function()
+        it("forwards string methods like len and sub", function()
+            expect(str("hello"):find() == 5)
+            -- expect(str("hello"):sub(1, 3) == "hel")
+        end)
+    end)
+
     describe("relational operations", function()
         -- FYI CANNOT mix types with relational operations
         --  hence limited test cases:
