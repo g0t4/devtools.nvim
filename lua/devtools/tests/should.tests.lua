@@ -53,3 +53,11 @@ it("string:should_end_with", function()
     assert.error(function() (""):should_end_with("nonempty") end);
     assert.error(function() ("foobar"):should_end_with("foo") end);
 end)
+
+it("string:should_contain", function()
+    ("hello world"):should_contain("hello");
+    ("test"):should_contain("");
+    (""):should_contain("");
+    assert.error(function() (""):should_contain("nonempty") end);
+    assert.error(function() ("foobar"):should_contain("rab") end);
+end)

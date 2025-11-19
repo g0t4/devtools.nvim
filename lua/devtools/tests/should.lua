@@ -147,4 +147,11 @@ function string:should_end_with(expected_suffix)
     error(string.format("expected string %q… to end with %q", actual_suffix, expected_suffix))
 end
 
+---@param self string
+---@param expected_substring string
+function string:should_contain(expected_substring)
+    if self:find(expected_substring, 1, true) then return end
+    error(string.format("expected string %q to contain %q", self, expected_substring))
+end
+
 return M
