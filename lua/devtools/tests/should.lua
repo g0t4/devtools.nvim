@@ -28,11 +28,20 @@ function M.be_same_colorful_diff(expected, actual)
         return
     end
 
-    local diff_message = combined.combined_word_diff(expected_text, actual_text)
-    -- inspect_diff looks GREAT in plenary's float window test results!
-    print("diff:\n" .. inspect_diff(diff_message))
-    -- call assert.are.same to fail this
-    assert.are.same(expected, actual, "see colorful diff above")
+    local function _assert_same()
+        -- btw metatables can differ, as long as the two tables match otherwise...
+        --  this is one reason why it's important to defer printing the diff (b/c it will show metatable differences)
+        assert.are.same(expected, actual, "see colorful diff above")
+    end
+
+    -- * catch assertion failure, and only then show the diff
+    local ok, err = pcall(_assert_same)
+    if not ok then
+        local diff_message = combined.combined_word_diff(expected_text, actual_text)
+        -- inspect_diff looks GREAT in plenary's float window test results!
+        print("diff:\n" .. inspect_diff(diff_message))
+        error(err)
+    end
 end
 
 -- show test diffs in a console/log with ansi color sequnces!
