@@ -1,7 +1,11 @@
-function new_buffer_with_lines(lines)
+local M = {}
+
+function M.new_buffer_with_lines(lines)
+    -- FYI this originated in ask-openai.nvim repo
+
     local bufnr = vim.api.nvim_create_buf(false, true)
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, false, lines)
-    -- vim.api.nvim_set_current_buf(bufnr) -- TODO?
+    -- vim.api.nvim_set_current_buf(bufnr) -- AFAICT I don't need this
 
     local win = vim.api.nvim_open_win(bufnr, true, {
         relative = 'editor',
@@ -22,7 +26,7 @@ describe("new_buffer_with_lines", function()
     -- cool thing is, any test that imports this module will get these tests added too!
 
     it("sets lines", function()
-        local bufnr = new_buffer_with_lines({ "line 1", "line 2", "line 3", "line 4" })
+        local bufnr = M.new_buffer_with_lines({ "line 1", "line 2", "line 3", "line 4" })
 
         local line1 = vim.fn.getbufoneline(bufnr, 1)
         assert.equal("line 1", line1)
@@ -35,3 +39,5 @@ describe("new_buffer_with_lines", function()
         assert.equal("", vim.fn.getbufoneline(bufnr, 10))
     end)
 end)
+
+return M
