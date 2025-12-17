@@ -63,4 +63,23 @@ function M.format_num(amount, decimal, prefix, neg_prefix)
     return formatted
 end
 
+function M.count(count)
+    -- TODO if any issues, write some tests for this, btw it will silently fail in a lualine component if it has a problem
+    if count < 500 then
+        return count
+    end
+    local suffixes = { 'K', 'M', 'B', 'T' }
+    local suffix_idx = 1
+    while count >= 1000 and suffix_idx <= #suffixes do
+        count = count / 1000
+        suffix_idx = suffix_idx + 1
+    end
+    local count_str = string.format("%.1f", count) -- use one decimal place
+    if count_str:sub(-2) == '.0' then
+        count_str = count_str:sub(1, -3) -- remove trailing '.0'
+    end
+    result = count_str .. suffixes[suffix_idx - 1]
+    return result
+end
+
 return M
