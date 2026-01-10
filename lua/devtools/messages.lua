@@ -445,6 +445,22 @@ function M.ensure_open()
     return M
 end
 
+-- Ensure the message window is closed if open.
+function M.ensure_closed()
+    -- If the buffer exists and is visible in any window, close that window.
+    if M.is_visible(M.dump_bufnr) then
+        -- Find the window displaying the buffer and close it.
+        local wins = vim.api.nvim_list_wins()
+        for _, win in ipairs(wins) do
+            if vim.api.nvim_win_get_buf(win) == M.dump_bufnr then
+                vim.api.nvim_win_close(win, true)
+                break
+            end
+        end
+    end
+    return M
+end
+
 -- FYI I hate this name but it works for now
 function M.open_append(...)
     ensure_buffer_is_open()
