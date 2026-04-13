@@ -460,14 +460,7 @@ function M.clear()
 end
 
 function M.bat_dump(object)
-    M.append(
-        io.popen(
-            string.format(
-                "printf %q|bat --color always -l lua",
-                vim.inspect(object)
-            )
-        ):read('*a')
-    )
+    M.append(inspect.bat_inspect(object))
 end
 
 function M.append(...)
