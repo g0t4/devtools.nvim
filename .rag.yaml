@@ -1,8 +1,8 @@
 include:
-  lua:
-  py:
-  fish:
-  md:
-  txt:
+  - lua
+  - py
+  - fish
+  - md
+  - txt
 ignores:
   - "notes/"
