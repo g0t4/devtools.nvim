@@ -95,6 +95,33 @@ function M.inspect(object, opts, current_depth)
     end
 end
 
+function M.bat_inspect(object)
+    -- require('devtools.messages')
+    --     .append(
+    --         io.popen(
+    --              string.format(
+    --                  "printf %q|bat --color always -l lua",
+    --                  vim.inspect({a="bar"})
+    --              )
+    --         )
+    --         :read('*a')
+    --     )
+
+
+    -- FYI another idea:
+    --   lua require('devtools.messages').append(vim.fn.system('bat --color=always ' .. vim.fn.expand('%'))
+
+    -- usage:
+    --  :Dump append(inspect.bat_inspect({ a= "bar"}))
+    return
+        io.popen(
+            string.format(
+                "printf %q|bat --color always -l lua",
+                vim.inspect(object)
+            )
+        ):read('*a')
+end
+
 --- use this for a thorough search to find what it is
 --- not at all performant for production, volume logging
 --- used for debugging mostly

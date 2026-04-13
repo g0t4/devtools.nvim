@@ -112,7 +112,8 @@ local function dump_command(opts, is_run)
         "local append = messages.append",
         "local inspect = require('devtools.inspect')",
         "local ansi = require('devtools.ansi')",
-        "local bat_dump = messages.bat_dump" ,
+        "local bat_dump = messages.bat_dump",
+        "local bat_inspect = inspect.bat_inspect",
     }
 
     -- * evaluate lua expression (if passed)
