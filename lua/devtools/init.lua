@@ -28,6 +28,10 @@ function M.setup(opts)
     -- usages:
     --   :Run bat_dump({foo="bar"})
     --   :Dump bat_i<TAB_COMPLETE>
+    --
+    -- FYI two different ways to color/pretty print:
+    --   :Dump inspect({foo="bar"})
+    --   :Dump bat_inspect({foo="bar"})
 end
 
 return M
