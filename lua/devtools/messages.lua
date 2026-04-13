@@ -88,8 +88,15 @@ end
 --    and it gets the evaluated value... this is how you can do it
 --
 
-local function dump_command(opts)
+---@param opts table
+---@param is_run boolean|nil
+local function dump_command(opts, is_run)
     M.ensure_open()
+    if is_run then
+        M.header(":Run " .. opts.args)
+    else
+        M.header(":Dump " .. opts.args)
+    end
 
     -- FYI should only be one expression
     --   there wouldn't be completion for multiple
@@ -102,6 +109,7 @@ local function dump_command(opts)
         "local print = require('devtools.messages').append",
         -- make messages module available
         "local messages = require('devtools.messages')",
+        "local append = messages.append",
         "local inspect = require('devtools.inspect')",
         "local ansi = require('devtools.ansi')",
     }
@@ -119,7 +127,15 @@ local function dump_command(opts)
             M.append(ansi.red("Error during evaluation: " .. result))
         end
 
-        M.header(":Dump " .. opts.args)
+        if is_run then
+            -- do not show result of expression if just using Run...
+            --    :Dump is to :Run
+            --         what
+            --    := is to :lua
+            --
+            -- run just runs the lua code... i.e. if it has prints then there's no need for logging the result (and logging might be undesirable, i.e. logging messages.append() logs the messages object b/c its a chained interface)
+            return
+        end
         M.append(format_dump(result))
     end
 
@@ -165,7 +181,16 @@ local function dump_command(opts)
     -- b/c I used dump command, should I focus the window? lets not for now
 end
 
+local function run_command(opts)
+    dump_command(opts, true)
+end
+
 vim.api.nvim_create_user_command("Dump", dump_command, {
+    range = true,
+    nargs = '*',
+    complete = "lua", -- completes like using :lua command!
+})
+vim.api.nvim_create_user_command("Run", run_command, {
     range = true,
     nargs = '*',
     complete = "lua", -- completes like using :lua command!
