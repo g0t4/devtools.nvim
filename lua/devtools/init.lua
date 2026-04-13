@@ -13,7 +13,6 @@ function M.setup(opts)
         return
     end
 
-
     -- I wouldn't add these globally except that it helps with completions in Dump/Run commands
     --   TODO long term I should augment just my two commands to have completions for the "globals" within those commands
     --      (see env_overrides in dump_command)
@@ -26,15 +25,9 @@ function M.setup(opts)
     _G.bat_dump = messages.bat_dump
     _G.bat_inspect = inspect.bat_inspect
     --
-    -- idea:
+    -- usages:
     --   :Run bat_dump({foo="bar"})
     --   :Dump bat_i<TAB_COMPLETE>
-
-    _G.bat_dump("FOO")
-    _G.bat_dump("BAR")
-    vim.defer_fn(function()
-        messages.ensure_open()
-    end, 100)
 end
 
 return M
