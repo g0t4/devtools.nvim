@@ -112,6 +112,7 @@ local function dump_command(opts, is_run)
         "local append = messages.append",
         "local inspect = require('devtools.inspect')",
         "local ansi = require('devtools.ansi')",
+        "local bat_dump = messages.bat_dump" ,
     }
 
     -- * evaluate lua expression (if passed)
@@ -455,6 +456,17 @@ function M.clear()
     -- vim.api.nvim_chan_send(M.dump_channel, '\x1bc') -- ANSI reset (ESC c)
 
     return M
+end
+
+function M.bat_dump(object)
+    M.append(
+        io.popen(
+            string.format(
+                "printf %q|bat --color always -l lua",
+                vim.inspect(object)
+            )
+        ):read('*a')
+    )
 end
 
 function M.append(...)
