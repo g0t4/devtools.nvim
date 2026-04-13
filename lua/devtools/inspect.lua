@@ -120,6 +120,10 @@ function M.bat_inspect(object)
                 vim.inspect(object)
             )
         ):read('*a')
+
+    -- local input = vim.inspect(object)
+    -- local cmd = "bat --color always -l lua"
+    -- return vim.fn.system(cmd, input)
 end
 
 --- use this for a thorough search to find what it is
