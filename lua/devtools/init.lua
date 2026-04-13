@@ -29,6 +29,12 @@ function M.setup(opts)
     -- idea:
     --   :Run bat_dump({foo="bar"})
     --   :Dump bat_i<TAB_COMPLETE>
+
+    _G.bat_dump("FOO")
+    _G.bat_dump("BAR")
+    vim.defer_fn(function()
+        messages.ensure_open()
+    end, 100)
 end
 
 return M
