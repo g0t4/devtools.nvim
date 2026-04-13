@@ -113,13 +113,13 @@ function M.bat_inspect(object)
 
     -- usage:
     --  :Dump append(inspect.bat_inspect({ a= "bar"}))
-    return
-        io.popen(
-            string.format(
-                "printf %q|bat --color always -l lua",
-                vim.inspect(object)
-            )
-        ):read('*a')
+    local pipe = io.popen(
+        string.format(
+            "printf %q|bat --color always -l lua",
+            vim.inspect(object)
+        )
+    )
+    return pipe:read('*a')
 
     -- local input = vim.inspect(object)
     -- local cmd = "bat --color always -l lua"
