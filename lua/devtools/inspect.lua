@@ -96,34 +96,9 @@ function M.inspect(object, opts, current_depth)
 end
 
 function M.bat_inspect(object)
-    -- require('devtools.messages')
-    --     .append(
-    --         io.popen(
-    --              string.format(
-    --                  "printf %q|bat --color always -l lua",
-    --                  vim.inspect({a="bar"})
-    --              )
-    --         )
-    --         :read('*a')
-    --     )
-
-
-    -- FYI another idea:
-    --   lua require('devtools.messages').append(vim.fn.system('bat --color=always ' .. vim.fn.expand('%'))
-
-    -- usage:
-    --  :Dump append(inspect.bat_inspect({ a= "bar"}))
-    local pipe = io.popen(
-        string.format(
-            "printf %q|bat --color always -l lua",
-            vim.inspect(object)
-        )
-    )
-    return pipe:read('*a')
-
-    -- local input = vim.inspect(object)
-    -- local cmd = "bat --color always -l lua"
-    -- return vim.fn.system(cmd, input)
+    local input = vim.inspect(object)
+    local cmd = "bat --color always -l lua"
+    return vim.fn.system(cmd, input)
 end
 
 --- use this for a thorough search to find what it is
