@@ -2,6 +2,15 @@ local ansi = require("devtools.ansi")
 
 local M = {}
 
+--- Strip ANSI escape sequences from a string.
+---@param text string
+---@return string plain_text
+---@return integer count
+function M.strip_ansi_escape_sequences(text)
+    -- \27 == 0x1B == ESC
+    return text:gsub("\27%[.-m", "")
+end
+
 setmetatable(M, {
     __call = function(_, ...)
         -- since I've been using inspect as a primary global, this means I only have to import this module and the globals issue is fixed for inspect()
