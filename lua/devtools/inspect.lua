@@ -129,6 +129,22 @@ function M.bat(text, language)
     return vim.fn.system(command_line, text)
 end
 
+--- generate a human readable JSON representation of `value` and use jq for syntax highlighting + pretty print
+---@param value any - will be json encoded
+function M.jq_json(value)
+    local input = vim.fn.json_encode(value)
+    return M.jq(input)
+end
+
+---@param text string # JSON string to format
+function M.jq(text)
+    if type(text) ~= "string" then
+        error("jq: input is expected to be a string")
+    end
+    local command_line = "jq --color-output ."
+    return vim.fn.system(command_line, text)
+end
+
 --- use this for a thorough search to find what it is
 --- not at all performant for production, volume logging
 --- used for debugging mostly
