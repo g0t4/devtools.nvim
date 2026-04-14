@@ -89,10 +89,16 @@ describe("jq_json", function()
         assert.matches('1', result_without_color)
     end)
 
-    it("table value", function()
+    it("table value - not compact", function()
         local result = inspect.jq_json({ a = 1, b = 2 })
         local result_without_color = inspect.strip_ansi_escape_sequences(result)
         assert.matches('{\n  "a": 1,\n  "b": 2\n}', result_without_color)
+    end)
+
+    it("table value - compact", function()
+        local result = inspect.jq_json({ a = 1, b = 2 }, true)
+        local result_without_color = inspect.strip_ansi_escape_sequences(result)
+        assert.matches('{"a":1,"b":2}', result_without_color)
     end)
 
     it("string value", function()

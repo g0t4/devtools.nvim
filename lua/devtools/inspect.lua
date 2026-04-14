@@ -131,17 +131,24 @@ end
 
 --- generate a human readable JSON representation of `value` and use jq for syntax highlighting + pretty print
 ---@param value any - will be json encoded
-function M.jq_json(value)
+---@param compact? boolean # default false
+---@return string
+function M.jq_json(value, compact)
     local input = vim.fn.json_encode(value)
-    return M.jq(input)
+    return M.jq(input, compact)
 end
 
 ---@param text string # JSON string to format
-function M.jq(text)
+---@param compact? boolean # default false
+---@return string
+function M.jq(text, compact)
     if type(text) ~= "string" then
         error("jq: input is expected to be a string")
     end
     local command_line = "jq --color-output ."
+    if compact then
+        command_line = "jq -c --color-output ."
+    end
     return vim.fn.system(command_line, text)
 end
 
