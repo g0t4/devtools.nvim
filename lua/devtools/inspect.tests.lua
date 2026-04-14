@@ -28,6 +28,12 @@ describe("exploratory", function()
 end)
 
 describe("bat_json", function()
+    it("numeric value", function()
+        local result = inspect.bat_json(1)
+        local result_without_color = inspect.strip_ansi_escape_sequences(result)
+        assert.matches('1', result_without_color)
+    end)
+
     it("table value", function()
         local result = inspect.bat_json({ a = 1, b = 2 })
         -- print(result)
