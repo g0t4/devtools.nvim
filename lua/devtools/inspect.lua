@@ -95,11 +95,18 @@ function M.inspect(object, opts, current_depth)
     end
 end
 
---- generate a human readable lua representation of `value` and use bat for lua syntax highlighting
+--- generate a human readable lua representation of `value` and use bat for syntax highlighting
 ---@param value any - will be vim.inspect'd
 function M.bat_inspect(value)
     local input = vim.inspect(value)
     return M.bat(input, "lua")
+end
+
+--- generate a human readable JSON representation of `value` and use bat for syntax highlighting
+---@param value any - will be json encoded
+function M.bat_json(value)
+    local input = vim.fn.json_encode(value)
+    return M.bat(input, "json")
 end
 
 --- syntax highlight text with bat
