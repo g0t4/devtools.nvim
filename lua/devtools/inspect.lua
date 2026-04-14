@@ -95,13 +95,22 @@ function M.inspect(object, opts, current_depth)
     end
 end
 
----@param value any
----@param language string
-function M.bat_inspect(value, language)
-    language = language or "lua"
+--- generate a human readable lua representation of `value` and use bat for lua syntax highlighting
+---@param value any - will be vim.inspect'd
+function M.bat_inspect(value)
     local input = vim.inspect(value)
+    return M.bat(input, "lua")
+end
+
+--- syntax highlight text with bat
+---@param text string
+---@param language string
+function M.bat(text, language)
+    if type(text) ~= "string" then
+        error("bat: input is expected to be a string, did you forget a vim.inspect or json.encode?")
+    end
     local command_line = "bat --color always --language " .. language
-    return vim.fn.system(command_line, input)
+    return vim.fn.system(command_line, text)
 end
 
 --- use this for a thorough search to find what it is
