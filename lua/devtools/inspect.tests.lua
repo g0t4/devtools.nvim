@@ -28,8 +28,14 @@ describe("exploratory", function()
 end)
 
 describe("bat_json", function()
-    it("numeric value", function()
+    it("numeric value with ansi escape color codes... partial verification, struggling to verify full sequence matches", function()
         local result = inspect.bat_json(1)
+
+        -- Verify that the output still contains ANSI escape sequences (e.g., color codes)
+        local has_ansi = result:find("\27%[") ~= nil
+        assert.is_true(has_ansi, "Result should contain ANSI escape sequences")
+
+        -- Verify the plain text representation without colors
         local result_without_color = inspect.strip_ansi_escape_sequences(result)
         assert.matches('1', result_without_color)
     end)
