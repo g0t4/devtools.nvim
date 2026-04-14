@@ -95,10 +95,13 @@ function M.inspect(object, opts, current_depth)
     end
 end
 
-function M.bat_inspect(object)
-    local input = vim.inspect(object)
-    local cmd = "bat --color always -l lua"
-    return vim.fn.system(cmd, input)
+---@param value any
+---@param language string
+function M.bat_inspect(value, language)
+    language = language or "lua"
+    local input = vim.inspect(value)
+    local command_line = "bat --color always --language " .. language
+    return vim.fn.system(command_line, input)
 end
 
 --- use this for a thorough search to find what it is
