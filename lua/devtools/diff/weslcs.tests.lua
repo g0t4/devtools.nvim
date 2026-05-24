@@ -2,9 +2,9 @@ local inspect = require('devtools.inspect')
 local should = require('devtools.tests.should')
 local weslcs = require('devtools.diff.weslcs')
 local splitter = require('devtools.diff.splitter')
-local _describe = require('devtools.tests._describe')
+local describe = require('devtools.tests.define.describe')
 
-_describe('tiny, no shared prefix/suffix words', function()
+describe('tiny, no shared prefix/suffix words', function()
     local before_text = 'b )'
     local after_text = 'b, c, d)'
 
@@ -75,7 +75,7 @@ _describe('tiny, no shared prefix/suffix words', function()
     end)
 end)
 
-_describe('my paper example', function()
+describe('my paper example', function()
     ---@format disablenext
     -- FYI whitespace is stripped out, so its only here to make this easier to read the before/after text
     local before_text = 'C F A    D Z O    H Z C'
@@ -241,7 +241,7 @@ _describe('my paper example', function()
 end)
 
 
-_describe('AA in before, only one A in after', function()
+describe('AA in before, only one A in after', function()
     local before_text = 'D F A A H'
     local after_text = 'F A R F H'
     local before_tokens = splitter.split_on_whitespace_then_skip_the_whitespace(before_text)
@@ -279,7 +279,7 @@ _describe('AA in before, only one A in after', function()
     end)
 end)
 
-_describe('strip shared suffix/prefix before LCS diff', function()
+describe('strip shared suffix/prefix before LCS diff', function()
     describe('prefix & suffix have overlap', function()
         local before_text = 'F A B C D E F G'
         local after_text = 'F A C D E X F G'
@@ -367,7 +367,7 @@ _describe('strip shared suffix/prefix before LCS diff', function()
     end)
 end)
 
-_describe('can convert to sign types', function()
+describe('can convert to sign types', function()
     local before_text = 'B C B'
     local after_text = 'A C A'
 

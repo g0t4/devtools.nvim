@@ -2,16 +2,9 @@ local should = require('devtools.tests.should')
 local histogram = require('devtools.diff.histogram')
 local inspect = require('devtools.inspect')
 local splitter = require('devtools.diff.splitter')
-local _describe = require('devtools.tests._describe')
+local describe = require('devtools.tests.define.describe')
 
-
-function ignore(a, b)
-end
-only = it
--- TODO! how can I make this more elegant?
--- it = ignore  -- uncomment to run "only" tests, otherwise, comment out to run all again (regardless if marked only/it)
-
-_describe('test using histogram diff', function()
+describe('test using histogram diff', function()
     it('with lines', function()
         local A = {
             'foo',

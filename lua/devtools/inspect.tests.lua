@@ -1,5 +1,5 @@
 local inspect = require("devtools.inspect")
-local describe = require('devtools.tests._describe')
+local describe = require('devtools.tests.define.describe')
 
 describe("exploratory", function()
     it("vim.islist", function()

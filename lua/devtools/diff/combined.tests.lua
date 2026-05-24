@@ -1,18 +1,15 @@
 local histogram = require('devtools.diff.histogram')
 local should = require('devtools.tests.should')
 local combined = require('devtools.diff.combined')
-local _describe = require('devtools.tests._describe')
+local describe = require('devtools.tests.define.describe')
+local only = require('devtools.tests.define.only')
+local skip = require('devtools.tests.define.skip')
 
 -- TODO revisit this idea in devtools.tests and find a clean way to handle this
 --  perhaps add your own _it and _only? and override clear registraiton on an _only? and then on the only replace _it() func with nothing after that point...?
 -- FYI some logic to limit which tests run w/o changing it on all of them:
-function ignore(a, b)
-end
 
-only = it
--- it = ignore  -- uncomment to run "only" tests, otherwise, comment out to run all again (regardless if marked only/it)
-
-_describe('simple comparison', function()
+describe('simple comparison', function()
     local before_text = [[
 local M = {}
 function M.add(a, b )
@@ -29,7 +26,7 @@ function M.add(a, b, c, d)
 end
 return N
 ]]
-    only('validate histogram alone', function()
+    it('validate histogram alone', function()
         local diffs = histogram.split_then_diff_lines(before_text, after_text)
 
         -- pretty_print(diffs)
@@ -140,7 +137,7 @@ return N
     end)
 end)
 
-_describe('simple comparison', function()
+describe('simple comparison', function()
     local before_text = [[
 function M.add(a, b )
     return a + b
