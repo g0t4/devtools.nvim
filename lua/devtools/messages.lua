@@ -226,7 +226,7 @@ function copy_path_of_current_file()
     pbcopy_command({ args = 'vim.fn.expand("%")' })
 end
 
-vim.api.nvim_create_user_command("DevPathCopy", copy_path_of_current_file, {})
+vim.api.nvim_create_user_command("DevCopyRelativePath", copy_path_of_current_file, {})
 
 function copy_cmdline()
     local line = vim.fn.getcmdline()
