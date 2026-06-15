@@ -1,4 +1,4 @@
-include:
+include_domains:
   - lua
   - py
   - fish
