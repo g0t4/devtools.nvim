@@ -80,7 +80,6 @@ local LEVEL_NUMBER_TO_TEXT = {
 }
 local DEFAULT_LOG_LEVEL_NUMBER = LEVEL_NUMBERS.WARN
 
-
 local function log_level_tag_for_number(level_number)
     local level_number_to_tag = {
         [LOG_LEVEL_NUMBERS.TRACE] = ansi.cyan("TRACE"),
@@ -107,8 +106,26 @@ function Logger:info(...)
     self:log(LOG_LEVEL_NUMBERS.INFO, ...)
 end
 
+-- * log threshold *
+local MAX_LOG_THRESHOLD = 2 -- must always show WARN/ERROR
+
+---@return string, number
+function Logger.cycle_log_verbosity()
+    local current_text, current_number = Logger.get_log_threshold()
+    local next_number = (current_number + 1) % (MAX_LOG_THRESHOLD + 1)
+    vim.g.log_threshold_text = LEVEL_NUMBER_TO_TEXT[next_number]
+    return cfg.log_threshold_text, next_number
+end
+
+---@return string level_text, number level_number
+function Logger.get_log_threshold()
+    local text = vim.g.log_threshold_text or LEVEL_NUMBER_TO_TEXT[DEFAULT_LOG_LEVEL_NUMBER]
+    local number = LEVEL_TEXT_TO_NUMBER[text]
+    return text, number
+end
+
 function Logger:is_enabled(level_number)
-    local _, threshold = get_log_threshold()
+    local _, threshold = Logger.get_log_threshold()
     return level_number <= threshold
 end
 
@@ -177,7 +194,7 @@ local function build_entry(level_number, ...)
 end
 
 function Logger:log(level_number, ...)
-    local _, threshold_number = get_log_threshold()
+    local _, threshold_number = Logger.get_log_threshold()
     if level_number < threshold_number then
         return
     end
