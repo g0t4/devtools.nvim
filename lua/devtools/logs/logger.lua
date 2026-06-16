@@ -1,10 +1,7 @@
-local local_share = require("ask-openai.config.local_share")
 local ansi = require("devtools.ansi")
 local inspect = require("devtools.inspect")
 local Logger = {}
 Logger.__index = Logger
-
--- FYI! leave this here to use log level setting in local_share... NBD for now... and go head and use this in w/e neovim config (not just ask-openai.nvim plugin)
 
 -- purposes:
 -- - only open file once per process
@@ -45,7 +42,7 @@ end
 function Logger:ensure_file_is_open()
     if not self.file then
         -- data => ~/.local/share/nvim usually
-        local path = vim.fn.stdpath("data") .. "/" .. "ask-openai/" .. self.filename
+        local path = vim.fn.stdpath("data") .. "/" .. "devtools/" .. self.filename
         ensure_directory_exists(path)
         self.file = io.open(path, "a")
         if not self.file then
@@ -169,7 +166,7 @@ end
 
 function Logger:_log(entry)
     -- PRN can use vim.defer_fn if overhead is interferring with predictions... don't  care to do that now though...
-    self:ensure_file_is_open() -- ~11ms first time only (when ask dir already exists, so worse case is higher if it has to make the dir), 0 thereafter
+    self:ensure_file_is_open() -- ~11ms first time only (when dir already exists, so worse case is higher if it has to make the dir), 0 thereafter
     self.file:write(entry) -- 0.01ms => 0.00ms
     self.file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
 end
@@ -251,7 +248,7 @@ function Logger.universal()
     if universal_logger then
         return universal_logger
     end
-    universal_logger = Logger:new("ask-universal.log")
+    universal_logger = Logger:new("universal.log")
     return universal_logger
 end
 
