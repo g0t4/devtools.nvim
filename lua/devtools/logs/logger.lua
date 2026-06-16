@@ -78,7 +78,6 @@ local LEVEL_NUMBER_TO_TEXT = {
     [LEVEL_NUMBERS.WARN]  = "WARN",
     [LEVEL_NUMBERS.ERROR] = "ERROR",
 }
-local DEFAULT_LOG_LEVEL_NUMBER = LEVEL_NUMBERS.WARN
 
 local function log_level_tag_for_number(level_number)
     local level_number_to_tag = {
@@ -113,13 +112,14 @@ local MAX_LOG_THRESHOLD = 2 -- must always show WARN/ERROR
 function Logger.cycle_log_verbosity()
     local current_text, current_number = Logger.get_log_threshold()
     local next_number = (current_number + 1) % (MAX_LOG_THRESHOLD + 1)
+    -- TODO is this where I want to keep log_threshold_text ?
     vim.g.log_threshold_text = LEVEL_NUMBER_TO_TEXT[next_number]
-    return cfg.log_threshold_text, next_number
+    return vim.g.log_threshold_text, next_number
 end
 
 ---@return string level_text, number level_number
 function Logger.get_log_threshold()
-    local text = vim.g.log_threshold_text or LEVEL_NUMBER_TO_TEXT[DEFAULT_LOG_LEVEL_NUMBER]
+    local text = vim.g.log_threshold_text or LEVEL_NUMBER_TO_TEXT[LEVEL_NUMBERS.INFO] -- TODO default to WARN again?
     local number = LEVEL_TEXT_TO_NUMBER[text]
     return text, number
 end
