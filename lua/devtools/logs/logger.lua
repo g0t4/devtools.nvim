@@ -53,7 +53,8 @@ function Logger:ensure_file_is_open()
 
         -- FYI this is only called on FIRST LOG... not on reboot unless reboot has a log call
         --  so it will reset after the first log is written which is fine, just keep in mind
-        local header = "\n\n\n============================= NEW NVIM INSTANCE ===========================================\n\n\n"
+        local time = os.date("%Y-%m-%d %H:%M:%S")
+        local header = "\n\n\n============================= NEW NVIM INSTANCE " .. os.date("%Y-%m-%d %H:%M:%S") .. "===========================================\n\n\n"
         self.file:write(header)
     end
 end
@@ -292,6 +293,7 @@ function Logger.universal()
     return universal_logger
 end
 
--- Logger.universal():warn("TEST")
+-- force clear scrollback + new nvim instance message (else wont show until first log entry and that can be confusing)
+Logger.universal():ensure_file_is_open()
 
 return Logger
