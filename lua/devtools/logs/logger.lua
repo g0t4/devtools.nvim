@@ -58,34 +58,57 @@ function Logger:ensure_file_is_open()
     end
 end
 
+-- * log level constants
+local LEVEL_NUMBERS = {
+    TRACE = 0,
+    INFO = 1,
+    WARN = 2,
+    ERROR = 3,
+}
+local LOG_LEVEL_NUMBERS = LEVEL_NUMBERS
+local LEVEL_TEXT_TO_NUMBER = {
+    ["TRACE"] = LEVEL_NUMBERS.TRACE,
+    ["INFO"]  = LEVEL_NUMBERS.INFO,
+    ["WARN"]  = LEVEL_NUMBERS.WARN,
+    ["ERROR"] = LEVEL_NUMBERS.ERROR,
+}
+local LEVEL_NUMBER_TO_TEXT = {
+    [LEVEL_NUMBERS.TRACE] = "TRACE",
+    [LEVEL_NUMBERS.INFO]  = "INFO",
+    [LEVEL_NUMBERS.WARN]  = "WARN",
+    [LEVEL_NUMBERS.ERROR] = "ERROR",
+}
+local DEFAULT_LOG_LEVEL_NUMBER = LEVEL_NUMBERS.WARN
+
+
 local function log_level_tag_for_number(level_number)
     local level_number_to_tag = {
-        [local_share.LOG_LEVEL_NUMBERS.TRACE] = ansi.cyan("TRACE"),
-        [local_share.LOG_LEVEL_NUMBERS.INFO] = ansi.white_bold("INFO "),
-        [local_share.LOG_LEVEL_NUMBERS.WARN] = ansi.yellow_bold("WARN "),
-        [local_share.LOG_LEVEL_NUMBERS.ERROR] = ansi.red_bold("ERROR"),
+        [LOG_LEVEL_NUMBERS.TRACE] = ansi.cyan("TRACE"),
+        [LOG_LEVEL_NUMBERS.INFO] = ansi.white_bold("INFO "),
+        [LOG_LEVEL_NUMBERS.WARN] = ansi.yellow_bold("WARN "),
+        [LOG_LEVEL_NUMBERS.ERROR] = ansi.red_bold("ERROR"),
     }
     return level_number_to_tag[level_number]
 end
 
 function Logger:error(...)
-    self:log(local_share.LOG_LEVEL_NUMBERS.ERROR, ...)
+    self:log(LOG_LEVEL_NUMBERS.ERROR, ...)
 end
 
 function Logger:warn(...)
-    self:log(local_share.LOG_LEVEL_NUMBERS.WARN, ...)
+    self:log(LOG_LEVEL_NUMBERS.WARN, ...)
 end
 
 function Logger:trace(...)
-    self:log(local_share.LOG_LEVEL_NUMBERS.TRACE, ...)
+    self:log(LOG_LEVEL_NUMBERS.TRACE, ...)
 end
 
 function Logger:info(...)
-    self:log(local_share.LOG_LEVEL_NUMBERS.INFO, ...)
+    self:log(LOG_LEVEL_NUMBERS.INFO, ...)
 end
 
 function Logger:is_enabled(level_number)
-    local _, threshold = local_share.get_log_threshold()
+    local _, threshold = get_log_threshold()
     return level_number <= threshold
 end
 
@@ -93,7 +116,7 @@ end
 ---@param value any - will be vim.inspect()'d and piped through bat
 function Logger:luaify_trace(message, value)
     -- bat is expensive, don't call if not logging it!
-    if not self:is_enabled(local_share.LOG_LEVEL_NUMBERS.TRACE) then
+    if not self:is_enabled(LOG_LEVEL_NUMBERS.TRACE) then
         return
     end
 
@@ -120,7 +143,7 @@ end
 ---@param compact? boolean
 ---@param ... any - lua value(s) that will be vim.json.encode()'d
 function Logger:_jsonify_trace(message, compact, ...)
-    if not self:is_enabled(local_share.LOG_LEVEL_NUMBERS.TRACE) then
+    if not self:is_enabled(LOG_LEVEL_NUMBERS.TRACE) then
         return
     end
     local value = { ... }
@@ -154,7 +177,7 @@ local function build_entry(level_number, ...)
 end
 
 function Logger:log(level_number, ...)
-    local _, threshold_number = local_share.get_log_threshold()
+    local _, threshold_number = get_log_threshold()
     if level_number < threshold_number then
         return
     end
