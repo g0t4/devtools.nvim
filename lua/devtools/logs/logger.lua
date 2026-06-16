@@ -292,6 +292,6 @@ function Logger.universal()
     return universal_logger
 end
 
-Logger.universal():warn("TEST")
+-- Logger.universal():warn("TEST")
 
 return Logger
