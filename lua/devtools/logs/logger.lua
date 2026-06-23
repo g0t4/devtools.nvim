@@ -67,7 +67,7 @@ function Logger:ensure_file_is_open()
     local lua_vm_host = require("devtools.host").get_lua_vm_host():upper()
     local header =
         "\n============================== "
-        .. "NEW " .. ansi.apple_pink(ansi.underline(lua_vm_host)) .. " INSTANCE "
+        .. "NEW " .. ansi.apple_yellow(ansi.underline(lua_vm_host)) .. " INSTANCE "
         .. "(" .. time .. ")"
         .. " ==============================\n\n"
     self.file:write(header)

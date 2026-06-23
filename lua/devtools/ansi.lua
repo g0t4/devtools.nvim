@@ -280,6 +280,11 @@ function M.show_colors()
     return text
 end
 
+function M.apple_yellow(text, options)
+    local apple_yellow = "ffb400"
+    return M.rgb_hex(text, apple_yellow, options)
+end
+
 function M.apple_pink(text, options)
     local apple_pink = "ff375f"
     return M.rgb_hex(text, apple_pink, options)
