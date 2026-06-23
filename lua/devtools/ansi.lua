@@ -280,6 +280,21 @@ function M.show_colors()
     return text
 end
 
+function M.rgb_hex(text, hex, options)
+    options = options or {}
+    options.color = options.color ~= false
+    if not options.color then
+        return text
+    end
+    local r = tonumber(hex:sub(1, 2), 16)
+    local g = tonumber(hex:sub(3, 4), 16)
+    local b = tonumber(hex:sub(5, 6), 16)
+    if not (r and g and b) then
+        return text
+    end
+    return "\27[38;2;" .. r .. ";" .. g .. ";" .. b .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+end
+
 function M.rgb(text, r, g, b, options)
     options = options or {}
     options.color = options.color ~= false
