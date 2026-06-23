@@ -47,26 +47,26 @@ function Logger:ensure_file_is_open()
         return
     end
 
-        local xdg_data_home = os.getenv("XDG_DATA_HOME")
-        if not xdg_data_home then
-            -- use default:
-            xdg_data_home = os.getenv("HOME") .. "/.local/share"
-        end
-        local path = xdg_data_home .. "/devtools/" .. self.filename
-        ensure_directory_exists(path)
-        self.file = io.open(path, "a")
-        if not self.file then
-            error("Failed to open log file: " .. path)
-        end
+    local xdg_data_home = os.getenv("XDG_DATA_HOME")
+    if not xdg_data_home then
+        -- use default:
+        xdg_data_home = os.getenv("HOME") .. "/.local/share"
+    end
+    local path = xdg_data_home .. "/devtools/" .. self.filename
+    ensure_directory_exists(path)
+    self.file = io.open(path, "a")
+    if not self.file then
+        error("Failed to open log file: " .. path)
+    end
 
-        clear_iterm_scrollback(self.file)
+    clear_iterm_scrollback(self.file)
 
-        -- FYI this is only called on FIRST LOG... not on reboot unless reboot has a log call
-        --  so it will reset after the first log is written which is fine, just keep in mind
-        local time = os.date("%Y-%m-%d %H:%M:%S")
-        local lua_vm_host = require("devtools.host").get_lua_vm_host()
-        local header = "\n\n\n============================= NEW DEVTOOLS " .. lua_vm_host .. " LOGGER INSTANCE " .. os.date("%Y-%m-%d %H:%M:%S") .. "===========================================\n\n\n"
-        self.file:write(header)
+    -- FYI this is only called on FIRST LOG... not on reboot unless reboot has a log call
+    --  so it will reset after the first log is written which is fine, just keep in mind
+    local time = os.date("%Y-%m-%d %H:%M:%S")
+    local lua_vm_host = require("devtools.host").get_lua_vm_host()
+    local header = "\n\n\n============================= NEW DEVTOOLS " .. lua_vm_host .. " LOGGER INSTANCE " .. os.date("%Y-%m-%d %H:%M:%S") .. "===========================================\n\n\n"
+    self.file:write(header)
 end
 
 -- * log level constants
