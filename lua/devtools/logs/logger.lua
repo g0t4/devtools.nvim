@@ -3,6 +3,9 @@ local inspect = require("devtools.inspect")
 local Logger = {}
 Logger.__index = Logger
 
+-- TODO! finish porting to work in hammerspoon and neovim!
+--   log writing is working, changing log levels needs settings review for vim.g.*)
+
 -- purposes:
 -- - only open file once per process
 -- - only check for directory existence once
@@ -41,8 +44,12 @@ end
 
 function Logger:ensure_file_is_open()
     if not self.file then
-        -- data => ~/.local/share/nvim usually
-        local path = vim.fn.stdpath("data") .. "/" .. "devtools/" .. self.filename
+        local xdg_data_home = os.getenv("XDG_DATA_HOME")
+        if not xdg_data_home then
+            -- use default:
+            xdg_data_home = os.getenv("HOME") .. "/.local/share"
+        end
+        local path = xdg_data_home .. "/devtools/" .. self.filename
         ensure_directory_exists(path)
         self.file = io.open(path, "a")
         if not self.file then
@@ -54,7 +61,7 @@ function Logger:ensure_file_is_open()
         -- FYI this is only called on FIRST LOG... not on reboot unless reboot has a log call
         --  so it will reset after the first log is written which is fine, just keep in mind
         local time = os.date("%Y-%m-%d %H:%M:%S")
-        local header = "\n\n\n============================= NEW NVIM INSTANCE " .. os.date("%Y-%m-%d %H:%M:%S") .. "===========================================\n\n\n"
+        local header = "\n\n\n============================= NEW DEVTOOLS LOGGER INSTANCE " .. os.date("%Y-%m-%d %H:%M:%S") .. "===========================================\n\n\n"
         self.file:write(header)
     end
 end
@@ -120,9 +127,16 @@ end
 
 ---@return string level_text, number level_number
 function Logger.get_log_threshold()
-    local text = vim.g.log_threshold_text or LEVEL_NUMBER_TO_TEXT[LEVEL_NUMBERS.INFO] -- TODO default to WARN again?
-    local number = LEVEL_TEXT_TO_NUMBER[text]
-    return text, number
+    local current_text
+    if vim and vim.g then
+        current_text = vim.g.log_threshold_text or LEVEL_NUMBER_TO_TEXT[LEVEL_NUMBERS.INFO] -- TODO default to WARN again?
+    else
+        -- default to INFO if not vim (for now)
+        -- TODO perhaps pass default level to create? instead of making logger know where to go to store the current level and change it?
+        current_text = LEVEL_NUMBER_TO_TEXT[LEVEL_NUMBERS.INFO]
+    end
+    local current_number = LEVEL_TEXT_TO_NUMBER[current_text]
+    return current_text, current_number
 end
 
 function Logger:is_enabled(level_number)
@@ -280,20 +294,28 @@ end
 
 local DISABLED = false
 -- local DISABLED = true
-local universal_logger = nil
-function Logger.universal()
+local cached_loggers = {}
+---@param name string
+function Logger.create(name)
+    if name == nil then
+        error("name is required to open a log file")
+    end
+
     if DISABLED then
         return NOOP_LOGGER
     end
 
-    if universal_logger then
-        return universal_logger
+    if cached_loggers[name] then
+        return cached_loggers[name]
     end
-    universal_logger = Logger:new("universal.log")
-    return universal_logger
+    local new_logger = Logger:new(name)
+    cached_loggers[name] = new_logger
+    new_logger:ensure_file_is_open()
+    return new_logger
 end
 
--- force clear scrollback + new nvim instance message (else wont show until first log entry and that can be confusing)
-Logger.universal():ensure_file_is_open()
+function Logger.universal()
+    return Logger.create("universal.log")
+end
 
 return Logger
