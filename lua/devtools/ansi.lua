@@ -280,6 +280,11 @@ function M.show_colors()
     return text
 end
 
+function M.apple_pink(text, options)
+    local apple_pink = "ff375f"
+    return M.rgb_hex(text, apple_pink, options)
+end
+
 function M.rgb_hex(text, hex, options)
     options = options or {}
     options.color = options.color ~= false
