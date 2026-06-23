@@ -281,7 +281,7 @@ function M.show_colors()
 end
 
 function M.apple_yellow(text, options)
-    local apple_yellow = "ffb400"
+    local apple_yellow = "ffd60a"
     return M.rgb_hex(text, apple_yellow, options)
 end
 
