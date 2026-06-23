@@ -11,9 +11,9 @@ Logger.__index = Logger
 -- - only check for directory existence once
 -- - reduce overhead for callers (after first hit)
 -- - PRN further reduce overhead for callers (i.e. queue writing / schedule later)
-function Logger:new(filename)
+function Logger:new(basename)
     local self = setmetatable({}, Logger)
-    self.filename = filename
+    self.basename = basename
     self.file = nil
     return self
 end
@@ -52,7 +52,7 @@ function Logger:ensure_file_is_open()
         -- use default:
         xdg_data_home = os.getenv("HOME") .. "/.local/share"
     end
-    local path = xdg_data_home .. "/devtools/" .. self.filename
+    local path = xdg_data_home .. "/devtools/" .. self.basename
     ensure_directory_exists(path)
     self.file = io.open(path, "a")
     if not self.file then
@@ -68,7 +68,7 @@ function Logger:ensure_file_is_open()
     local header =
         "\n============================== "
         .. "NEW " .. ansi.apple_yellow(ansi.underline(lua_vm_host)) .. " INSTANCE "
-        .. ansi.blue(self.filename) .. " "
+        .. ansi.blue(self.basename) .. " "
         .. "(" .. time .. ")"
         .. " ==============================\n\n"
     self.file:write(header)
