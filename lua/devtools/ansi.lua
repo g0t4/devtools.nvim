@@ -280,11 +280,13 @@ function M.show_colors()
     return text
 end
 
+-- * apple colors (https://developer.apple.com/design/human-interface-guidelines/color#macOS-system-colors)
+--  like what I did with my log_ fish function
+-- FYI apple has some color schemes that I like and recall so I can use these for some variation instead of just M.my_yellow
 function M.apple_yellow(text, options)
     local apple_yellow = "ffd60a"
     return M.rgb_hex(text, apple_yellow, options)
 end
-
 function M.apple_pink(text, options)
     local apple_pink = "ff375f"
     return M.rgb_hex(text, apple_pink, options)
