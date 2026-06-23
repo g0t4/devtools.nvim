@@ -104,7 +104,14 @@ function M.cyan(text, options)
     return M.color(text, 'cyan', options)
 end
 
--- TODO come back to this when I finish my AskRewrite code (accept is not fully finished)
+function M.underline(text, options)
+    options = options or {}
+    options.color = options.color or true
+    if not options.color then
+        return text
+    end
+    return "\27[" .. color_keys.underline .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+end
 
 function M.bold(text, options)
     options = options or {}
@@ -271,6 +278,18 @@ function M.show_colors()
         end
     end
     return text
+end
+
+function M.rgb(text, r, g, b, options)
+    options = options or {}
+    options.color = options.color ~= false
+    if not options.color then
+        return text
+    end
+    if not (r and g and b) then
+        return text
+    end
+    return "\27[38;2;" .. r .. ";" .. g .. ";" .. b .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
 return M
