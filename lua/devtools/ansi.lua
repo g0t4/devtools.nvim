@@ -106,6 +106,15 @@ end
 
 -- TODO come back to this when I finish my AskRewrite code (accept is not fully finished)
 
+function M.bold(text, options)
+    options = options or {}
+    options.color = options.color or true
+    if not options.color then
+        return text
+    end
+    return "\27[" .. color_keys.bright .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+end
+
 function M.red_bold(text, options)
     options = options or {}
     options.color = options.color or true -- default is true
