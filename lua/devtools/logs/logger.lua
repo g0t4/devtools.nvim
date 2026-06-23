@@ -68,6 +68,7 @@ function Logger:ensure_file_is_open()
     local header =
         "\n============================== "
         .. "NEW " .. ansi.apple_yellow(ansi.underline(lua_vm_host)) .. " INSTANCE "
+        .. ansi.blue(self.filename) .. " "
         .. "(" .. time .. ")"
         .. " ==============================\n\n"
     self.file:write(header)
