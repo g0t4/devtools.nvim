@@ -64,8 +64,12 @@ function Logger:ensure_file_is_open()
     -- FYI this is only called on FIRST LOG... not on reboot unless reboot has a log call
     --  so it will reset after the first log is written which is fine, just keep in mind
     local time = os.date("%Y-%m-%d %H:%M:%S")
-    local lua_vm_host = require("devtools.host").get_lua_vm_host()
-    local header = "\n\n\n============================= NEW DEVTOOLS " .. lua_vm_host .. " LOGGER INSTANCE " .. time .. "===========================================\n\n\n"
+    local lua_vm_host = require("devtools.host").get_lua_vm_host():upper()
+    local header =
+        "\n============================== "
+        .. "NEW " .. lua_vm_host .. " INSTANCE "
+        .. "(" .. time .. ")"
+        .. " ==============================\n\n"
     self.file:write(header)
 end
 
