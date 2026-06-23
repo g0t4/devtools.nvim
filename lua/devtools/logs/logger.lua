@@ -43,7 +43,10 @@ function clear_iterm_scrollback(file)
 end
 
 function Logger:ensure_file_is_open()
-    if not self.file then
+    if self.file then
+        return
+    end
+
         local xdg_data_home = os.getenv("XDG_DATA_HOME")
         if not xdg_data_home then
             -- use default:
@@ -64,7 +67,6 @@ function Logger:ensure_file_is_open()
         local lua_vm_host = require("devtools.host").get_lua_vm_host()
         local header = "\n\n\n============================= NEW DEVTOOLS " .. lua_vm_host .. " LOGGER INSTANCE " .. os.date("%Y-%m-%d %H:%M:%S") .. "===========================================\n\n\n"
         self.file:write(header)
-    end
 end
 
 -- * log level constants
