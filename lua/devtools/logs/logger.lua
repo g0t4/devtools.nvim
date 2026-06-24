@@ -107,6 +107,10 @@ local function log_level_tag_for_number(level_number)
     return level_number_to_tag[level_number]
 end
 
+function Logger:traceback(message, traceback)
+    self:log(LOG_LEVEL_NUMBERS.ERROR, message, "\n\n", traceback, "\n\n")
+end
+
 function Logger:error(...)
     self:log(LOG_LEVEL_NUMBERS.ERROR, ...)
 end
@@ -258,20 +262,20 @@ function Logger:with_context(ctx, fn, failure_fn)
     self._context = ctx
     self:info("set_context")
 
-    local ok, result = xpcall(fn, debug.traceback)
+    local ok, result_or_traceback = xpcall(fn, debug.traceback)
     if ok then
         self:info("release_context")
         self._context = nil
-        return result
+        return result_or_traceback
     end
 
-    self:error("context operation failed", { ok = ok, error = result })
+    self:traceback("context fn() failed", result_or_traceback)
 
     -- * failure callback
     failure_fn = failure_fn or function() end
-    local ok, result = xpcall(failure_fn, debug.traceback)
+    local ok, result_or_traceback = xpcall(failure_fn, debug.traceback)
     if not ok then
-        self:error("context failure_fn failed too", { ok = ok, error = result })
+        self:traceback("context failure_fn failed too", result_or_traceback)
     end
     self:info("release_context")
     self._context = nil
