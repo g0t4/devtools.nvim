@@ -302,6 +302,7 @@ function full_traceback(error_message)
 
     local trace = table.concat(lines, "\n")
     fails.add_failure(trace) -- could add objects too instead of traceback string then later transform depending on downstream use case?
+    fails.copy_last_failure()
     return trace
 end
 

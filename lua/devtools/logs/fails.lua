@@ -1,6 +1,7 @@
 -- module with past failures
 -- + the ability to copy traceback to clipboard
 -- + load into quickfix in neovim!
+local host = require("devtools.host")
 
 local M = {}
 
@@ -10,11 +11,17 @@ function M.add_failure(traceback)
 end
 
 function M.copy_last_failure(idx)
-    local entry = M.failures[idx]
+    local entry = M.failures[idx or 1]
     if not entry then
         return
     end
-    require("devtools.utils").copy_to_clipboard(entry.traceback)
+    if host.is_nvim() then
+        vim.fn.setreg('+', entry.traceback)
+    elseif host.is_hammerspoon() then
+        hs.pasteboard.setContents(entry.traceback)
+    else
+        error("Unsupported host")
+    end
 end
 
 function M.load_to_quickfix()
