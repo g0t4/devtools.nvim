@@ -1,5 +1,5 @@
 local combined = require("devtools.diff.combined")
-require("devtools.tests.should")
+local should = require("devtools.tests.should")
 
 -- *** STRINGS
 --   FYI (monkey patch for a readable API)
@@ -152,7 +152,7 @@ function StringAsserts:should_contain(expected_substring)
     if self.str:find(expected_substring, 1, true) then return end
 
     local diff_message = combined.combined_word_diff(self.str, expected_substring)
-    print("diff:\n" .. inspect_diff(diff_message))
+    print("diff:\n" .. should.inspect_diff(diff_message))
 
     error(string.format("expected string %q to contain %q", self.str, expected_substring))
 end

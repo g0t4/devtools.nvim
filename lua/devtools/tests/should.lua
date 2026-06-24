@@ -38,14 +38,14 @@ function M.be_same_colorful_diff(expected, actual)
     local ok, err = pcall(_assert_same)
     if not ok then
         local diff_message = combined.combined_word_diff(expected_text, actual_text)
-        -- inspect_diff looks GREAT in plenary's float window test results!
-        print("diff:\n" .. inspect_diff(diff_message))
+        -- M.inspect_diff looks GREAT in plenary's float window test results!
+        print("diff:\n" .. M.inspect_diff(diff_message))
         error(err)
     end
 end
 
 -- show test diffs in a console/log with ansi color sequnces!
-function inspect_diff(diff)
+function M.inspect_diff(diff)
     local lines = {}
     for _, v in ipairs(diff) do
         local type = v[1]
