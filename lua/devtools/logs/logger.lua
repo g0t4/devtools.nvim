@@ -272,8 +272,8 @@ function Logger:with_context(ctx, fn, failure_fn)
     self:traceback("with_context fn() failed", result_or_traceback)
 
     -- * failure callback
-    failure_fn = failure_fn or function() end
-    local ok, result_or_traceback = xpcall(failure_fn, debug.traceback)
+    local NOOP = function() end
+    local ok, result_or_traceback = xpcall(failure_fn or NOOP, debug.traceback)
     if not ok then
         self:traceback("with_context failure_fn() failed too", result_or_traceback)
     end
