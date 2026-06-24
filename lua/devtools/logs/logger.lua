@@ -1,6 +1,7 @@
 local ansi = require("devtools.ansi")
 local inspect = require("devtools.inspect")
 local host = require("devtools.host")
+local fails = require("devtools.logs.fails")
 local Logger = {}
 Logger.__index = Logger
 
@@ -299,7 +300,9 @@ function full_traceback(error_message)
         level = level + 1
     end
 
-    return table.concat(lines, "\n")
+    local trace = table.concat(lines, "\n")
+    fails.add_failure(trace) -- could add objects too instead of traceback string then later transform depending on downstream use case?
+    return trace
 end
 
 local function NOOP() end
