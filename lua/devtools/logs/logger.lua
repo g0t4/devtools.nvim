@@ -3,14 +3,14 @@ local inspect = require("devtools.inspect")
 local Logger = {}
 Logger.__index = Logger
 
--- TODO! finish porting to work in hammerspoon and neovim!
---   log writing is working, changing log levels needs settings review for vim.g.*)
+-- PRN in hammerspoon => review changing log levels (i.e. vim.g.__) ... currently uses default level only
 
--- purposes:
--- - only open file once per process
--- - only check for directory existence once
--- - reduce overhead for callers (after first hit)
--- - PRN further reduce overhead for callers (i.e. queue writing / schedule later)
+---@class Logger
+---@field basename string
+---@field file? file* @file handle for the log file
+
+---@param basename string
+---@return Logger
 function Logger:new(basename)
     local self = setmetatable({}, Logger)
     self.basename = basename
@@ -304,6 +304,7 @@ local DISABLED = false
 -- local DISABLED = true
 local cached_loggers = {}
 ---@param name string
+---@return Logger instance
 function Logger.create(name)
     if name == nil then
         error("name is required to open a log file")
