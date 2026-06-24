@@ -255,6 +255,53 @@ function Logger:_log(entry)
     self._file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
 end
 
+function full_traceback(error_message)
+    -- alternative to debug.traceback which has has truncated paths (super annoying)
+
+    -- FYI error_message comes from xpcall internals, no way to fix the truncated path within it... it's just a string
+    -- you could do a path search for it... maybe lazily just within traceback paths... but you won't get original
+
+    local lines = {
+        tostring(error_message),
+        "",
+        "stack traceback:",
+    }
+
+    local level = 2
+    while true do
+        local info = debug.getinfo(level, "Slnfu")
+        if not info then
+            break
+        end
+
+        local source = info.source
+
+        if source:sub(1, 1) == "@" then
+            source = source:sub(2)
+        end
+
+        local name = info.name or "<anonymous>"
+
+        local what = info.namewhat
+        if what == "" then
+            what = info.what
+        end
+
+        lines[#lines + 1] = string.format(
+            "  %s:%d: %s '%s' [%s]",
+            source,
+            info.currentline,
+            what,
+            name,
+            tostring(info.func)
+        )
+
+        level = level + 1
+    end
+
+    return table.concat(lines, "\n")
+end
+
 local function NOOP() end
 
 ---@param context_message any
@@ -264,7 +311,7 @@ function Logger:with_context(context_message, fn, failure_fn)
     self._context = context_message
     self:info("with_context start") -- log after set so context shows
 
-    local ok, result_or_traceback = xpcall(fn, debug.traceback)
+    local ok, result_or_traceback = xpcall(fn, full_traceback)
     if ok then
         self:info("with_context success") -- log before release so context shows
         self._context = nil
@@ -274,7 +321,7 @@ function Logger:with_context(context_message, fn, failure_fn)
     self:traceback("with_context failed", result_or_traceback)
 
     -- * failure callback
-    local ok, result_or_traceback = xpcall(failure_fn or NOOP, debug.traceback)
+    local ok, result_or_traceback = xpcall(failure_fn or NOOP, full_traceback)
     if not ok then
         self:traceback("with_context failure_fn() failed too", result_or_traceback) -- log before release so context shows
     end
