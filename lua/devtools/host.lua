@@ -66,4 +66,16 @@ function M.is_hammerspoon()
     return M.get_lua_vm_host() == "hammerspoon"
 end
 
+function M.throw_if_not_hammerspoon()
+    if not M.is_hammerspoon() then
+        error("Host is not Hammerspoon")
+    end
+end
+
+function M.throw_if_not_nvim()
+    if not M.is_nvim() then
+        error("Host is not Neovim")
+    end
+end
+
 return M
