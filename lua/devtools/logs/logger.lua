@@ -255,6 +255,8 @@ function Logger:_log(entry)
     self._file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
 end
 
+local function NOOP() end
+
 ---@param ctx any
 ---@param fn fun()
 ---@param failure_fn? fun()
@@ -272,7 +274,6 @@ function Logger:with_context(ctx, fn, failure_fn)
     self:traceback("with_context fn() failed", result_or_traceback)
 
     -- * failure callback
-    local NOOP = function() end
     local ok, result_or_traceback = xpcall(failure_fn or NOOP, debug.traceback)
     if not ok then
         self:traceback("with_context failure_fn() failed too", result_or_traceback)
