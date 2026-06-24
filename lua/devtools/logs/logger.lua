@@ -251,6 +251,9 @@ function Logger:_log(entry)
     self._file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
 end
 
+---@param ctx any
+---@param fn fun()
+---@param failure_fn? fun()
 function Logger:with_context(ctx, fn, failure_fn)
     self._context = ctx
     self:info("set_context")
@@ -263,13 +266,16 @@ function Logger:with_context(ctx, fn, failure_fn)
     end
 
     self:error("context operation failed", { ok = ok, error = result })
+
     -- * failure callback
+    failure_fn = failure_fn or function() end
     local ok, result = xpcall(failure_fn, debug.traceback)
     if not ok then
         self:error("context failure_fn failed too", { ok = ok, error = result })
     end
     self:info("release_context")
     self._context = nil
+    return nil -- explicit that we are returning nothing b/c of error
 end
 
 -- verbose, for troubleshooting
