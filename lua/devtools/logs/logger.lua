@@ -251,13 +251,21 @@ function Logger:_log(entry)
     self._file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
 end
 
-function Logger:set_context(what)
-    self._context = what
-end
+function Logger:with_context(ctx, fn)
+    self._context = ctx
+    self:info("set_context")
 
-function Logger:release_context()
+    local ok, result = xpcall(fn, debug.traceback)
+
     self:info("release_context")
     self._context = nil
+
+    if ok then
+        return result
+    end
+
+    self:error("context operation failed", { ok = ok, result = result })
+    return result
 end
 
 -- verbose, for troubleshooting
