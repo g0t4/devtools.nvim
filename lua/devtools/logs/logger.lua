@@ -245,6 +245,7 @@ function Logger:set_context(what)
 end
 
 function Logger:release_context()
+    self:info("release_context")
     self._context = nil
 end
 
