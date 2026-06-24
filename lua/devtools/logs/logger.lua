@@ -14,7 +14,8 @@ Logger.__index = Logger
 function Logger:new(basename)
     local self = setmetatable({}, Logger)
     self.basename = basename
-    self.file = nil
+    self._file = nil
+    self._context = nil
     return self
 end
 
@@ -43,7 +44,7 @@ function clear_iterm_scrollback(file)
 end
 
 function Logger:ensure_file_is_open()
-    if self.file then
+    if self._file then
         return
     end
 
@@ -54,12 +55,12 @@ function Logger:ensure_file_is_open()
     end
     local path = xdg_data_home .. "/devtools/" .. self.basename
     ensure_directory_exists(path)
-    self.file = io.open(path, "a")
-    if not self.file then
+    self._file = io.open(path, "a")
+    if not self._file then
         error("Failed to open log file: " .. path)
     end
 
-    clear_iterm_scrollback(self.file)
+    clear_iterm_scrollback(self._file)
 
     -- FYI this is only called on FIRST LOG... not on reboot unless reboot has a log call
     --  so it will reset after the first log is written which is fine, just keep in mind
@@ -71,7 +72,7 @@ function Logger:ensure_file_is_open()
         .. ansi.blue(self.basename) .. " "
         .. "(" .. time .. ")"
         .. " ==============================\n\n"
-    self.file:write(header)
+    self._file:write(header)
 end
 
 -- * log level constants
@@ -191,7 +192,11 @@ function Logger:_jsonify_trace(message, compact, ...)
     self:trace(message, json)
 end
 
-local function build_entry(level_number, ...)
+---@param logger Logger
+---@param level_number number
+---@param ... any
+---@return string
+local function build_log_entry(logger, level_number, ...)
     -- CAREFUL with how you use arg table, it's fine to do but it messes up sequential tables (arg is a table)...
     --   #arg => stops at first nil
     --   use select("#", ...) as it doesn't suffer from this issue
@@ -210,8 +215,9 @@ local function build_entry(level_number, ...)
     end
 
     return string.format(
-        "[%s] %s\n",
+        "[%s] %s %s\n",
         log_level_tag_for_number(level_number),
+        (logger._context or ""),
         table.concat(stringified, " ")
     )
 end
@@ -222,7 +228,7 @@ function Logger:log(level_number, ...)
         return
     end
 
-    local entry = build_entry(level_number, ...)
+    local entry = build_log_entry(self, level_number, ...)
 
     self:_log(entry)
 end
@@ -230,8 +236,16 @@ end
 function Logger:_log(entry)
     -- PRN can use vim.defer_fn if overhead is interferring with predictions... don't  care to do that now though...
     self:ensure_file_is_open() -- ~11ms first time only (when dir already exists, so worse case is higher if it has to make the dir), 0 thereafter
-    self.file:write(entry) -- 0.01ms => 0.00ms
-    self.file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
+    self._file:write(entry) -- 0.01ms => 0.00ms
+    self._file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
+end
+
+function Logger:set_context(what)
+    self._context = what
+end
+
+function Logger:release_context()
+    self._context = nil
 end
 
 -- verbose, for troubleshooting
