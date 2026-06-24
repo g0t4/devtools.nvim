@@ -262,21 +262,21 @@ local function NOOP() end
 ---@param failure_fn? fun()
 function Logger:with_context(context_message, fn, failure_fn)
     self._context = context_message
-    self:info("set_context")
+    self:info("with_context start") -- log after set so context shows
 
     local ok, result_or_traceback = xpcall(fn, debug.traceback)
     if ok then
-        self:info("with_context fn() success")
+        self:info("with_context success") -- log before release so context shows
         self._context = nil
         return result_or_traceback
     end
 
-    self:traceback("with_context fn() failed", result_or_traceback)
+    self:traceback("with_context failed", result_or_traceback)
 
     -- * failure callback
     local ok, result_or_traceback = xpcall(failure_fn or NOOP, debug.traceback)
     if not ok then
-        self:traceback("with_context failure_fn() failed too", result_or_traceback)
+        self:traceback("with_context failure_fn() failed too", result_or_traceback) -- log before release so context shows
     end
     self._context = nil
     return nil -- explicit that we are returning nothing b/c of error
