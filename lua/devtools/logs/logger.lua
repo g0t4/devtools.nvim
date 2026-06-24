@@ -257,11 +257,11 @@ end
 
 local function NOOP() end
 
----@param ctx any
+---@param context_message any
 ---@param fn fun()
 ---@param failure_fn? fun()
-function Logger:with_context(ctx, fn, failure_fn)
-    self._context = ctx
+function Logger:with_context(context_message, fn, failure_fn)
+    self._context = context_message
     self:info("set_context")
 
     local ok, result_or_traceback = xpcall(fn, debug.traceback)
