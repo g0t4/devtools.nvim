@@ -47,18 +47,19 @@ function M.load_to_quickfix_from_nvim()
     vim.cmd('copen')
 end
 
-function load_to_quickfix_from_hammerspoon()
+function M.load_to_quickfix_from_hammerspoon()
     host.throw_if_not_hammerspoon()
 
     hs.eventtap.keyStroke({}, "escape") -- ensure normal mode
     M.copy_last_failure()
     hs.eventtap.keyStrokes(":copen\n") -- \n to submit <CR>
     hs.eventtap.keyStrokes(":cgetexpr split(getreg('+'), '\\n')\n")
+    hs.timer.doAfter(0.1, function()
+        -- optional - return => jump to first source:
+        hs.eventtap.keyStroke({}, hs.keycodes.map["return"])
+    end)
 
-    -- TODO is this a doable alternative?? gptoss FIM suggested this...
-    --  TODO so could I get PID of nvim instance => clipboard? by typing that command out to nvim current instance?
-    --  then use this to send trace to Neovim?
-    -- local items = {}
+    -- TODO try to get this to work... would be cool to use this for comms from streamdeck buttons of all sorts!
     -- for _, entry in ipairs(M.failures) do
     --     table.insert(items, {
     --         bufnr = entry.bufnr,
@@ -75,7 +76,12 @@ function load_to_quickfix_from_hammerspoon()
     -- hs.osascript.applescript(script)
 end
 
--- test by uncommenting and then reload HS via streamdeck button while sitting in a nvim instance
--- M.load_to_quickfix_from_hammerspoon()
+function HS_last_failure_to_nvim_quickfix()
+    M.load_to_quickfix_from_hammerspoon()
+end
+
+function NVIM_last_failure_to_nvim_quickfix()
+    M.load_to_quickfix_from_nvim()
+end
 
 return M
