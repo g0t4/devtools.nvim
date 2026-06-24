@@ -303,10 +303,10 @@ end
 local DISABLED = false
 -- local DISABLED = true
 local cached_loggers = {}
----@param name string
+---@param basename string
 ---@return Logger instance
-function Logger.create(name)
-    if name == nil then
+function Logger.create(basename)
+    if basename == nil then
         error("name is required to open a log file")
     end
 
@@ -314,11 +314,11 @@ function Logger.create(name)
         return NOOP_LOGGER
     end
 
-    if cached_loggers[name] then
-        return cached_loggers[name]
+    if cached_loggers[basename] then
+        return cached_loggers[basename]
     end
-    local new_logger = Logger:new(name)
-    cached_loggers[name] = new_logger
+    local new_logger = Logger:new(basename)
+    cached_loggers[basename] = new_logger
     new_logger:ensure_file_is_open()
     return new_logger
 end
