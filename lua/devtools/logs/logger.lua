@@ -269,7 +269,7 @@ function Logger:with_context(ctx, fn, failure_fn)
         return result_or_traceback
     end
 
-    self:traceback("context fn() failed", result_or_traceback)
+    self:traceback("with_context fn() failed", result_or_traceback)
 
     -- * failure callback
     failure_fn = failure_fn or function() end
