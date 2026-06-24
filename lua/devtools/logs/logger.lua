@@ -1,5 +1,6 @@
 local ansi = require("devtools.ansi")
 local inspect = require("devtools.inspect")
+local host = require("devtools.host")
 local Logger = {}
 Logger.__index = Logger
 
@@ -65,10 +66,10 @@ function Logger:ensure_file_is_open()
     -- FYI this is only called on FIRST LOG... not on reboot unless reboot has a log call
     --  so it will reset after the first log is written which is fine, just keep in mind
     local time = os.date("%Y-%m-%d %H:%M:%S")
-    local lua_vm_host = require("devtools.host").get_lua_vm_host():upper()
+    local lua_host = host.get_lua_vm_host():upper()
     local header =
         "\n============================== "
-        .. "NEW " .. ansi.apple_yellow(ansi.underline(lua_vm_host)) .. " INSTANCE "
+        .. "NEW " .. ansi.apple_yellow(ansi.underline(lua_host)) .. " INSTANCE "
         .. ansi.blue(self.basename) .. " "
         .. "(" .. time .. ")"
         .. " ==============================\n\n"
@@ -154,7 +155,7 @@ function Logger:is_enabled(level_number)
 end
 
 ---@param message string
----@param value any - will be vim.inspect()'d and piped through bat
+---@param value any - will be inspect()'d and piped through bat
 function Logger:luaify_trace(message, value)
     -- bat is expensive, don't call if not logging it!
     if not self:is_enabled(LOG_LEVEL_NUMBERS.TRACE) then
@@ -208,7 +209,17 @@ local function build_log_entry(logger, level_number, ...)
         -- make sure everything is a string so it can be concatenated
         if type(value) == "table" then
             -- auto inspect table values
-            stringified[i] = vim.inspect(value)
+            if host.is_nvim() then
+                stringified[i] = vim.inspect(value)
+            elseif host.is_hammerspoon() then
+                -- FYI vim.inspect may show table vs hs.inspect shows details when using hammerspoon host
+                -- hs.inspect pretty prints
+                -- PRN add log level `options` for hs.inspect(value, options)?
+                stringified[i] = hs.inspect(value)
+            else
+                -- fallback to vim.inspect for now (ok to leave separate pathway to make explicit)
+                stringified[i] = vim.inspect(value)
+            end
         else
             stringified[i] = tostring(value)
         end
