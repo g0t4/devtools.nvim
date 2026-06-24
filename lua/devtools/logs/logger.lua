@@ -264,7 +264,7 @@ function Logger:with_context(ctx, fn, failure_fn)
 
     local ok, result_or_traceback = xpcall(fn, debug.traceback)
     if ok then
-        self:info("release_context")
+        self:info("with_context fn() success")
         self._context = nil
         return result_or_traceback
     end
@@ -277,7 +277,6 @@ function Logger:with_context(ctx, fn, failure_fn)
     if not ok then
         self:traceback("context failure_fn failed too", result_or_traceback)
     end
-    self:info("release_context")
     self._context = nil
     return nil -- explicit that we are returning nothing b/c of error
 end
