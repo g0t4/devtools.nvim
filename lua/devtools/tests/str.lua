@@ -1,4 +1,5 @@
 local combined = require("devtools.diff.combined")
+require("devtools.tests.should")
 
 -- *** STRINGS
 --   FYI (monkey patch for a readable API)
