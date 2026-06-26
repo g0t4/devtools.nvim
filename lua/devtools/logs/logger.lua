@@ -426,6 +426,12 @@ function Logger.universal()
     return Logger.create("universal.log")
 end
 
+function Logger.clear_scrollback_for_all_loggers()
+    for _, logger in pairs(cached_loggers) do
+        logger:clear_iterm_scrollback()
+    end
+end
+
 -- _G.Log = Logger.universal()
 -- -- PRN lazy load Log on first access
 -- -- a few considerations:
