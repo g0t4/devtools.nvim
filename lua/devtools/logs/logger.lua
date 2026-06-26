@@ -426,4 +426,10 @@ function Logger.universal()
     return Logger.create("universal.log")
 end
 
+-- TODO do I want to keep this as a convenient way to log from command line mode in nvim?
+-- intended use case is for this to be a global that I can always access (if I have used the logger at all in my nvim config)
+-- := Log:info(...)
+-- PRN lazy load this on first access?
+_G.Log = Logger.universal()
+
 return Logger
