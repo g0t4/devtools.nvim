@@ -1,3 +1,6 @@
+--
+-- FYI this is a bit overkill... nice, but only for lazy getters (think properties) like Log right now
+--
 -- weak map so getters aren't attached to target objects
 local getters_by_target = setmetatable({}, { __mode = "k" })
 
