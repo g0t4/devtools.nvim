@@ -28,15 +28,15 @@ local function ensure_directory_exists(path)
     end
 end
 
-function clear_iterm_scrollback(file)
+function Logger:clear_iterm_scrollback()
     -- * YES iTerm2 scrollback clear:
     --  AND cat works on the file still, it just beeps and shows in every spot it was used (if [a]ppending to file):
     --   38;2;229;192;123m1337;ClearScrollback
     --   which means I can still cat to analyze older logs if needed (rare) while still getting a focused log!
     --   FYI 50 works instead of 1337 too, in my testing
     local clear_iterm_scrolback = "\x1b]1337;ClearScrollback\a"
-    file:write(clear_iterm_scrolback)
-    file:flush()
+    self._file:write(clear_iterm_scrolback)
+    self._file:flush()
 
     -- * ctrl+L through log
     -- but leaves scrollback (obviously)
@@ -62,7 +62,7 @@ function Logger:ensure_file_is_open()
         error("Failed to open log file: " .. path)
     end
 
-    clear_iterm_scrollback(self._file)
+    self:clear_iterm_scrollback()
 
     -- FYI this is only called on FIRST LOG... not on reboot unless reboot has a log call
     --  so it will reset after the first log is written which is fine, just keep in mind
