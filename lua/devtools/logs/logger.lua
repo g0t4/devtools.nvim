@@ -2,14 +2,14 @@ local ansi = require("devtools.ansi")
 local inspect = require("devtools.inspect")
 local host = require("devtools.host")
 local fails = require("devtools.logs.fails")
-local Logger = {}
-Logger.__index = Logger
 
 -- PRN in hammerspoon => review changing log levels (i.e. vim.g.__) ... currently uses default level only
 
 ---@class Logger
 ---@field basename string
 ---@field file? file* @file handle for the log file
+local Logger = {}
+Logger.__index = Logger
 
 ---@param basename string
 ---@return Logger
