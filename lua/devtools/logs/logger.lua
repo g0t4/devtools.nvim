@@ -401,6 +401,7 @@ end
 
 local DISABLED = false
 -- local DISABLED = true
+---@type table<string, Logger>
 local cached_loggers = {}
 ---@param basename string
 ---@return Logger instance
