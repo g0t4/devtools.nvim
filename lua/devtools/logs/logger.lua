@@ -426,18 +426,21 @@ function Logger.universal()
     return Logger.create("universal.log")
 end
 
--- lazy load Log on first access
-setmetatable(_G, {
-    __index = function(t, k)
-        if k == "Log" then
-            local logger = Logger.universal()
-            logger:info("CREATED")
-            rawset(t, "Log", logger)
-            return logger
-        end
-        return rawget(t, k)
-    end,
-})
+-- _G.Log = Logger.universal()
+-- -- PRN lazy load Log on first access
+-- -- a few considerations:
+-- -- - make sure to set type annotations
+-- setmetatable(_G, {
+--     __index = function(t, k)
+--         if k == "Log" then
+--             local logger = Logger.universal()
+--             logger:info("CREATED")
+--             rawset(t, "Log", logger)
+--             return logger
+--         end
+--         return rawget(t, k)
+--     end,
+-- })
 
 
 return Logger

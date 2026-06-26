@@ -24,6 +24,7 @@ function M.setup(opts)
     _G.ansi = require('devtools.ansi')
     _G.bat_dump = messages.bat_dump
     _G.bat_inspect = inspect.bat_inspect
+    require("devtools.getters")
     --
     -- usages:
     --   :Run bat_dump({foo="bar"})
