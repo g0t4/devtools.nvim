@@ -24,7 +24,26 @@ function M.setup(opts)
     _G.ansi = require('devtools.ansi')
     _G.bat_dump = messages.bat_dump
     _G.bat_inspect = inspect.bat_inspect
-    require("devtools.getters")
+
+    local add_getter = require("devtools.getters")
+
+    -- FYI nothing wrong with going back to just set it on setup (devtools/init.lua would be fine)
+    ---@type Logger
+    _G.Log = nil -- typing only, first use triggers lazy load
+    --
+    add_getter(_G, "Log", function()
+        local log = require("devtools.logs.logger"):universal()
+        log:info("CREATED")
+        return log
+    end)
+    --
+    -- FYI can add more lazy loaded getters:
+    -- local config = {}
+    --
+    -- add_getter(config, "expensive", function()
+    --     return compute_expensive_value()
+    -- end)
+
     --
     -- usages:
     --   :Run bat_dump({foo="bar"})

@@ -40,18 +40,4 @@ local function add_getter(target, name, fn)
     getters[name] = fn
 end
 
----@type Logger
-_G.Log = nil -- typing only, first use triggers lazy load
-
--- FYI nothing wrong with going back to just set it on setup (devtools/init.lua would be fine)
-add_getter(_G, "Log", function()
-    local log = require("devtools.logs.logger"):universal()
-    log:info("CREATED")
-    return log
-end)
-
--- local config = {}
---
--- add_getter(config, "expensive", function()
---     return compute_expensive_value()
--- end)
+return add_getter
