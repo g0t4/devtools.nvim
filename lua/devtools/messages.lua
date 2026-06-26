@@ -18,6 +18,10 @@ function M.setup(opts)
         M.clear()
         -- ALSO clear builtin :messages
         vim.cmd(":messages clear")
+
+        -- ALSO clear log scrollback
+        local logger = require("devtools.logs.logger")
+        logger.universal():clear_iterm_scrollback()
     end)
     -- show messages
     vim.keymap.set('n', '<leader>mm', function()
