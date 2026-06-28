@@ -315,7 +315,12 @@ function Logger:with_context(context_message, fn, failure_fn)
     self._context = context_message
     self:info("with_context start") -- log after set so context shows
 
+    local Timer = require("devtools.logs.timer")
+    local timer = Timer.new()
+
     local ok, result_or_traceback = xpcall(fn, full_traceback)
+    local duration = timer:overall_duration()
+    self:info("fn took", duration) -- FYI async dispatch makes this less useful in general... maybe move this to run_async?
     if ok then
         self:info("with_context success") -- log before release so context shows
         self._context = nil
@@ -325,9 +330,10 @@ function Logger:with_context(context_message, fn, failure_fn)
     self:traceback("with_context failed", result_or_traceback)
 
     -- * failure callback
-    local ok, result_or_traceback = xpcall(failure_fn or NOOP, full_traceback)
-    if not ok then
-        self:traceback("with_context failure_fn() failed too", result_or_traceback) -- log before release so context shows
+    local ok_failure, result_or_traceback_failure = xpcall(failure_fn or NOOP, full_traceback)
+    -- PRN log duration of failure fn when you actually need it
+    if not ok_failure then
+        self:traceback("with_context failure_fn() failed too", result_or_traceback_failure) -- log before release so context shows
     end
     self._context = nil
     return nil -- explicit that we are returning nothing b/c of error
