@@ -3,6 +3,7 @@ local histogram = require('devtools.diff.histogram')
 local inspect = require('devtools.inspect')
 local splitter = require('devtools.diff.splitter')
 local describe = require('devtools.tests.define.describe')
+local only = require('devtools.tests.define.only')
 
 describe('test using histogram diff', function()
     it('with lines', function()
