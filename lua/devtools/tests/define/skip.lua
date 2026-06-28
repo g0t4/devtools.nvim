@@ -1,6 +1,4 @@
-local M = {}
-
-function M.skip(desc, func)
+local function skip(desc, func)
 end
 
-return M
+return skip
