@@ -17,7 +17,6 @@ function Logger:new(basename)
     local self = setmetatable({}, Logger)
     self.basename = basename
     self._file = nil
-    self._context = nil
     return self
 end
 
@@ -230,10 +229,12 @@ local function build_log_entry(logger, level_number, ...)
         end
     end
 
+    local context = logger:get_coroutine_context()
+
     return string.format(
         "[%s] %s %s\n",
         log_level_tag_for_number(level_number),
-        (logger._context or ""),
+        (context or ""),
         table.concat(stringified, " ")
     )
 end
@@ -308,35 +309,30 @@ end
 
 local function NOOP() end
 
----@param context_message any
----@param fn fun()
----@param failure_fn? fun()
-function Logger:with_context(context_message, fn, failure_fn)
-    self._context = context_message
-    self:info("with_context start") -- log after set so context shows
 
-    local Timer = require("devtools.logs.timer")
-    local timer = Timer.new()
+local co_contexts = setmetatable({}, { __mode = "k" }) -- weak table for coroutine contexts
 
-    local ok, result_or_traceback = xpcall(fn, full_traceback)
-    local duration = timer:overall_duration()
-    self:info("fn took", duration) -- FYI async dispatch makes this less useful in general... maybe move this to run_async?
-    if ok then
-        self:info("with_context success") -- log before release so context shows
-        self._context = nil
-        return result_or_traceback
+-- set context within a coroutine to track logging across that coroutine (request proxy)
+function Logger:set_coroutine_context(context_message)
+    -- cool thing is, now the context is available across loggers!
+    -- so it doesn't matter where you log to, you'll see what request (context) was involved
+    local co, is_main = coroutine.running()
+    if is_main then
+        Logger:error("cannot set coroutine context from main thread, did you forget to call ensure_in_coroutine()?")
+        return
     end
+    co_contexts[co] = context_message
+end
 
-    self:traceback("with_context failed", result_or_traceback)
-
-    -- * failure callback
-    local ok_failure, result_or_traceback_failure = xpcall(failure_fn or NOOP, full_traceback)
-    -- PRN log duration of failure fn when you actually need it
-    if not ok_failure then
-        self:traceback("with_context failure_fn() failed too", result_or_traceback_failure) -- log before release so context shows
+function Logger:get_coroutine_context()
+    local co, is_main = coroutine.running()
+    if is_main then
+        -- silent ignore because there are plenty of times when there will be no context!
+        --  and those are not failures
+        --  failure is handled on the set side (either set in wrong spot which might be is_main thread... OR forget to set)
+        return nil
     end
-    self._context = nil
-    return nil -- explicit that we are returning nothing b/c of error
+    return co_contexts[co]
 end
 
 -- verbose, for troubleshooting
