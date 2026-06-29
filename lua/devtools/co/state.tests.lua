@@ -18,18 +18,28 @@ describe("test CoroutineStateTracker", function()
         assert.equals("test_context", result)
     end)
 
-    it("returns nil when getting state from main thread", function()
-        local context = CoroutineStateTracker:get("log_context")
-        assert.is_nil(context)
-    end)
-
-    it("throws error when setting state from main thread", function()
-        local success, err = pcall(function()
-            CoroutineStateTracker:set("log_context", "test_context")
-        end)
-        assert.is_false(success)
-        assert.matches("cannot set coroutine state from main thread", err)
-    end)
+    -- describe("main thread cannot be tested w/ plenary, IIAC", function()
+    --     it("returns nil when getting state from main thread", function()
+    --         -- FYI cannot do this test IIAC with plenary test runner cuz it starts a coroutine for each test... so I can't be on main thread
+    --         local co, is_main = coroutine.running()
+    --         assert.is_true(is_main, "TEST CANNOT WORK UNLESS IT STARTS WITH MAIN THREAD (COROUTINE)")
+    --
+    --         local context = CoroutineStateTracker:get("log_context")
+    --         assert.is_nil(context, "should be nil")
+    --     end)
+    --
+    --     it("throws error when setting state from main thread", function()
+    --         -- FYI cannot do this test IIAC with plenary test runner cuz it starts a coroutine for each test... so I can't be on main thread
+    --         local co, is_main = coroutine.running()
+    --         assert.is_true(is_main, "TEST CANNOT WORK UNLESS IT STARTS WITH MAIN THREAD (COROUTINE)")
+    --
+    --         local success, err = pcall(function()
+    --             CoroutineStateTracker:set("log_context", "test_context")
+    --         end)
+    --         assert.is_false(success)
+    --         assert.matches("cannot set coroutine state from main thread", err)
+    --     end)
+    -- end)
 
     it("supports multiple keys per coroutine", function()
         local results = {}
