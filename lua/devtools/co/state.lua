@@ -3,14 +3,6 @@
 local CoroutineStateTracker = {}
 CoroutineStateTracker.__index = CoroutineStateTracker
 
----@return CoroutineStateTracker
-function CoroutineStateTracker:new()
-    local self = setmetatable({}, CoroutineStateTracker)
-    -- weak table for coroutine contexts: keys are coroutines, values are tables of state
-    self.states = setmetatable({}, { __mode = "k" })
-    return self
-end
-
 ---@param key string
 ---@param value any
 function CoroutineStateTracker:set(key, value)
@@ -44,21 +36,10 @@ function CoroutineStateTracker:get(key)
     return state[key]
 end
 
--- Singleton instance
----@type CoroutineStateTracker | nil
-CoroutineStateTracker._instance = nil
-
----@return CoroutineStateTracker
-function CoroutineStateTracker.get_instance()
-    if not CoroutineStateTracker._instance then
-        CoroutineStateTracker._instance = CoroutineStateTracker:new()
-    end
-    return CoroutineStateTracker._instance
-end
-
----@return void
 function CoroutineStateTracker.reset()
-    CoroutineStateTracker._instance = nil
+    CoroutineStateTracker.states = setmetatable({}, { __mode = "k" }) -- weak map
 end
+
+CoroutineStateTracker.reset()
 
 return CoroutineStateTracker
