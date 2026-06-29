@@ -2,6 +2,7 @@ local ansi = require("devtools.ansi")
 local inspect = require("devtools.inspect")
 local host = require("devtools.host")
 local fails = require("devtools.logs.fails")
+local coroutine_state = require("devtools.co.state")
 
 -- PRN in hammerspoon => review changing log levels (i.e. vim.g.__) ... currently uses default level only
 
@@ -310,8 +311,6 @@ end
 local function NOOP() end
 
 
-local co_contexts = setmetatable({}, { __mode = "k" }) -- weak table for coroutine contexts
-
 -- set context within a coroutine to track logging across that coroutine (request proxy)
 function Logger:set_coroutine_context(context_message)
     -- cool thing is, now the context is available across loggers!
@@ -321,7 +320,7 @@ function Logger:set_coroutine_context(context_message)
         Logger:error("cannot set coroutine context from main thread, did you forget to call ensure_in_coroutine()?")
         return
     end
-    co_contexts[co] = context_message
+    coroutine_state.get_instance():set("log_context", context_message)
 end
 
 function Logger:get_coroutine_context()
@@ -332,7 +331,7 @@ function Logger:get_coroutine_context()
         --  failure is handled on the set side (either set in wrong spot which might be is_main thread... OR forget to set)
         return nil
     end
-    return co_contexts[co]
+    return coroutine_state.get_instance():get("log_context")
 end
 
 -- verbose, for troubleshooting
