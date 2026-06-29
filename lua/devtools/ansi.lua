@@ -252,6 +252,17 @@ function M.green_bg(text, options)
     return M.color(text, 'green_bg', options)
 end
 
+function M.green_bold(text, options)
+    options = options or {}
+    options.color = options.color or true -- default is true
+    if not options.color then
+        return text
+    end
+    local bold_text =
+        "\27[" .. color_keys.bright .. ";" .. color_keys.green .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return bold_text
+end
+
 function M.yellow_bg(text, options)
     return M.color(text, 'yellow_bg', options)
 end

@@ -80,19 +80,22 @@ end
 -- * log level constants
 local LEVEL_NUMBERS = {
     TRACE = 0,
-    INFO = 1,
-    WARN = 2,
-    ERROR = 3,
+    DEBUG = 1,
+    INFO = 2,
+    WARN = 3,
+    ERROR = 4,
 }
 local LOG_LEVEL_NUMBERS = LEVEL_NUMBERS
 local LEVEL_TEXT_TO_NUMBER = {
     ["TRACE"] = LEVEL_NUMBERS.TRACE,
+    ["DEBUG"] = LEVEL_NUMBERS.DEBUG,
     ["INFO"]  = LEVEL_NUMBERS.INFO,
     ["WARN"]  = LEVEL_NUMBERS.WARN,
     ["ERROR"] = LEVEL_NUMBERS.ERROR,
 }
 local LEVEL_NUMBER_TO_TEXT = {
     [LEVEL_NUMBERS.TRACE] = "TRACE",
+    [LEVEL_NUMBERS.DEBUG] = "DEBUG",
     [LEVEL_NUMBERS.INFO]  = "INFO",
     [LEVEL_NUMBERS.WARN]  = "WARN",
     [LEVEL_NUMBERS.ERROR] = "ERROR",
@@ -101,6 +104,7 @@ local LEVEL_NUMBER_TO_TEXT = {
 local function log_level_tag_for_number(level_number)
     local level_number_to_tag = {
         [LOG_LEVEL_NUMBERS.TRACE] = ansi.cyan("TRACE"),
+        [LOG_LEVEL_NUMBERS.DEBUG] = ansi.green_bold("DEBUG"),
         [LOG_LEVEL_NUMBERS.INFO] = ansi.white_bold("INFO "),
         [LOG_LEVEL_NUMBERS.WARN] = ansi.yellow_bold("WARN "),
         [LOG_LEVEL_NUMBERS.ERROR] = ansi.red_bold("ERROR"),
@@ -118,6 +122,10 @@ end
 
 function Logger:warn(...)
     self:log(LOG_LEVEL_NUMBERS.WARN, ...)
+end
+
+function Logger:debug(...)
+    self:log(LOG_LEVEL_NUMBERS.DEBUG, ...)
 end
 
 function Logger:trace(...)
