@@ -3,9 +3,15 @@
 local CoroutineStateTracker = {}
 CoroutineStateTracker.__index = CoroutineStateTracker
 
+local function new_weak_map()
+    return setmetatable({}, { __mode = "k" })
+end
+
+local states = new_weak_map()
+
 ---@param key string
 ---@param value any
-function CoroutineStateTracker:set(key, value)
+function CoroutineStateTracker.set(key, value)
     local co, is_main = coroutine.running()
     if is_main then
         error("cannot set coroutine state from main thread")
@@ -13,15 +19,15 @@ function CoroutineStateTracker:set(key, value)
     if not co then
         return
     end
-    if not self.states[co] then
-        self.states[co] = {}
+    if not states[co] then
+        states[co] = {}
     end
-    self.states[co][key] = value
+    states[co][key] = value
 end
 
 ---@param key string
 ---@return any
-function CoroutineStateTracker:get(key)
+function CoroutineStateTracker.get(key)
     local co, is_main = coroutine.running()
     if is_main then
         return nil
@@ -29,7 +35,7 @@ function CoroutineStateTracker:get(key)
     if not co then
         return nil
     end
-    local state = self.states[co]
+    local state = states[co]
     if not state then
         return nil
     end
@@ -37,9 +43,7 @@ function CoroutineStateTracker:get(key)
 end
 
 function CoroutineStateTracker.reset()
-    CoroutineStateTracker.states = setmetatable({}, { __mode = "k" }) -- weak map
+    states = new_weak_map()
 end
-
-CoroutineStateTracker.reset()
 
 return CoroutineStateTracker

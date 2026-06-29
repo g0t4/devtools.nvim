@@ -320,7 +320,7 @@ function Logger:set_coroutine_context(context_message)
         Logger:error("cannot set coroutine context from main thread, did you forget to call ensure_in_coroutine()?")
         return
     end
-    CoroutineStateTracker:set("log_context", context_message)
+    CoroutineStateTracker.set("log_context", context_message)
 end
 
 function Logger:get_coroutine_context()
@@ -331,7 +331,7 @@ function Logger:get_coroutine_context()
         --  failure is handled on the set side (either set in wrong spot which might be is_main thread... OR forget to set)
         return nil
     end
-    return CoroutineStateTracker:get("log_context")
+    return CoroutineStateTracker.get("log_context")
 end
 
 -- verbose, for troubleshooting
