@@ -88,6 +88,15 @@ end
 -- Try using your new AI tools to do this (zed predicts too)
 
 function M.color(text, color, options)
+    -- TODO do I really use this options.color anywhere? if not let's nuke it ... can always add some global toggle if I truly need no color... seems like I only use this in inspect.inspect() and I am not sure I've really used that anywhere at this point
+    --    rg -g '*.lua' 'require\(.devtools.inspect'
+    --    rg -g '*.lua' inspect\.inspect
+    --
+    --  find ansi methods that include a comma within parens of func call:
+    --    rg -g '*.lua' "\bansi.\w+\([^)]+,"
+    --
+    -- first step is to use M.color and a few other helpers to simplify where I even touch options
+    --  then I can nuke them later
     options = options or {}
     options.color = options.color or true
     if not options.color then
