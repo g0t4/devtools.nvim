@@ -250,11 +250,14 @@ local function build_log_entry(logger, level_number, ...)
         end
     end
 
-    local context = logger:get_coroutine_context()
+    local context, timer = logger:get_coroutine_context()
+
+    local overall = timer and timer:overall_duration() or ""
 
     return string.format(
-        "[%s] %s %s\n",
+        "[%s] %s %s %s\n",
         log_level_tag_for_number(level_number),
+        overall,
         (context or ""),
         table.concat(stringified, " ")
     )
@@ -340,6 +343,8 @@ function Logger:set_coroutine_context(context_message)
         Logger:error("cannot set coroutine context from main thread, did you forget to call ensure_in_coroutine()?")
         return
     end
+    -- TODO should I set timer here and not in all cases in ensure_in_coroutine
+    -- TODO or should I at least ensure timer is attached when context is set?
     CoroutineStateTracker.set("log_context", context_message)
 end
 
@@ -351,7 +356,7 @@ function Logger:get_coroutine_context()
         --  failure is handled on the set side (either set in wrong spot which might be is_main thread... OR forget to set)
         return nil
     end
-    return CoroutineStateTracker.get("log_context")
+    return CoroutineStateTracker.get("log_context"), CoroutineStateTracker.get("timer")
 end
 
 -- verbose, for troubleshooting
