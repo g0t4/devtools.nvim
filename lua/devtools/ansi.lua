@@ -107,6 +107,10 @@ function M.cyan(text, options)
     return M.color(text, color_keys.cyan, options)
 end
 
+function M.cyan_bold(text, options)
+    return M.color(text, {color_keys.bold, color_keys.cyan}, options)
+end
+
 function M.underline(text, options)
     return M.color(text, color_keys.underline, options)
 end
@@ -129,6 +133,10 @@ end
 
 function M.blue(text, options)
     return M.color(text, color_keys.blue, options)
+end
+
+function M.blue_bold(text, options)
+    return M.color(text, {color_keys.bold, color_keys.blue}, options)
 end
 
 function M.magenta(text, options)
