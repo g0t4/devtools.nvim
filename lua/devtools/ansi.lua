@@ -87,132 +87,123 @@ end
 -- TODO rewrite this to cover all colors... and be reusable.
 -- Try using your new AI tools to do this (zed predicts too)
 
-function M.color(text, colors, options)
-    -- TODO do I really use this options.color anywhere? if not let's nuke it ... can always add some global toggle if I truly need no color... seems like I only use this in inspect.inspect() and I am not sure I've really used that anywhere at this point
-    --    rg -g '*.lua' 'require\(.devtools.inspect'
-    --    rg -g '*.lua' inspect\.inspect
-    --
-    --  find ansi methods that include a comma within parens of func call:
-    --    rg -g '*.lua' "\bansi.\w+\([^)]+,"
-    --
-    -- first step is to use M.color and a few other helpers to simplify where I even touch options
-    --  then I can nuke them later
+function M.color(text, codes, options)
     options = options or {}
     options.color = options.color or true
     if not options.color then
         return text
     end
 
-    local codes = {}
-    if type(colors) == "table" then
-        for _, c in ipairs(colors) do
-            table.insert(codes, tostring(color_keys[c]))
+    local code_strings = {}
+    if type(codes) == "table" then
+        for _, c in ipairs(codes) do
+            table.insert(code_strings, tostring(c))
         end
     else
-        table.insert(codes, tostring(color_keys[colors]))
+        table.insert(code_strings, tostring(codes))
     end
 
-    return "\27[" .. table.concat(codes, ";") .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return "\27[" .. table.concat(code_strings, ";") .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
 function M.black(text, options)
-    return M.color(text, 'black', options)
+    return M.color(text, color_keys.black, options)
 end
 
 function M.cyan(text, options)
-    return M.color(text, 'cyan', options)
+    return M.color(text, color_keys.cyan, options)
 end
 
 function M.underline(text, options)
-    return M.color(text, 'underline', options)
+    return M.color(text, color_keys.underline, options)
 end
 
 function M.bold(text, options)
-    return M.color(text, {'bold'}, options)
+    return M.color(text, color_keys.bold, options)
 end
 
 function M.dim(text, options)
-    return M.color(text, {'dim'}, options)
+    return M.color(text, color_keys.dim, options)
 end
 
 function M.red_bold(text, options)
-    return M.color(text, {'bold', 'red'}, options)
+    return M.color(text, {color_keys.bold, color_keys.red}, options)
 end
 
 function M.red(text, options)
-    return M.color(text, 'red', options)
+    return M.color(text, color_keys.red, options)
 end
 
 function M.blue(text, options)
-    return M.color(text, 'blue', options)
+    return M.color(text, color_keys.blue, options)
 end
 
 function M.magenta(text, options)
-    return M.color(text, 'magenta', options)
+    return M.color(text, color_keys.magenta, options)
 end
 
 function M.magenta_bold(text, options)
-    return M.color(text, {'bold', 'magenta'}, options)
+    return M.color(text, {color_keys.bold, color_keys.magenta}, options)
 end
 
 function M.green(text, options)
-    return M.color(text, 'green', options)
+    return M.color(text, color_keys.green, options)
 end
 
 function M.yellow_bold(text, options)
-    return M.color(text, {'bold', 'yellow'}, options)
+    return M.color(text, {color_keys.bold, color_keys.yellow}, options)
 end
 
 function M.yellow(text, options)
-    return M.color(text, 'yellow', options)
+    return M.color(text, color_keys.yellow, options)
 end
 
 function M.black_bold(text, options)
-    return M.color(text, {'bold', 'black'}, options)
+    return M.color(text, {color_keys.bold, color_keys.black}, options)
 end
 
 function M.white_bold(text, options)
-    return M.color(text, {'bold', 'white'}, options)
+    return M.color(text, {color_keys.bold, color_keys.white}, options)
 end
 
 function M.white(text, options)
-    return M.color(text, 'white', options)
+    return M.color(text, color_keys.white, options)
 end
 
 function M.black_bg(text, options)
-    return M.color(text, 'black_bg', options)
+    return M.color(text, color_keys.black_bg, options)
 end
 
 function M.red_bg(text, options)
-    return M.color(text, 'red_bg', options)
+    return M.color(text, color_keys.red_bg, options)
 end
 
 function M.blue_bg(text, options)
-    return M.color(text, 'blue_bg', options)
+    return M.color(text, color_keys.blue_bg, options)
 end
 
 function M.magenta_bg(text, options)
-    return M.color(text, 'magenta_bg', options)
+    return M.color(text, color_keys.magenta_bg, options)
 end
 
 function M.green_bg(text, options)
-    return M.color(text, 'green_bg', options)
+    return M.color(text, color_keys.green_bg, options)
 end
 
 function M.green_bold(text, options)
-    return M.color(text, {'bold', 'green'}, options)
+    return M.color(text, {color_keys.bold, color_keys.green}, options)
 end
 
 function M.yellow_bg(text, options)
-    return M.color(text, 'yellow_bg', options)
+    return M.color(text, color_keys.yellow_bg, options)
 end
 
 function M.cyan_bg(text, options)
-    return M.color(text, 'cyan_bg', options)
+    return M.color(text, color_keys.cyan_bg, options)
 end
 
 function M.white_bg(text, options)
-    return M.color(text, 'white_bg', options)
+    return M.color(text, color_keys.white_bg, options)
 end
 
 function M.show_colors()
