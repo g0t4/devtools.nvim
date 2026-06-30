@@ -17,7 +17,12 @@ function CoroutineStateTracker.set(key, value)
     if is_main then
         error("cannot set coroutine state from main thread")
     end
+    CoroutineStateTracker._set(key, value, co)
+end
+
+function CoroutineStateTracker._set(key, value, co)
     if not co then
+        error("coroutiune `co` is nil, cannot set state without a coroutine")
         return
     end
     if not states[co] then
@@ -33,6 +38,10 @@ function CoroutineStateTracker.get(key)
     if is_main then
         return nil
     end
+    return CoroutineStateTracker._get(key, co)
+end
+
+function CoroutineStateTracker._get(key, co)
     if not co then
         return nil
     end
