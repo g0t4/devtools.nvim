@@ -49,7 +49,7 @@ local color_keys = {
 
     -- misc
     reset     = 0,
-    bright    = 1,
+    bold      = 1,
     dim       = 2,
     underline = 4,
     blink     = 5,
@@ -128,7 +128,7 @@ function M.underline(text, options)
 end
 
 function M.bold(text, options)
-    return M.color(text, {'bright'}, options)
+    return M.color(text, {'bold'}, options)
 end
 
 function M.dim(text, options)
@@ -136,7 +136,7 @@ function M.dim(text, options)
 end
 
 function M.red_bold(text, options)
-    return M.color(text, {'bright', 'red'}, options)
+    return M.color(text, {'bold', 'red'}, options)
 end
 
 function M.red(text, options)
@@ -152,7 +152,7 @@ function M.magenta(text, options)
 end
 
 function M.magenta_bold(text, options)
-    return M.color(text, {'bright', 'magenta'}, options)
+    return M.color(text, {'bold', 'magenta'}, options)
 end
 
 function M.green(text, options)
@@ -160,7 +160,7 @@ function M.green(text, options)
 end
 
 function M.yellow_bold(text, options)
-    return M.color(text, {'bright', 'yellow'}, options)
+    return M.color(text, {'bold', 'yellow'}, options)
 end
 
 function M.yellow(text, options)
@@ -168,11 +168,11 @@ function M.yellow(text, options)
 end
 
 function M.black_bold(text, options)
-    return M.color(text, {'bright', 'black'}, options)
+    return M.color(text, {'bold', 'black'}, options)
 end
 
 function M.white_bold(text, options)
-    return M.color(text, {'bright', 'white'}, options)
+    return M.color(text, {'bold', 'white'}, options)
 end
 
 function M.white(text, options)
@@ -200,7 +200,7 @@ function M.green_bg(text, options)
 end
 
 function M.green_bold(text, options)
-    return M.color(text, {'bright', 'green'}, options)
+    return M.color(text, {'bold', 'green'}, options)
 end
 
 function M.yellow_bg(text, options)
