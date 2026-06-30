@@ -84,6 +84,8 @@ local LEVEL_NUMBERS = {
     INFO = 2,
     WARN = 3,
     ERROR = 4,
+    FATAL = 5,
+    OFF = 6,
 }
 local LOG_LEVEL_NUMBERS = LEVEL_NUMBERS
 local LEVEL_TEXT_TO_NUMBER = {
@@ -92,6 +94,8 @@ local LEVEL_TEXT_TO_NUMBER = {
     ["INFO"]  = LEVEL_NUMBERS.INFO,
     ["WARN"]  = LEVEL_NUMBERS.WARN,
     ["ERROR"] = LEVEL_NUMBERS.ERROR,
+    ["FATAL"] = LEVEL_NUMBERS.FATAL,
+    ["OFF"]   = LEVEL_NUMBERS.OFF,
 }
 local LEVEL_NUMBER_TO_TEXT = {
     [LEVEL_NUMBERS.TRACE] = "TRACE",
@@ -99,21 +103,29 @@ local LEVEL_NUMBER_TO_TEXT = {
     [LEVEL_NUMBERS.INFO]  = "INFO",
     [LEVEL_NUMBERS.WARN]  = "WARN",
     [LEVEL_NUMBERS.ERROR] = "ERROR",
+    [LEVEL_NUMBERS.FATAL] = "FATAL",
+    [LEVEL_NUMBERS.OFF]   = "OFF",
 }
 
 local function log_level_tag_for_number(level_number)
     local level_number_to_tag = {
         [LOG_LEVEL_NUMBERS.TRACE] = ansi.cyan("TRACE"),
         [LOG_LEVEL_NUMBERS.DEBUG] = ansi.green_bold("DEBUG"),
-        [LOG_LEVEL_NUMBERS.INFO] = ansi.white_bold("INFO "),
-        [LOG_LEVEL_NUMBERS.WARN] = ansi.yellow_bold("WARN "),
+        [LOG_LEVEL_NUMBERS.INFO]  = ansi.white_bold("INFO "),
+        [LOG_LEVEL_NUMBERS.WARN]  = ansi.yellow_bold("WARN "),
         [LOG_LEVEL_NUMBERS.ERROR] = ansi.red_bold("ERROR"),
+        [LOG_LEVEL_NUMBERS.FATAL] = ansi.magenta_bold("FATAL"),
+        [LOG_LEVEL_NUMBERS.OFF]   = ansi.dim("OFF"),
     }
     return level_number_to_tag[level_number]
 end
 
 function Logger:traceback(message, traceback)
     self:log(LOG_LEVEL_NUMBERS.ERROR, message, "\n\n", traceback, "\n\n")
+end
+
+function Logger:fatal(...)
+    self:log(LOG_LEVEL_NUMBERS.FATAL, ...)
 end
 
 function Logger:error(...)
@@ -217,24 +229,24 @@ local function build_log_entry(logger, level_number, ...)
     --   also, can use:    for k,v in pairs(arg)
     -- FYI using `arg` resulted in parameters from previous calls (w/ more params) to be logged in subsequent logs...
     local stringified = {} -- new set of args to write into, don't try to use special `arg` variable
-    for i = 1, select("#", ...) do
-        local value = select(i, ...)
+    for i_base1 = 1, select("#", ...) do
+        local value = select(i_base1, ...)
         -- make sure everything is a string so it can be concatenated
         if type(value) == "table" then
             -- auto inspect table values
             if host.is_nvim() then
-                stringified[i] = vim.inspect(value)
+                stringified[i_base1] = vim.inspect(value)
             elseif host.is_hammerspoon() then
                 -- FYI vim.inspect may show table vs hs.inspect shows details when using hammerspoon host
                 -- hs.inspect pretty prints
                 -- PRN add log level `options` for hs.inspect(value, options)?
-                stringified[i] = hs.inspect(value)
+                stringified[i_base1] = hs.inspect(value)
             else
                 -- fallback to vim.inspect for now (ok to leave separate pathway to make explicit)
-                stringified[i] = vim.inspect(value)
+                stringified[i_base1] = vim.inspect(value)
             end
         else
-            stringified[i] = tostring(value)
+            stringified[i_base1] = tostring(value)
         end
     end
 
@@ -260,7 +272,7 @@ function Logger:log(level_number, ...)
 end
 
 function Logger:_log(entry)
-    -- PRN can use vim.defer_fn if overhead is interferring with predictions... don't  care to do that now though...
+    -- PRN can use vim.defer_fn if overhead is interfarring with predictions... don't  care to do that now though...
     self:ensure_file_is_open() -- ~11ms first time only (when dir already exists, so worse case is higher if it has to make the dir), 0 thereafter
     self._file:write(entry) -- 0.01ms => 0.00ms
     self._file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
@@ -278,9 +290,9 @@ function full_traceback(error_message)
         "stack traceback:",
     }
 
-    local level = 2
+    local level_base0 = 2
     while true do
-        local info = debug.getinfo(level, "Slnfu")
+        local info = debug.getinfo(level_base0, "Slnfu")
         if not info then
             break
         end
@@ -307,7 +319,7 @@ function full_traceback(error_message)
             tostring(info.func)
         )
 
-        level = level + 1
+        level_base0 = level_base0 + 1
     end
 
     local trace = table.concat(lines, "\n")
