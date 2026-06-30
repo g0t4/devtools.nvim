@@ -122,6 +122,15 @@ function M.bold(text, options)
     return "\27[" .. color_keys.bright .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
+function M.dim(text, options)
+    options = options or {}
+    options.color = options.color or true
+    if not options.color then
+        return text
+    end
+    return "\27[" .. color_keys.dim .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+end
+
 function M.red_bold(text, options)
     options = options or {}
     options.color = options.color or true -- default is true
@@ -158,6 +167,17 @@ function M.magenta(text, options)
         return text
     end
     return "\27[" .. color_keys.magenta .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+end
+
+function M.magenta_bold(text, options)
+    options = options or {}
+    options.color = options.color or true -- default is true
+    if not options.color then
+        return text
+    end
+    local bold_text =
+        "\27[" .. color_keys.bright .. ";" .. color_keys.magenta .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return bold_text
 end
 
 function M.green(text, options)
