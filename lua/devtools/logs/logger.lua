@@ -160,6 +160,7 @@ function Logger.cycle_log_verbosity()
     return vim.g.log_threshold_text, next_number
 end
 
+local HAMMERSPOON_LOG_THRESHOLD = "TRACE"
 ---@return string level_text, number level_number
 function Logger.get_log_threshold()
     local current_text
@@ -168,7 +169,7 @@ function Logger.get_log_threshold()
     else
         -- default to INFO if not vim (for now)
         -- TODO perhaps pass default level to create? instead of making logger know where to go to store the current level and change it?
-        current_text = LEVEL_NUMBER_TO_TEXT[LEVEL_NUMBERS.INFO]
+        current_text = HAMMERSPOON_LOG_THRESHOLD
     end
     local current_number = LEVEL_TEXT_TO_NUMBER[current_text]
     return current_text, current_number
