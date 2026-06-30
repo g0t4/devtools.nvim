@@ -94,16 +94,9 @@ function M.color(text, codes, options)
         return text
     end
 
-    local code_strings = {}
-    if type(codes) == "table" then
-        for _, c in ipairs(codes) do
-            table.insert(code_strings, tostring(c))
-        end
-    else
-        table.insert(code_strings, tostring(codes))
-    end
+    local code_str = type(codes) == "table" and table.concat(codes, ";") or tostring(codes)
 
-    return "\27[" .. table.concat(code_strings, ";") .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return "\27[" .. code_str .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
 function M.black(text, options)
