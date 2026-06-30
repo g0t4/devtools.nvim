@@ -105,12 +105,7 @@ function M.cyan(text, options)
 end
 
 function M.underline(text, options)
-    options = options or {}
-    options.color = options.color or true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.underline .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'underline', options)
 end
 
 function M.bold(text, options)
