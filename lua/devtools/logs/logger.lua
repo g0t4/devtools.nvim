@@ -253,12 +253,16 @@ local function build_log_entry(logger, level_number, ...)
 
     local context, timer = logger:get_coroutine_context()
 
-    local overall = timer and timer:overall_duration() or ""
+    local durations = ""
+    if timer then
+        local overall, since_last_log = timer:mark_last_start_and_get_durations()
+        durations = overall .. " / " .. since_last_log
+    end
 
     return string.format(
-        "[%s] %s %s %s\n",
+        "[%s]%s %s %s\n",
         log_level_tag_for_number(level_number),
-        overall,
+        durations,
         (context or ""),
         table.concat(stringified, " ")
     )

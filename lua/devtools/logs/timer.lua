@@ -67,4 +67,14 @@ function Timer:overall_duration()
     return Timer.format_elapsed_time(now - self._overall_start)
 end
 
+---@return string overall
+---@return string since_last_mark
+function Timer:mark_last_start_and_get_durations()
+    local now = get_now_in_nanoseconds_counter()
+    local overall = Timer.format_elapsed_time(now - self._overall_start)
+    local since_last_log = Timer.format_elapsed_time(now - self._last_start)
+    self._last_start = now
+    return overall, since_last_log
+end
+
 return Timer
