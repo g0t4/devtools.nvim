@@ -87,7 +87,7 @@ end
 -- TODO rewrite this to cover all colors... and be reusable.
 -- Try using your new AI tools to do this (zed predicts too)
 
-function M.color(text, color, options)
+function M.color(text, colors, options)
     -- TODO do I really use this options.color anywhere? if not let's nuke it ... can always add some global toggle if I truly need no color... seems like I only use this in inspect.inspect() and I am not sure I've really used that anywhere at this point
     --    rg -g '*.lua' 'require\(.devtools.inspect'
     --    rg -g '*.lua' inspect\.inspect
@@ -102,7 +102,17 @@ function M.color(text, color, options)
     if not options.color then
         return text
     end
-    return "\27[" .. color_keys[color] .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+
+    local codes = {}
+    if type(colors) == "table" then
+        for _, c in ipairs(colors) do
+            table.insert(codes, tostring(color_keys[c]))
+        end
+    else
+        table.insert(codes, tostring(color_keys[colors]))
+    end
+
+    return "\27[" .. table.concat(codes, ";") .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
 end
 
 function M.black(text, options)
@@ -118,123 +128,51 @@ function M.underline(text, options)
 end
 
 function M.bold(text, options)
-    options = options or {}
-    options.color = options.color or true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.bright .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, {'bright'}, options)
 end
 
 function M.dim(text, options)
-    options = options or {}
-    options.color = options.color or true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.dim .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, {'dim'}, options)
 end
 
 function M.red_bold(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    local bold_text =
-        "\27[" .. color_keys.bright .. ";" .. color_keys.red .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
-    return bold_text
+    return M.color(text, {'bright', 'red'}, options)
 end
 
 function M.red(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.red .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'red', options)
 end
 
 function M.blue(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.blue .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'blue', options)
 end
 
 function M.magenta(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.magenta .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'magenta', options)
 end
 
 function M.magenta_bold(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    local bold_text =
-        "\27[" .. color_keys.bright .. ";" .. color_keys.magenta .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
-    return bold_text
+    return M.color(text, {'bright', 'magenta'}, options)
 end
 
 function M.green(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.green .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'green', options)
 end
 
 function M.yellow_bold(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    local bold_text =
-        "\27[" .. color_keys.bright .. ";" .. color_keys.yellow .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
-    return bold_text
+    return M.color(text, {'bright', 'yellow'}, options)
 end
 
 function M.yellow(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.yellow .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'yellow', options)
 end
 
--- TODO later you can cleanup duplication
-
 function M.black_bold(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    local bold_text =
-        "\27[" .. color_keys.bright .. ";" .. color_keys.black .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
-    return bold_text
+    return M.color(text, {'bright', 'black'}, options)
 end
 
 function M.white_bold(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    local bold_text =
-        "\27[" .. color_keys.bright .. ";" .. color_keys.white .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
-    return bold_text
+    return M.color(text, {'bright', 'white'}, options)
 end
 
 function M.white(text, options)
@@ -242,30 +180,15 @@ function M.white(text, options)
 end
 
 function M.black_bg(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.black_bg .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'black_bg', options)
 end
 
 function M.red_bg(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.red_bg .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'red_bg', options)
 end
 
 function M.blue_bg(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    return "\27[" .. color_keys.blue_bg .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
+    return M.color(text, 'blue_bg', options)
 end
 
 function M.magenta_bg(text, options)
@@ -277,14 +200,7 @@ function M.green_bg(text, options)
 end
 
 function M.green_bold(text, options)
-    options = options or {}
-    options.color = options.color or true -- default is true
-    if not options.color then
-        return text
-    end
-    local bold_text =
-        "\27[" .. color_keys.bright .. ";" .. color_keys.green .. "m" .. text .. "\27[" .. color_keys.reset .. "m"
-    return bold_text
+    return M.color(text, {'bright', 'green'}, options)
 end
 
 function M.yellow_bg(text, options)
