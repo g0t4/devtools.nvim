@@ -42,7 +42,7 @@ end
 
 ---@param elapsed_seconds number
 ---@return string
-function format_elapsed_time(elapsed_seconds)
+function Timer.format_elapsed_time(elapsed_seconds)
     if elapsed_seconds >= 1 then
         return string.format("** %.3f s **", elapsed_seconds)
     end
@@ -64,7 +64,7 @@ end
 
 function Timer:overall_duration()
     local now = get_now_in_nanoseconds_counter()
-    return format_elapsed_time(now - self._overall_start)
+    return Timer.format_elapsed_time(now - self._overall_start)
 end
 
 return Timer

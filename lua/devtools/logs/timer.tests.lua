@@ -1,0 +1,38 @@
+local describe = require('devtools.tests.define.describe')
+local should = require('devtools.tests.should')
+local only = require('devtools.tests.define.only')
+local skip = require('devtools.tests.define.skip')
+
+local timer = require('devtools.logs.timer')
+
+describe('timer', function()
+    describe('format_elapsed_time', function()
+        it('formats seconds when elapsed_seconds >= 1', function()
+            should.be_equal('** 1.000 s **', timer.format_elapsed_time(1.0))
+            should.be_equal('** 1.234 s **', timer.format_elapsed_time(1.2345))
+            should.be_equal('** 2.346 s **', timer.format_elapsed_time(2.3456))
+        end)
+
+        it('formats milliseconds when 1 <= ms <= 10', function()
+            should.be_equal('1.00 ms', timer.format_elapsed_time(0.001))
+            should.be_equal('5.00 ms', timer.format_elapsed_time(0.005))
+            should.be_equal('10.00 ms', timer.format_elapsed_time(0.010))
+        end)
+
+        it('formats milliseconds with stars when ms > 10', function()
+            should.be_equal('* 11.00 ms *', timer.format_elapsed_time(0.011))
+            should.be_equal('* 23.45 ms *', timer.format_elapsed_time(0.02345))
+        end)
+
+        it('formats microseconds when 1 <= us < 1000', function()
+            should.be_equal('500 µs', timer.format_elapsed_time(0.0005))
+            should.be_equal('1 µs', timer.format_elapsed_time(0.000001))
+        end)
+
+        it('formats nanoseconds when us < 1', function()
+            should.be_equal('500 ns', timer.format_elapsed_time(0.0000005))
+            should.be_equal('1 ns', timer.format_elapsed_time(0.000000001))
+            should.be_equal('1 ns', timer.format_elapsed_time(0.00000000075))
+        end)
+    end)
+end)
