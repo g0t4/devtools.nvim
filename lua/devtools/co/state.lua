@@ -7,6 +7,7 @@ local function new_weak_map()
     return setmetatable({}, { __mode = "k" })
 end
 
+-- BTW no need to remove timer later b/c CoroutineStateTracker uses a weak map to store state
 local states = new_weak_map()
 
 ---@param key string
