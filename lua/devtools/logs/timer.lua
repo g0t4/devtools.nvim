@@ -38,6 +38,11 @@ function Timer:capture(message)
     table.insert(self._logs, { message = message, duration = duration })
 end
 
+--- FYI this is not intended to be high precision timing...
+---  this is intended for loggability
+---  hence not showing a bunch of decimal places
+---  use this to find concerns and then use something more precise when necessary
+---
 ---@param elapsed_seconds number
 ---@return string
 function Timer.format_elapsed_time(elapsed_seconds)
