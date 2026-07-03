@@ -7,6 +7,11 @@ local timer = require('devtools.logs.timer')
 
 describe('timer', function()
     describe('format_elapsed_time', function()
+        it("formats in minutes when elapsed_seconds >= 60", function()
+            should.be_equal('1.00 min', timer.format_elapsed_time(60))
+            should.be_equal('2.18 min', timer.format_elapsed_time(131))
+        end)
+
         it('formats seconds when elapsed_seconds >= 1', function()
             should.be_equal('1.00 s', timer.format_elapsed_time(1.0))
             should.be_equal('1.23 s', timer.format_elapsed_time(1.2345))
