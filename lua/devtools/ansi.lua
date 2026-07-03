@@ -244,6 +244,10 @@ function M.apple_pink(text, options)
     return M.rgb_hex(text, apple_pink, options)
 end
 
+function M.white_on_red(text, options)
+    return M.color(text, { color_keys.bold, color_keys.white, color_keys.red_bg }, options)
+end
+
 function M.rgb_hex(text, hex, options)
     options = options or {}
     options.color = options.color ~= false
