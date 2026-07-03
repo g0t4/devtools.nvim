@@ -1,7 +1,5 @@
 local host = require("devtools.host")
 
--- TODO review and cleanup (refactor away) this is just a copy from dotfiles repo... I wanna make this part of with_context and other utilities
-
 ---@class Timer
 ---@field _overall_start number
 ---@field _last_start number
