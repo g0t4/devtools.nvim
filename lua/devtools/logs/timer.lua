@@ -43,7 +43,7 @@ end
 ---@return string
 function Timer.format_elapsed_time(elapsed_seconds)
     if elapsed_seconds >= 1 then
-        return string.format("%.3f s", elapsed_seconds)
+        return string.format("%.2f s", elapsed_seconds)
     end
     local ms = elapsed_seconds * 1e3
     if ms >= 1 then
