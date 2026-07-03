@@ -85,7 +85,8 @@ local LEVEL_NUMBERS = {
     WARN = 3,
     ERROR = 4,
     FATAL = 5,
-    OFF = 6,
+    ALWAYS = 100,
+    OFF = 100,
 }
 local LOG_LEVEL_NUMBERS = LEVEL_NUMBERS
 local LEVEL_TEXT_TO_NUMBER = {
@@ -122,6 +123,11 @@ end
 
 function Logger:traceback(message, traceback)
     self:log(LOG_LEVEL_NUMBERS.ERROR, message, "\n\n", traceback, "\n\n")
+end
+
+--- when there isn't a level so much as you always want to show the message
+function Logger:always(...)
+    self:log(LOG_LEVEL_NUMBERS.ALWAYS, ...)
 end
 
 function Logger:fatal(...)
@@ -257,6 +263,15 @@ local function build_log_entry(logger, level_number, ...)
     if timer then
         local overall, since_last_log = timer:mark_last_start_and_get_durations()
         durations = overall .. " / " .. since_last_log
+    end
+
+    if level_number == LEVEL_NUMBERS.ALWAYS then
+        return string.format(
+            "%s %s %s\n",
+            durations,
+            (context or ""),
+            table.concat(stringified, " ")
+        )
     end
 
     return string.format(
@@ -462,6 +477,11 @@ function Logger.clear_scrollback_for_all_loggers()
     for _, logger in pairs(cached_loggers) do
         logger:clear_iterm_scrollback()
     end
+end
+
+function Logger:white_on_red(...)
+    local entry = build_log_entry(self, LOG_LEVEL_NUMBERS.ALWAYS, ...)
+    return self:_log(ansi.white_on_red(entry))
 end
 
 -- _G.Log = Logger.universal()
