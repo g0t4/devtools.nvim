@@ -43,10 +43,10 @@ end
 function Timer.format_elapsed_time(elapsed_seconds)
     if elapsed_seconds >= 60 then
         local minutes = elapsed_seconds / 60
-        return string.format("%.2fmin", minutes)
+        return string.format("%.1fmin", minutes)
     end
     if elapsed_seconds >= 1 then
-        return string.format("%.2fs", elapsed_seconds)
+        return string.format("%.1fs", elapsed_seconds)
     end
     local ms = elapsed_seconds * 1e3
     if ms >= 1 then
