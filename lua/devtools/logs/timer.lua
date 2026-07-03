@@ -43,14 +43,14 @@ end
 function Timer.format_elapsed_time(elapsed_seconds)
     if elapsed_seconds >= 60 then
         local minutes = elapsed_seconds / 60
-        return string.format("%.2f min", minutes)
+        return string.format("%.2fmin", minutes)
     end
     if elapsed_seconds >= 1 then
-        return string.format("%.2f s", elapsed_seconds)
+        return string.format("%.2fs", elapsed_seconds)
     end
     local ms = elapsed_seconds * 1e3
     if ms >= 1 then
-        local time = string.format("%.2f ms", ms)
+        local time = string.format("%.2fms", ms)
         if ms > 10 then
             return time
         end
@@ -58,10 +58,10 @@ function Timer.format_elapsed_time(elapsed_seconds)
     end
     local us = elapsed_seconds * 1e6
     if us >= 1 then
-        return string.format("%.0f µs", us)
+        return string.format("%.0fµs", us)
     end
     local ns = elapsed_seconds * 1e9
-    return string.format("%d ns", math.floor(ns + 0.5))
+    return string.format("%dns", math.floor(ns + 0.5))
 end
 
 function Timer:overall_duration()
