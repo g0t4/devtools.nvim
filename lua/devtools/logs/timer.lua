@@ -50,10 +50,7 @@ function Timer.format_elapsed_time(elapsed_seconds)
     end
     local ms = elapsed_seconds * 1e3
     if ms >= 1 then
-        local time = string.format("%.2fms", ms)
-        if ms > 10 then
-            return time
-        end
+        local time = string.format("%.1fms", ms)
         return time
     end
     local us = elapsed_seconds * 1e6
