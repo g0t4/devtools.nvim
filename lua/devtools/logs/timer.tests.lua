@@ -6,6 +6,20 @@ local skip = require('devtools.tests.define.skip')
 local timer = require('devtools.logs.timer')
 
 describe('timer', function()
+    describe("captures_log", function()
+        it("include overall + captures", function()
+            local t = timer.new()
+            t:capture("first")
+            t:capture("second")
+
+            local log_output = t:captures_log()
+
+            assert.matches("Overall time: %d*", log_output)
+            assert.matches("  first: %d*", log_output)
+            assert.matches("  second: %d*", log_output)
+        end)
+    end)
+
     describe('format_elapsed_time', function()
         it("formats in minutes when elapsed_seconds >= 60", function()
             should.be_equal('1.00 min', timer.format_elapsed_time(60))
