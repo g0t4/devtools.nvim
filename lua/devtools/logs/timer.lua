@@ -1,4 +1,5 @@
 local host = require("devtools.host")
+local log = require("devtools.logs.logger"):universal()
 
 ---@class Timer
 ---@field _overall_start number
@@ -73,6 +74,22 @@ function Timer:mark_last_start_and_get_durations()
     local since_last_log = Timer.format_elapsed_time(now - self._last_start)
     self._last_start = now
     return overall, since_last_log
+end
+
+function Timer:log_timing()
+    local overall = Timer.format_elapsed_time(get_now_in_nanoseconds_counter() - self._overall_start)
+    log:info(string.format("Overall time: %s", overall))
+    for _, entry in ipairs(self._logs) do
+        log:info(string.format("  %s: %s", entry.message, format_elapsed_time(entry.duration)))
+    end
+end
+
+function Timer.time_this(fn, description)
+    local timer = Timer.new()
+    local result = fn()
+    local duration = Timer.format_elapsed_time(get_now_in_nanoseconds_counter() - timer._overall_start)
+    log:info(string.format("%s: %s", description, duration))
+    return result
 end
 
 return Timer
