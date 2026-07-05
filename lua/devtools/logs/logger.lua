@@ -301,14 +301,21 @@ function Logger:_log(entry)
     self._file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
 end
 
+--- usage:
+---   xpcall(do_something, full_traceback_xpcall)
+--- does NOT truncate paths!
 function full_traceback_xpcall(error_message)
-    -- FYI intended use: xpcall(do_something, full_traceback_xpcall)
+    -- PRN can I recreate the full path? at least in some cases?
+    -- find part of path within current repo => then recreate stem
+    -- would work well except for files w/in repo that are deeply nested and/or long dir/file names
+
+    -- FYI error_message comes from xpcall internals, no way to fix the truncated path within it... it's just a string
+    -- you could do a path search for it... maybe lazily just within traceback paths... but you won't get original
+
     --   TODO can I use this beyond xpcall? where error callback is used?
     --
     -- alternative to debug.traceback which has has truncated paths (super annoying)
 
-    -- FYI error_message comes from xpcall internals, no way to fix the truncated path within it... it's just a string
-    -- you could do a path search for it... maybe lazily just within traceback paths... but you won't get original
 
     local lines = {
         tostring(error_message),
