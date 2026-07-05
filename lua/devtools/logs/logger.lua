@@ -301,7 +301,10 @@ function Logger:_log(entry)
     self._file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
 end
 
-function full_traceback(error_message)
+function full_traceback_xpcall(error_message)
+    -- FYI intended use: xpcall(do_something, full_traceback_xpcall)
+    --   TODO can I use this beyond xpcall? where error callback is used?
+    --
     -- alternative to debug.traceback which has has truncated paths (super annoying)
 
     -- FYI error_message comes from xpcall internals, no way to fix the truncated path within it... it's just a string
