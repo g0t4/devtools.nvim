@@ -15,7 +15,7 @@ function full_traceback_xpcall(error_message)
         --      I have seen them in both hs and nvim...
 
         "",
-        "stack traceback:",
+        "full_traceback:",
     }
 
     local level_base0 = 2
