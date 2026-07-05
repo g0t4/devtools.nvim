@@ -1,0 +1,2 @@
+
+error("load fails")

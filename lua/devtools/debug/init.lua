@@ -3,21 +3,17 @@ local fails = require("devtools.logs.fails")
 --- usage:
 ---   xpcall(do_something, full_traceback_xpcall)
 --- does NOT truncate paths!
+---
+-- alternative to debug.traceback which has has truncated paths (super annoying)
 function full_traceback_xpcall(error_message)
-    -- PRN can I recreate the full path? at least in some cases?
-    -- find part of path within current repo => then recreate stem
-    -- would work well except for files w/in repo that are deeply nested and/or long dir/file names
-
-    -- FYI error_message comes from xpcall internals, no way to fix the truncated path within it... it's just a string
-    -- you could do a path search for it... maybe lazily just within traceback paths... but you won't get original
-
-    --   TODO can I use this beyond xpcall? where error callback is used?
-    --
-    -- alternative to debug.traceback which has has truncated paths (super annoying)
-
-
     local lines = {
         tostring(error_message),
+        -- FYI error_message comes from xpcall internals and other error handlers
+        --    LEAVE ERROR MESSAGE AS-IS => do not waste time "fixing" the '...' truncated path, nor "stripping" the path
+        --    b/c if you mess up your traceback (i.e. in some edge case)... then error message will be critical to show that something is amiss!
+        --    btw if you really wanna change anything, find what raises these errors and understand it first
+        --      I have seen them in both hs and nvim...
+
         "",
         "stack traceback:",
     }
@@ -59,4 +55,3 @@ function full_traceback_xpcall(error_message)
     fails.copy_last_failure()
     return trace
 end
-
