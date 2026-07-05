@@ -91,6 +91,13 @@ function Timer:captures_log()
 end
 
 function Timer.time_this(fn, description, log)
+    if log == nil then
+        log = require('devtools.logs.logger').universal()
+    end
+    if not description then
+        description = "no description"
+    end
+
     local timer = Timer.new()
     local result = fn()
     local duration = Timer.format_elapsed_time(get_now_in_nanoseconds_counter() - timer._overall_start)
