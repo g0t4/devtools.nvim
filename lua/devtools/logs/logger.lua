@@ -154,6 +154,22 @@ function Logger:info(...)
     self:log(LOG_LEVEL_NUMBERS.INFO, ...)
 end
 
+function Logger:divider(message)
+    local line
+    if message and message ~= "" then
+        local msg = tostring(message)
+        local total_len = 80
+        local num_pad_chars = total_len - #msg - 2
+        local num_left_side = math.max(math.floor(num_pad_chars / 2), 0)
+        local num_right_side = math.max(num_pad_chars - num_left_side, 0)
+        line = string.rep("-", num_left_side) .. " " .. msg .. " " .. string.rep("-", num_right_side)
+    else
+        line = string.rep("-", 80)
+    end
+    self:_log("\n" .. ansi.apple_mint(line) .. "\n")
+    return self
+end
+
 -- * log threshold *
 local MAX_LOG_THRESHOLD = 2 -- must always show WARN/ERROR
 

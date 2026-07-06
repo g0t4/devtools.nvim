@@ -239,9 +239,15 @@ function M.apple_yellow(text, options)
     local apple_yellow = "ffd60a"
     return M.rgb_hex(text, apple_yellow, options)
 end
+
 function M.apple_pink(text, options)
     local apple_pink = "ff375f"
     return M.rgb_hex(text, apple_pink, options)
+end
+
+function M.apple_mint(text, options)
+    local apple_green = "66d4cf"
+    return M.rgb_hex(text, apple_green, options)
 end
 
 function M.white_on_red(text, options)
