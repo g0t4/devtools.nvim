@@ -117,7 +117,7 @@ function M.cyan(text, options)
 end
 
 function M.cyan_bold(text, options)
-    return M.color(text, {color_keys.bold, color_keys.cyan}, options)
+    return M.color(text, { color_keys.bold, color_keys.cyan }, options)
 end
 
 function M.underline(text, options)
@@ -133,7 +133,7 @@ function M.dim(text, options)
 end
 
 function M.red_bold(text, options)
-    return M.color(text, {color_keys.bold, color_keys.red}, options)
+    return M.color(text, { color_keys.bold, color_keys.red }, options)
 end
 
 function M.red(text, options)
@@ -145,7 +145,7 @@ function M.blue(text, options)
 end
 
 function M.blue_bold(text, options)
-    return M.color(text, {color_keys.bold, color_keys.blue}, options)
+    return M.color(text, { color_keys.bold, color_keys.blue }, options)
 end
 
 function M.magenta(text, options)
@@ -153,7 +153,7 @@ function M.magenta(text, options)
 end
 
 function M.magenta_bold(text, options)
-    return M.color(text, {color_keys.bold, color_keys.magenta}, options)
+    return M.color(text, { color_keys.bold, color_keys.magenta }, options)
 end
 
 function M.green(text, options)
@@ -161,7 +161,7 @@ function M.green(text, options)
 end
 
 function M.yellow_bold(text, options)
-    return M.color(text, {color_keys.bold, color_keys.yellow}, options)
+    return M.color(text, { color_keys.bold, color_keys.yellow }, options)
 end
 
 function M.yellow(text, options)
@@ -169,11 +169,11 @@ function M.yellow(text, options)
 end
 
 function M.black_bold(text, options)
-    return M.color(text, {color_keys.bold, color_keys.black}, options)
+    return M.color(text, { color_keys.bold, color_keys.black }, options)
 end
 
 function M.white_bold(text, options)
-    return M.color(text, {color_keys.bold, color_keys.white}, options)
+    return M.color(text, { color_keys.bold, color_keys.white }, options)
 end
 
 function M.white(text, options)
@@ -201,7 +201,7 @@ function M.green_bg(text, options)
 end
 
 function M.green_bold(text, options)
-    return M.color(text, {color_keys.bold, color_keys.green}, options)
+    return M.color(text, { color_keys.bold, color_keys.green }, options)
 end
 
 function M.yellow_bg(text, options)

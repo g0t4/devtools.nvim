@@ -301,7 +301,6 @@ function Logger:_log(entry)
     self._file:flush() -- 0.69ms (max in my tests) => down to 0.02ms (most of time)
 end
 
-
 local function NOOP() end
 
 
