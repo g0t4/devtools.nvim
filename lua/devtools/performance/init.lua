@@ -1,5 +1,7 @@
 local lua = require("devtools.lua")
 
+local M = {}
+
 ---@return integer nanoseconds
 function get_time_in_ns()
     return vim.loop.hrtime()
@@ -14,15 +16,21 @@ function get_elapsed_time_in_rounded_ms(start_time)
     return ms_rounded_1_digit
 end
 
-function start_profiler()
+-- TODO refactor to module usage so we don't have dependency load order issues w/ globals
+M.get_time_in_ns = get_time_in_ns
+M.get_elapsed_time_in_rounded_ms = get_elapsed_time_in_rounded_ms
+
+function M.start_profiler()
     local ProFi = lua.try_require_luarocks_dependency("ProFi")
     ProFi:start()
 end
 
-function stop_profiler(path)
+function M.stop_profiler(path)
     path = path or "profi.txt"
     local ProFi = require("ProFi")
     ProFi:stop()
     ProFi:writeReport(path)
     print("profile written to: " .. path)
 end
+
+return M
