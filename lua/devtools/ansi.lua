@@ -51,6 +51,7 @@ local color_keys = {
     reset     = 0,
     bold      = 1,
     dim       = 2,
+    italic    = 3,
     underline = 4,
     blink     = 5,
     reverse   = 7,
@@ -118,6 +119,10 @@ end
 
 function M.cyan_bold(text, options)
     return M.color(text, { color_keys.bold, color_keys.cyan }, options)
+end
+
+function M.italic(text, options)
+    return M.color(text, color_keys.italic, options)
 end
 
 function M.underline(text, options)
