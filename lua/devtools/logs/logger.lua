@@ -88,7 +88,7 @@ local LEVEL_NUMBERS = {
     ALWAYS = 100,
     OFF = 100,
 }
-local LOG_LEVEL_NUMBERS = LEVEL_NUMBERS
+
 local LEVEL_TEXT_TO_NUMBER = {
     ["TRACE"] = LEVEL_NUMBERS.TRACE,
     ["DEBUG"] = LEVEL_NUMBERS.DEBUG,
@@ -110,48 +110,48 @@ local LEVEL_NUMBER_TO_TEXT = {
 
 local function log_level_tag_for_number(level_number)
     local level_number_to_tag = {
-        [LOG_LEVEL_NUMBERS.TRACE] = ansi.cyan("TRACE"),
-        [LOG_LEVEL_NUMBERS.DEBUG] = ansi.green_bold("DEBUG"),
-        [LOG_LEVEL_NUMBERS.INFO]  = ansi.white_bold("INFO "),
-        [LOG_LEVEL_NUMBERS.WARN]  = ansi.yellow_bold("WARN "),
-        [LOG_LEVEL_NUMBERS.ERROR] = ansi.red_bold("ERROR"),
-        [LOG_LEVEL_NUMBERS.FATAL] = ansi.magenta_bold("FATAL"),
-        [LOG_LEVEL_NUMBERS.OFF]   = ansi.dim("OFF"),
+        [LEVEL_NUMBERS.TRACE] = ansi.cyan("TRACE"),
+        [LEVEL_NUMBERS.DEBUG] = ansi.green_bold("DEBUG"),
+        [LEVEL_NUMBERS.INFO]  = ansi.white_bold("INFO "),
+        [LEVEL_NUMBERS.WARN]  = ansi.yellow_bold("WARN "),
+        [LEVEL_NUMBERS.ERROR] = ansi.red_bold("ERROR"),
+        [LEVEL_NUMBERS.FATAL] = ansi.magenta_bold("FATAL"),
+        [LEVEL_NUMBERS.OFF]   = ansi.dim("OFF"),
     }
     return level_number_to_tag[level_number]
 end
 
 function Logger:traceback(message, traceback)
-    self:log(LOG_LEVEL_NUMBERS.ERROR, message, "\n\n", traceback, "\n\n")
+    self:log(LEVEL_NUMBERS.ERROR, message, "\n\n", traceback, "\n\n")
 end
 
 --- when there isn't a level so much as you always want to show the message
 function Logger:always(...)
-    self:log(LOG_LEVEL_NUMBERS.ALWAYS, ...)
+    self:log(LEVEL_NUMBERS.ALWAYS, ...)
 end
 
 function Logger:fatal(...)
-    self:log(LOG_LEVEL_NUMBERS.FATAL, ...)
+    self:log(LEVEL_NUMBERS.FATAL, ...)
 end
 
 function Logger:error(...)
-    self:log(LOG_LEVEL_NUMBERS.ERROR, ...)
+    self:log(LEVEL_NUMBERS.ERROR, ...)
 end
 
 function Logger:warn(...)
-    self:log(LOG_LEVEL_NUMBERS.WARN, ...)
+    self:log(LEVEL_NUMBERS.WARN, ...)
 end
 
 function Logger:debug(...)
-    self:log(LOG_LEVEL_NUMBERS.DEBUG, ...)
+    self:log(LEVEL_NUMBERS.DEBUG, ...)
 end
 
 function Logger:trace(...)
-    self:log(LOG_LEVEL_NUMBERS.TRACE, ...)
+    self:log(LEVEL_NUMBERS.TRACE, ...)
 end
 
 function Logger:info(...)
-    self:log(LOG_LEVEL_NUMBERS.INFO, ...)
+    self:log(LEVEL_NUMBERS.INFO, ...)
 end
 
 function Logger:divider(message)
@@ -206,7 +206,7 @@ end
 ---@param value any - will be inspect()'d and piped through bat
 function Logger:luaify_trace(message, value)
     -- bat is expensive, don't call if not logging it!
-    if not self:is_enabled(LOG_LEVEL_NUMBERS.TRACE) then
+    if not self:is_enabled(LEVEL_NUMBERS.TRACE) then
         return
     end
 
@@ -233,7 +233,7 @@ end
 ---@param compact? boolean
 ---@param ... any - lua value(s) that will be vim.json.encode()'d
 function Logger:_jsonify_trace(message, compact, ...)
-    if not self:is_enabled(LOG_LEVEL_NUMBERS.TRACE) then
+    if not self:is_enabled(LEVEL_NUMBERS.TRACE) then
         return
     end
     local value = { ... }
@@ -446,7 +446,7 @@ function Logger.clear_scrollback_for_all_loggers()
 end
 
 function Logger:white_on_red(...)
-    local entry = build_log_entry(self, LOG_LEVEL_NUMBERS.ALWAYS, ...)
+    local entry = build_log_entry(self, LEVEL_NUMBERS.ALWAYS, ...)
     return self:_log(ansi.white_on_red(entry))
 end
 
