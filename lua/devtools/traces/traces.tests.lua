@@ -14,8 +14,8 @@ describe("resolve_truncated_path", function()
     it("works for test case error", function()
         local ok, err = xpcall(boom, debug.traceback)
 
-        -- print("\n******************** Original traceback:\n")
-        -- print(err)
+        print("\n******************** Original traceback:\n")
+        print(err)
 
         -- print("\n******************** search:\n")
         local fixed = err:gsub("(%.%.%.*[^:\n]+)", function(short_path)
