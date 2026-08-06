@@ -23,6 +23,12 @@ function M.resolve_truncated_path(truncated_path)
 
     local suffix = truncated_path:gsub("^%.%.%.", "")
 
+    -- TODO hammerspoon will need diff roots to look through
+    --  and especially add /Applications/Hammerspoon.app/Contents
+    --   TODO find paths for HS path?
+    --    use hs CLI to run the search! and then just update this logic to detect hammerspoon vs not (the stack trace as HS vs not?) or just run this with host process type?
+    --        devtools.host?
+    --
     -- FYI technically we don't need workspace_root first, it is probably the best place to look first
     --  unless the errors aren't in your own code
     local workspace_root = vim.fn.getcwd()
