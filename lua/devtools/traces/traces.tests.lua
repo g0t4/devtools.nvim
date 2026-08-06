@@ -49,4 +49,10 @@ stack traceback:
 
         should.be_same_colorful_diff(expected, fixed_string)
     end)
+
+    it("should skip ...", function()
+        local dotdotdot = "..."
+        local result = traces.resolve_truncated_path(dotdotdot)
+        should.be_nil(result)
+    end)
 end)
