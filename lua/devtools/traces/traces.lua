@@ -36,7 +36,7 @@ function M.resolve_truncated_path(truncated_path)
 
     for _, root in ipairs(roots) do
         -- print("  CHECKING " .. root)
-        local result = vim.system({
+        local cmd = {
             "fd",
             -- "--type", "file",
             "--absolute-path",
@@ -44,7 +44,8 @@ function M.resolve_truncated_path(truncated_path)
             "--fixed-strings",
             suffix,
             root,
-        }, { text = true }):wait()
+        }
+        local result = vim.system(cmd, { text = true }):wait()
 
         if result.code == 0 then
             local matches = vim
@@ -61,6 +62,7 @@ function M.resolve_truncated_path(truncated_path)
                     return match
                 end
             elseif #matches > 1 then
+                vim.print(cmd)
                 error(("Multiple matches for %q:\n%s"):format(
                     truncated_path,
                     table.concat(matches, "\n")
