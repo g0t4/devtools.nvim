@@ -44,28 +44,13 @@ stack traceback:
 	[C]: in function 'xpcall'
 	]] .. home .. [[/.local/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:74: in function 'call_inner'
 	]] .. home .. [[/.local/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:120: in function 'original_describe'
-	]] .. home .. [[/repos/github/g0t4/devtools.nvim/lua/devtools/tests/define/describe.lua:16: in function 'describe'
+	./lua/devtools/tests/define/describe.lua:16: in function 'describe'
 	]] .. home .. [[/repos/github/g0t4/devtools.nvim/lua/devtools/traces/traces.tests.lua:13: in function 'loaded'
 	]] .. home .. [[/.local/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:239: in function <]] .. home .. [[/.local/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:238>]]
 
-
-        -- .../g0t4/devtools.nvim/lua/devtools/traces/traces.tests.lua:20: boom
-        -- stack traceback:
-        --         [C]: in function 'error'
-        --         .../g0t4/devtools.nvim/lua/devtools/traces/traces.tests.lua:20: in function <.../g0t4/devtools.nvim/lua/devtools/traces/traces.tests.lua:19>
-        --         [C]: in function 'xpcall'
-        --         .../g0t4/devtools.nvim/lua/devtools/traces/traces.tests.lua:60: in function <.../g0t4/devtools.nvim/lua/devtools/traces/traces.tests.lua:59>
-        --         [C]: in function 'xpcall'
-        --         ...ocal/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:74: in function 'call_inner'
-        --         ...ocal/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:175: in function 'it'
-        --         .../g0t4/devtools.nvim/lua/devtools/traces/traces.tests.lua:59: in function <.../g0t4/devtools.nvim/lua/devtools/traces/traces.tests.lua:58>
-        --         [C]: in function 'xpcall'
-        --         ...ocal/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:74: in function 'call_inner'
-        --         ...ocal/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:120: in function 'original_describe'
-        --         ...0t4/devtools.nvim/lua/devtools/tests/define/describe.lua:16: in function 'describe'
-        --         .../g0t4/devtools.nvim/lua/devtools/traces/traces.tests.lua:58: in function 'loaded'
-        --         ...ocal/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:239: in function <...ocal/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:238>
-
+        -- PRN do I need to do anythin to capture ./ paths and transform them too? like this one above:
+        --     ./lua/devtools/tests/define/describe.lua:16: in function 'describe'
+        --
 
         should.be_same_colorful_diff(expected, fixed_string)
     end)
