@@ -66,7 +66,7 @@ function M.resolve_truncated_path(truncated_path)
                     return match
                 end
             elseif #matches > 1 then
-                vim.print(cmd)
+                vim.print(table.concat(cmd, " ")) -- leave print of command so I can replicate
                 error(("Multiple matches for %q:\n%s"):format(
                     truncated_path,
                     table.concat(matches, "\n")
