@@ -72,4 +72,12 @@ function M.resolve_truncated_path(truncated_path)
     return nil
 end
 
+function M.fix_paths_in_error(error_text)
+    local fixed = error_text:gsub("(%.%.%.*[^:\n]+)", function(short_path)
+        local full = M.resolve_truncated_path(short_path)
+        return full or short_path
+    end)
+    return fixed
+end
+
 return M

@@ -18,12 +18,7 @@ describe("resolve_truncated_path", function()
         print(err)
 
         -- print("\n******************** search:\n")
-        local fixed = err:gsub("(%.%.%.*[^:\n]+)", function(short_path)
-            -- print("SEARCHING FOR: ", short_path)
-            local full = traces.resolve_truncated_path(short_path)
-            -- print("   FULL: ", vim.inspect(full))
-            return full or short_path
-        end)
+        local fixed = traces.fix_paths_in_error(err)
 
         -- print("\n ********************* Fixed traceback:\n")
         -- print(fixed)
