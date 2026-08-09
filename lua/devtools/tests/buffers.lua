@@ -1,5 +1,17 @@
 local M = {}
 
+---@param lines string[]
+---@return integer bufnr
+---@return integer win
+function M.new_buffer_in_new_window_with_lines(lines)
+    -- FYI this is just an aliased function call to make explicit that I want both new buffer and new window
+    -- the new buffer code below has always done both but I never made that explicit in the func signature
+    return M.new_buffer_with_lines(lines)
+end
+
+---@param lines string[]
+---@return integer bufnr
+---@return integer win
 function M.new_buffer_with_lines(lines)
     -- FYI this originated in ask-openai.nvim repo
 
@@ -16,7 +28,7 @@ function M.new_buffer_with_lines(lines)
         style = 'minimal',
     })
     vim.api.nvim_set_current_win(win)
-    return bufnr
+    return bufnr, win
     -- FYI not setting cursor before commands, let the tests handle reliably setting cursor
     -- vim.api.nvim_win_set_cursor(win, { 1, 0 })
 end
