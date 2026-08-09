@@ -15,14 +15,15 @@ describe("new_buffer_with_lines", function()
 
             assert.is_false(vim.tbl_contains(bufs_before, bufnr), "buffer should not exist before the call")
             assert.is_true(vim.tbl_contains(bufs_after, bufnr), "buffer should exist after the call")
-            -- make sure difference is only the new buffer too
+            assert.is_true(vim.api.nvim_buf_is_valid(bufnr), "buffer should be valid")
+
+            -- * ensure difference is the single buffer bufnr
             local in_after_and_before = vim.tbl_filter(function(bufnr) return vim.tbl_contains(bufs_before, bufnr) end, bufs_after)
             -- vim.print("in after and before", in_after_and_before)
             assert.are.same(in_after_and_before, bufs_before, "make sure nothing removed")
             local in_after_but_not_before = vim.tbl_filter(function(bufnr) return not vim.tbl_contains(bufs_before, bufnr) end, bufs_after)
             -- vim.print("after that was not in before", in_after_but_not_before)
             assert.are.same(in_after_but_not_before, { bufnr }, "only new buffer is the one created")
-            assert.is_true(vim.api.nvim_buf_is_valid(bufnr), "buffer should be valid")
         end)
 
         it("returns a fresh buffer id on each call", function()
