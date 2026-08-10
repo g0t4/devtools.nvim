@@ -92,4 +92,45 @@ function M.fix_paths_in_error(error_text)
     return fixed
 end
 
+---Parse a lua traceback into quickfix list items.
+---Truncated paths (from lua's error() shortening long paths to ~60 chars with a `...` prefix)
+---are left as-is here; call resolve_truncated_path() (or load_trace_to_quickfix()) to fix them.
+---@param trace string
+---@return table[] -- quickfix items: { filename, lnum, col, text }
+function M.parse_trace_for_quickfix(trace)
+    local items = {}
+    for line in vim.gsplit(trace, "\n", { plain = true }) do
+        -- prefer a `...`-truncated path so prefixes like "vim.schedule callback:"
+        -- don't get glued onto the filename (lua shortens long paths in stack traces)
+        local path, lnum, text = line:match("(%.%.%.%S-):(%d+):(.*)$")
+        if not path then
+            -- fallback: capture the path up to the first ":number:"
+            --   (handles full paths and virtual frames like `[string "x"]`)
+            path, lnum, text = line:match("^%s*(.-):(%d+):(.*)$")
+        end
+        if path then
+            local filename = path:gsub("^%s+", ""):gsub("%s+$", "")
+            local message = (text and text:gsub("^%s+", ""):gsub("%s+$", "")) or ""
+            table.insert(items, {
+                filename = filename,
+                lnum = tonumber(lnum),
+                col = 0,
+                text = message,
+            })
+        end
+    end
+    return items
+end
+
+---Parse a lua traceback, resolve truncated paths, and load it into the quickfix list.
+---@param trace string
+function M.load_trace_to_quickfix(trace)
+    local items = M.parse_trace_for_quickfix(trace)
+    for _, item in ipairs(items) do
+        item.filename = M.resolve_truncated_path(item.filename) or item.filename
+    end
+    vim.fn.setqflist(items, 'r')
+    vim.cmd('copen')
+end
+
 return M

@@ -79,8 +79,89 @@ stack traceback:
         .../wesdemos/.config/nvim/lua/plugins/wip/osc-reference.lua:91: in function <.../wesdemos/.config/nvim/lua/plugins/wip/osc-reference.lua:84>       --
 ]]
 
-describe("parse_for_quickfix", function()
-    it("trace1 RENAME ACCORDINGLY", function()
+local expected_trace1 = {
+    {
+        filename = "...a/ask-openai/agents/viewer/buffers_integration_tests.lua",
+        lnum = 131,
+        col = 0,
+        text = "handle 0x08844ac0a0 is already closing",
+    },
+    {
+        filename = "...a/ask-openai/agents/viewer/buffers_integration_tests.lua",
+        lnum = 131,
+        col = 0,
+        text = "in function 'fn'",
+    },
+    {
+        filename = '[string "vim/_core/editor"]',
+        lnum = 273,
+        col = 0,
+        text = 'in function <[string "vim/_core/editor"]:272>',
+    },
+    {
+        filename = "...ocal/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua",
+        lnum = 268,
+        col = 0,
+        text = "in function 'run'",
+    },
+}
 
+local expected_trace2 = {
+    {
+        filename = "...epos/github/g0t4/devtools.nvim/lua/devtools/messages.lua",
+        lnum = 231,
+        col = 0,
+        text = "in function 'dump_background'",
+    },
+    {
+        filename = "...epos/github/g0t4/devtools.nvim/lua/devtools/messages.lua",
+        lnum = 257,
+        col = 0,
+        text = "in function 'append'",
+    },
+    {
+        filename = ".../wesdemos/.config/nvim/lua/plugins/wip/osc-reference.lua",
+        lnum = 91,
+        col = 0,
+        text = "in function <.../wesdemos/.config/nvim/lua/plugins/wip/osc-reference.lua:84>       --",
+    },
+}
+
+describe("parse_for_quickfix", function()
+    it("parses trace1 (truncated paths + virtual frames)", function()
+        local items = traces.parse_trace_for_quickfix(trace1)
+        should.be_same_colorful_diff(expected_trace1, items)
+    end)
+
+    it("parses trace2 (autocommand error prefix + truncated paths)", function()
+        local items = traces.parse_trace_for_quickfix(trace2)
+        should.be_same_colorful_diff(expected_trace2, items)
+    end)
+
+    it("load_trace_to_quickfix parses, resolves paths, and fills the quickfix list", function()
+        -- keep resolution a no-op so the test is deterministic
+        --   (the real resolve_truncated_path hits fd + runtimepath)
+        local original_resolve = traces.resolve_truncated_path
+        traces.resolve_truncated_path = function(path)
+            return path
+        end
+
+        local captured
+        local original_setqflist = vim.fn.setqflist
+        vim.fn.setqflist = function(items)
+            captured = items
+        end
+        -- stub copen so a headless test run doesn't try to open a window
+        local original_copen = vim.cmd.copen
+        vim.cmd.copen = function() end
+
+        traces.load_trace_to_quickfix(trace1)
+
+        -- restore
+        traces.resolve_truncated_path = original_resolve
+        vim.fn.setqflist = original_setqflist
+        vim.cmd.copen = original_copen
+
+        should.be_same_colorful_diff(expected_trace1, captured)
     end)
 end)
