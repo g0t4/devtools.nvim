@@ -56,3 +56,31 @@ stack traceback:
         should.be_nil(result)
     end)
 end)
+
+
+local trace1 = [[
+vim.schedule callback: ...a/ask-openai/agents/viewer/buffers_integration_tests.lua:131: handle 0x08844ac0a0 is already closing
+stack traceback:
+        [C]: in function 'close'
+        ...a/ask-openai/agents/viewer/buffers_integration_tests.lua:131: in function 'fn'
+        [string "vim/_core/editor"]:273: in function <[string "vim/_core/editor"]:272>
+        [builtin#36]: at 0x01015b6528
+        ...ocal/share/nvim/lazy/plenary.nvim/lua/plenary/busted.lua:268: in function 'run'
+]]
+
+
+local trace2 = [[
+Error detected while processing TermRequest Autocommands for "*":
+Error executing lua callback: TermRequest Autocommands for "*": Vim(normal):Can't re-enter normal mode from terminal mode
+stack traceback:
+        [C]: in function 'win_execute'
+        ...epos/github/g0t4/devtools.nvim/lua/devtools/messages.lua:231: in function 'dump_background'
+        ...epos/github/g0t4/devtools.nvim/lua/devtools/messages.lua:257: in function 'append'
+        .../wesdemos/.config/nvim/lua/plugins/wip/osc-reference.lua:91: in function <.../wesdemos/.config/nvim/lua/plugins/wip/osc-reference.lua:84>       --
+]]
+
+describe("parse_for_quickfix", function()
+    it("trace1 RENAME ACCORDINGLY", function()
+
+    end)
+end)
