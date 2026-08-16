@@ -20,13 +20,15 @@ local BORDER_CHARS = {
     none = nil,
 }
 
----@return string[][] grid rows of cells (each cell is a single char or "")
+---@return string[][] grid rows of cells (each cell is a single char or " ")
 local function make_grid(cols, rows)
     local grid = {}
     for _ = 1, rows do
         local row = {}
         for _ = 1, cols do
-            table.insert(row, "")
+            -- cells must be spaces, not "", so empty areas contribute padding
+            -- when the row is concatenated (screenshot must show real layout)
+            table.insert(row, " ")
         end
         table.insert(grid, row)
     end
@@ -146,10 +148,9 @@ function M.dump()
 
     local out = {}
     for _, row in ipairs(grid) do
-        -- trim trailing spaces so the dump is readable
-        -- note: parens around gsub so only the 1st return (string) is used,
-        -- otherwise gsub's 2nd return (count) leaks into table.insert
-        table.insert(out, (table.concat(row):gsub("%s+$", "")))
+        -- keep trailing spaces: this is a screenshot, so the blank padding
+        -- between windows must be preserved to show real layout
+        table.insert(out, table.concat(row))
     end
     return table.concat(out, "\n")
 end
