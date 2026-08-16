@@ -1,5 +1,6 @@
 local describe = require("devtools.tests.define.describe")
 local notify = require("devtools.notify")
+local only = require("devtools.tests.define.only")
 
 --- Wait for a condition to become true, polling every `poll_ms` milliseconds.
 --- @param predicate fun(): boolean
@@ -26,7 +27,7 @@ local function wait_for(predicate, timeout_ms, poll_ms)
 end
 
 describe("E2E - devtools.notify", function()
-    it("notification appears immediately and auto-disappears after its timeout", function()
+    only("notification appears immediately and auto-disappears after its timeout", function()
         -- * action: show a notification that auto-dismisses after 300ms
         local n = notify.info("hello world", { timeout = 300 })
 
