@@ -1,6 +1,7 @@
 local messages = require("devtools.messages")
 local nvim = require("devtools.nvim")
 local lua = require("devtools.lua")
+local notify = require("devtools.notify")
 
 local M = {}
 
@@ -8,6 +9,7 @@ function M.setup(opts)
     messages.setup(opts)
     nvim.setup()
     lua.setup()
+    notify.setup(opts and opts.notify)
 
     if opts.no_globals then
         return

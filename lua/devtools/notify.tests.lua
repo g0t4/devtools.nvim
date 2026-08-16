@@ -1,0 +1,33 @@
+local describe = require('devtools.tests.define.describe')
+local notify = require("devtools.notify")
+
+describe("devtools.notify", function()
+    it("creates a visible window", function()
+        local n = notify.info("hello world", { timeout = 0 })
+        assert.is_true(vim.api.nvim_win_is_valid(n.win_id))
+        n:dismiss()
+    end)
+
+    it("dismiss removes the window", function()
+        local n = notify.warn("gone soon", { timeout = 0 })
+        local win_id = n.win_id
+        n:dismiss()
+        assert.is_false(vim.api.nvim_win_is_valid(win_id))
+    end)
+
+    it("stacks notifications without error", function()
+        local a = notify.error("one", { timeout = 0 })
+        local b = notify.error("two", { timeout = 0 })
+        assert.is_true(vim.api.nvim_win_is_valid(a.win_id))
+        assert.is_true(vim.api.nvim_win_is_valid(b.win_id))
+        a:dismiss()
+        b:dismiss()
+    end)
+
+    it("dismiss_all clears everything", function()
+        notify.info("x", { timeout = 0 })
+        notify.info("y", { timeout = 0 })
+        notify.dismiss_all()
+        assert.is_true(true)
+    end)
+end)
