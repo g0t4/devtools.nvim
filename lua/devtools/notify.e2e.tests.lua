@@ -41,12 +41,11 @@ describe("E2E - devtools.notify", function()
         -- * "viewpoint": dump the current screen as text so a human can
         --   eyeball the UI state (headless nvim has no real pixels, so we
         --   rebuild what would be rendered). Like a Selenium screencap.
-        print("\n========== SCREEN DUMP @ notification visible ==========")
-        print(screen.dump())
-        print("========================================================\n")
+        screen.dump_bounded("notification visible")
 
         -- * disappears on its own after the timeout fires
         local disappeared = wait_for(function()
+            screen.dump_bounded("start of wait_for")
             return not n.win_id or not vim.api.nvim_win_is_valid(n.win_id)
         end, 2000, 100)
         assert.is_true(disappeared, "notification should auto-dismiss after its timeout")

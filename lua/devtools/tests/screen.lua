@@ -100,6 +100,15 @@ local function draw_window(grid, win_id)
     end
 end
 
+--- Helper to dump screen w/ boundaries
+---@param title? string
+function M.dump_bounded(title)
+    -- hrm... can't we just get borders around windows with buffers too?
+    print("\n========== SCREEN DUMP @ " .. title .. " ==========")
+    print(M.dump())
+    print("==============================================")
+end
+
 ---Render the current screen as a single string (newline separated rows).
 ---@return string
 function M.dump()
