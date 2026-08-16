@@ -194,7 +194,12 @@ end
 
 ---Dismiss all currently visible notifications.
 function M.dismiss_all()
+    -- iterate a snapshot so dismiss() removing from `active` doesn't skip items
+    local pending = {}
     for _, n in ipairs(active) do
+        table.insert(pending, n)
+    end
+    for _, n in ipairs(pending) do
         n:dismiss()
     end
 end
