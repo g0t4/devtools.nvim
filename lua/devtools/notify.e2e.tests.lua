@@ -1,5 +1,6 @@
 local describe = require("devtools.tests.define.describe")
 local notify = require("devtools.notify")
+local screen = require("devtools.tests.screen")
 local only = require("devtools.tests.define.only")
 
 --- Wait for a condition to become true, polling every `poll_ms` milliseconds.
@@ -36,6 +37,13 @@ describe("E2E - devtools.notify", function()
             vim.api.nvim_win_is_valid(n.win_id),
             "notification window should be valid immediately after notify()"
         )
+
+        -- * "viewpoint": dump the current screen as text so a human can
+        --   eyeball the UI state (headless nvim has no real pixels, so we
+        --   rebuild what would be rendered). Like a Selenium screencap.
+        print("\n========== SCREEN DUMP @ notification visible ==========")
+        print(screen.dump())
+        print("========================================================\n")
 
         -- * disappears on its own after the timeout fires
         local disappeared = wait_for(function()
