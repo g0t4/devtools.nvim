@@ -41,10 +41,15 @@ describe("devtools.tests.screen", function()
         vim.cmd(":q!")
     end)
     it("renders content from a vertical split window", function()
+        -- * setup: make vsplit open the new window on the RIGHT (matches the
+        --   user's config which sets 'splitright'; nvim's default is LEFT).
+        local save_splitright = vim.o.splitright
+        vim.o.splitright = true
+
         -- * setup: first buffer/window
         vim.api.nvim_buf_set_lines(0, 0, -1, false, { "first win content" })
-        -- * create a vertical split. NOTE: :vsplit new opens the new window on
-        --   the LEFT, so the current buffer after the command is the new window.
+        -- * create a vertical split; with splitright the new window is on the
+        --   RIGHT, so the current buffer after the command is the new window.
         vim.cmd(":vsplit new")
         vim.api.nvim_buf_set_lines(0, 0, -1, false, { "second win content" })
 
@@ -73,23 +78,25 @@ describe("devtools.tests.screen", function()
         )
 
         -- * position: blank padding must separate the windows (not collapsed).
-        --   Find both contents' start columns; whichever is left vs right doesn't
-        --   matter (that depends on :vsplit placement), but the gap between them
-        --   must be pure spaces proving they render in their own columns.
-        local a_start = shared_line:find("first win content")
-        local b_start = shared_line:find("second win content")
-        assert.is_not_nil(a_start, "first win content should have a position")
-        assert.is_not_nil(b_start, "second win content should have a position")
+        --   With splitright the new (second) window is on the RIGHT, so its
+        --   content must start after the first window's content + blank padding.
+        local first_start = shared_line:find("first win content")
+        local second_start = shared_line:find("second win content")
+        assert.is_not_nil(first_start, "first win content should have a position")
+        assert.is_not_nil(second_start, "second win content should have a position")
+        assert.is_true(
+            second_start > first_start,
+            "with splitright the second window should be to the right of the first"
+        )
 
-        local first_start = math.min(a_start, b_start)
-        local second_start = math.max(a_start, b_start)
-        local first_text = first_start == a_start and "first win content" or "second win content"
-        -- the gap between the end of the first content and the start of the second
-        local between = shared_line:sub(first_start + #first_text, second_start - 1)
+        -- * the gap between the two contents must be pure blank space,
+        --   proving they render in their own columns
+        local between = shared_line:sub(first_start + #"first win content", second_start - 1)
         assert.is_true(#between > 0, "there should be blank padding between the two split windows")
         assert.is_true(between:match("^%s*$") ~= nil, "the gap between windows should be blank space")
 
-        -- * cleanup: close the extra window
+        -- * cleanup: restore splitright and close the extra window
+        vim.o.splitright = save_splitright
         vim.cmd(":q!")
     end)
 end)
