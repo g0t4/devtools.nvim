@@ -47,10 +47,23 @@ local function draw_window(grid, win_id)
     local cfg = vim.api.nvim_win_get_config(win_id)
     local bufnr = vim.api.nvim_win_get_buf(win_id)
 
-    local row = (cfg.row or 0) + 1   -- 1-indexed
-    local col = (cfg.col or 0) + 1
-    local width = cfg.width or 0
-    local height = cfg.height or 0
+    local is_float = cfg.relative and cfg.relative ~= ""
+    local row, col, width, height
+    if is_float then
+        -- float windows expose row/col/width/height directly in config
+        row = (cfg.row or 0) + 1   -- 1-indexed
+        col = (cfg.col or 0) + 1
+        width = cfg.width or 0
+        height = cfg.height or 0
+    else
+        -- regular windows compute their geometry from the layout, so query it
+        -- nvim_win_get_position returns {row, col} (a single table)
+        local pos = vim.api.nvim_win_get_position(win_id)
+        row = pos[1] + 1
+        col = pos[2] + 1
+        width = vim.api.nvim_win_get_width(win_id)
+        height = vim.api.nvim_win_get_height(win_id)
+    end
 
     -- nvim returns border as a table of 8 chars (top, right, bottom, left,
     -- top-left, top-right, bottom-left, bottom-right) OR "none". Accept both.
