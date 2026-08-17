@@ -5,6 +5,7 @@ local notify = require("devtools.notify")
 describe("devtools.tests.screen", function()
     it("returns a multi-line string", function()
         local dump = screen.dump()
+        -- vim.print(dump)
         assert.is_string(dump)
         assert.is_true(#dump > 0)
         assert.is_true(#vim.split(dump, "\n") >= 2)
@@ -13,6 +14,7 @@ describe("devtools.tests.screen", function()
     it("renders a notification box when one is visible", function()
         local n = notify.info("hello world", { timeout = 0 })
         local dump = screen.dump()
+        -- vim.print(dump)
         assert.is_true(dump:match("hello world") ~= nil, "dump should contain the notification text")
         assert.is_true(dump:match("%+%-+%+") ~= nil or dump:match("┌") ~= nil, "dump should contain a box border")
         n:dismiss()
@@ -22,6 +24,7 @@ describe("devtools.tests.screen", function()
         local n = notify.info("ghost", { timeout = 0 })
         n:dismiss()
         local dump = screen.dump()
+        -- vim.print(dump)
         assert.is_false(dump:match("ghost") ~= nil, "dismissed notification text should be gone")
     end)
     it("renders content from multiple regular (split) windows", function()
@@ -32,6 +35,7 @@ describe("devtools.tests.screen", function()
         vim.api.nvim_buf_set_lines(0, 0, -1, false, { "second window content" })
 
         local dump = screen.dump()
+        -- vim.print(dump)
 
         -- * verify both windows' content shows up
         assert.is_true(dump:match("first window content") ~= nil, "first window content missing from dump")
@@ -54,6 +58,7 @@ describe("devtools.tests.screen", function()
         vim.api.nvim_buf_set_lines(0, 0, -1, false, { "second win content" })
 
         local dump = screen.dump()
+        -- vim.print(dump)
 
         -- * verify both windows' content shows up side by side
         assert.is_true(dump:match("first win content") ~= nil, "first win content missing from dump")
@@ -153,6 +158,7 @@ describe("devtools.tests.screen", function()
         assert.is_equal(4, vim.tbl_count(window_buffers), "each of the 4 windows should show a distinct buffer")
 
         local dump = screen.dump()
+        -- vim.print(dump)
 
         -- * all four unique words must show up
         assert.is_true(contains(dump, "left-top content"), "left-top content missing from dump")
@@ -207,7 +213,8 @@ describe("devtools.tests.screen", function()
         })
 
         local dump = screen.dump()
-        vim.print(dump)
+        -- vim.print(dump)
+
 
         -- * both the underlying and the floating content must show up
         assert.is_true(dump:find("underlying content", 1, true) ~= nil, "underlying content missing from dump")
@@ -250,6 +257,8 @@ describe("devtools.tests.screen", function()
         vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "right window text" })
 
         local dump = screen.dump()
+        -- vim.print(dump)
+
         assert.is_true(dump:find("left window text", 1, true) ~= nil, "left window text missing from dump")
         assert.is_true(dump:find("right window text", 1, true) ~= nil, "right window text missing from dump")
         -- a single border draws "|" vertical edges and "+" corners
@@ -267,6 +276,7 @@ describe("devtools.tests.screen", function()
         vim.o.tabline = "TABS-%N"
 
         local dump = screen.dump()
+        -- vim.print(dump)
         local first_line = vim.split(dump, "\n")[1]
         assert.is_true(first_line:find("TABS-", 1, true) ~= nil, "tabline should render on the top row")
 
@@ -282,6 +292,7 @@ describe("devtools.tests.screen", function()
         vim.api.nvim_buf_set_lines(0, 0, -1, false, { "content" })
 
         local dump = screen.dump()
+        -- vim.print(dump)
         assert.is_true(dump:find("MYSTATUS", 1, true) ~= nil, "statusline text missing from dump")
 
         vim.o.laststatus = save_laststatus
@@ -296,6 +307,7 @@ describe("devtools.tests.screen", function()
         vim.api.nvim_buf_set_lines(0, 0, -1, false, { "content" })
 
         local dump = screen.dump()
+        -- vim.print(dump)
         assert.is_false(dump:find("GHOSTSL", 1, true) ~= nil, "statusline should not appear when laststatus=0")
 
         vim.o.laststatus = save_laststatus
@@ -310,6 +322,7 @@ describe("devtools.tests.screen", function()
         vim.api.nvim_buf_set_lines(0, 0, -1, false, { "content" })
 
         local dump = screen.dump()
+        -- vim.print(dump)
         assert.is_true(dump:find("GLOBALSL", 1, true) ~= nil, "global statusline text missing from dump")
 
         vim.o.laststatus = save_laststatus
@@ -322,6 +335,7 @@ describe("devtools.tests.screen", function()
         vim.api.nvim_buf_set_lines(0, 0, -1, false, { "win content" })
 
         local dump = screen.dump()
+        -- vim.print(dump)
         assert.is_true(dump:find("MYWINBAR", 1, true) ~= nil, "winbar text missing from dump")
 
         -- the winbar must sit on a row ABOVE the buffer content
@@ -349,6 +363,7 @@ describe("devtools.tests.screen", function()
         vim.api.nvim_buf_set_lines(0, 0, -1, false, { "cmd content" })
 
         local dump = screen.dump()
+        -- vim.print(dump)
         local lines = vim.split(dump, "\n")
         local last_line = lines[#lines]
         -- no command is being typed, so the reserved cmdline row must be blank
