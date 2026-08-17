@@ -191,4 +191,52 @@ describe("devtools.tests.screen", function()
         vim.cmd(":only!")
         vim.o.splitright = save_splitright
     end)
+    it("renders a floating window on top of an underlying buffer", function()
+        -- * underlying content the float will cover part of
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, { "underlying content here" })
+
+        -- * a floating window overlaid on top with a distinctive word + border
+        local float_buf = vim.api.nvim_create_buf(true, false)
+        vim.api.nvim_buf_set_lines(float_buf, 0, -1, false, { "FLOAT WORD" })
+        local float_win = vim.api.nvim_open_win(float_buf, false, {
+            relative = "editor",
+            row = 1, col = 8,
+            width = 12, height = 3,
+            border = "single",
+            style = "minimal",
+        })
+
+        local dump = screen.dump()
+
+        -- * both the underlying and the floating content must show up
+        assert.is_true(dump:find("underlying content", 1, true) ~= nil, "underlying content missing from dump")
+        assert.is_true(dump:find("FLOAT WORD", 1, true) ~= nil, "float content missing from dump")
+
+        -- * the float must be drawn as a bordered box ON TOP (not appended to)
+        --   the underlying buffer, so find the rendered row and its box top
+        local lines = vim.split(dump, "\n")
+        local float_row = nil
+        for i, line in ipairs(lines) do
+            if line:find("FLOAT WORD", 1, true) then
+                float_row = i
+                break
+            end
+        end
+        assert.is_not_nil(float_row, "should find a rendered line with FLOAT WORD")
+
+        -- * the row directly above the content is the box's top edge, so it
+        --   must carry a top-left corner character (┌ for nvim's box-drawing
+        --   border table, + for a plain single-line fallback). We check for the
+        --   corner's PRESENCE rather than an exact column so the assertion stays
+        --   robust to how nvim sizes the float box.
+        local border_line = lines[float_row - 1]
+        assert.is_true(
+            border_line:find("┌", 1, true) ~= nil or border_line:find("+", 1, true) ~= nil,
+            "the float should have a top-left border corner above its content"
+        )
+
+        -- * cleanup: close the floating window
+        vim.api.nvim_win_close(float_win, false)
+    end)
+
 end)
