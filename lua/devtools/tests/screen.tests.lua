@@ -207,6 +207,7 @@ describe("devtools.tests.screen", function()
         })
 
         local dump = screen.dump()
+        vim.print(dump)
 
         -- * both the underlying and the floating content must show up
         assert.is_true(dump:find("underlying content", 1, true) ~= nil, "underlying content missing from dump")
@@ -237,6 +238,123 @@ describe("devtools.tests.screen", function()
 
         -- * cleanup: close the floating window
         vim.api.nvim_win_close(float_win, false)
+    end)
+
+    it("renders a border around regular windows when winborder is set", function()
+        local save_winborder = vim.o.winborder
+        vim.o.winborder = "single"
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, { "left window text" })
+        vim.cmd(":vsplit")
+        local buf = vim.api.nvim_create_buf(true, false)
+        vim.api.nvim_win_set_buf(0, buf)
+        vim.api.nvim_buf_set_lines(buf, 0, -1, false, { "right window text" })
+
+        local dump = screen.dump()
+        assert.is_true(dump:find("left window text", 1, true) ~= nil, "left window text missing from dump")
+        assert.is_true(dump:find("right window text", 1, true) ~= nil, "right window text missing from dump")
+        -- a single border draws "|" vertical edges and "+" corners
+        assert.is_true(dump:find("|", 1, true) ~= nil, "vertical border edge missing")
+        assert.is_true(dump:find("+", 1, true) ~= nil, "border corner missing")
+
+        vim.o.winborder = save_winborder
+        vim.cmd(":q!")
+    end)
+
+    it("renders the tabline on the top row when shown", function()
+        local save_showtabline = vim.o.showtabline
+        local save_tabline = vim.o.tabline
+        vim.o.showtabline = 2
+        vim.o.tabline = "TABS-%N"
+
+        local dump = screen.dump()
+        local first_line = vim.split(dump, "\n")[1]
+        assert.is_true(first_line:find("TABS-", 1, true) ~= nil, "tabline should render on the top row")
+
+        vim.o.showtabline = save_showtabline
+        vim.o.tabline = save_tabline
+    end)
+
+    it("renders a per-window statusline when laststatus is 2", function()
+        local save_laststatus = vim.o.laststatus
+        local save_statusline = vim.o.statusline
+        vim.o.laststatus = 2
+        vim.o.statusline = "MYSTATUS"
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, { "content" })
+
+        local dump = screen.dump()
+        assert.is_true(dump:find("MYSTATUS", 1, true) ~= nil, "statusline text missing from dump")
+
+        vim.o.laststatus = save_laststatus
+        vim.o.statusline = save_statusline
+    end)
+
+    it("does not render statuslines when laststatus is 0", function()
+        local save_laststatus = vim.o.laststatus
+        local save_statusline = vim.o.statusline
+        vim.o.laststatus = 0
+        vim.o.statusline = "GHOSTSL"
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, { "content" })
+
+        local dump = screen.dump()
+        assert.is_false(dump:find("GHOSTSL", 1, true) ~= nil, "statusline should not appear when laststatus=0")
+
+        vim.o.laststatus = save_laststatus
+        vim.o.statusline = save_statusline
+    end)
+
+    it("renders a single global statusline when laststatus is 3", function()
+        local save_laststatus = vim.o.laststatus
+        local save_statusline = vim.o.statusline
+        vim.o.laststatus = 3
+        vim.o.statusline = "GLOBALSL"
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, { "content" })
+
+        local dump = screen.dump()
+        assert.is_true(dump:find("GLOBALSL", 1, true) ~= nil, "global statusline text missing from dump")
+
+        vim.o.laststatus = save_laststatus
+        vim.o.statusline = save_statusline
+    end)
+
+    it("renders a winbar at the top of a window, above its content", function()
+        local save_winbar = vim.o.winbar
+        vim.o.winbar = "MYWINBAR"
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, { "win content" })
+
+        local dump = screen.dump()
+        assert.is_true(dump:find("MYWINBAR", 1, true) ~= nil, "winbar text missing from dump")
+
+        -- the winbar must sit on a row ABOVE the buffer content
+        local lines = vim.split(dump, "\n")
+        local winbar_row = nil
+        local content_row = nil
+        for i, line in ipairs(lines) do
+            if line:find("MYWINBAR", 1, true) then
+                winbar_row = i
+            end
+            if line:find("win content", 1, true) then
+                content_row = i
+            end
+        end
+        assert.is_not_nil(winbar_row, "should find a rendered winbar row")
+        assert.is_not_nil(content_row, "should find a rendered content row")
+        assert.is_true(winbar_row < content_row, "the winbar should render above the buffer content")
+
+        vim.o.winbar = save_winbar
+    end)
+
+    it("reserves the bottom cmdline row (blank when idle)", function()
+        local save_cmdheight = vim.o.cmdheight
+        vim.o.cmdheight = 1
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, { "cmd content" })
+
+        local dump = screen.dump()
+        local lines = vim.split(dump, "\n")
+        local last_line = lines[#lines]
+        -- no command is being typed, so the reserved cmdline row must be blank
+        assert.is_true(last_line:match("^%s*$") ~= nil, "idle cmdline row should be blank")
+
+        vim.o.cmdheight = save_cmdheight
     end)
 
 end)
