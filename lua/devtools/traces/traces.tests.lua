@@ -69,16 +69,6 @@ stack traceback:
 ]]
 
 
-local trace2 = [[
-Error detected while processing TermRequest Autocommands for "*":
-Error executing lua callback: TermRequest Autocommands for "*": Vim(normal):Can't re-enter normal mode from terminal mode
-stack traceback:
-        [C]: in function 'win_execute'
-        ...epos/github/g0t4/devtools.nvim/lua/devtools/messages.lua:231: in function 'dump_background'
-        ...epos/github/g0t4/devtools.nvim/lua/devtools/messages.lua:257: in function 'append'
-        .../wesdemos/.config/nvim/lua/plugins/wip/osc-reference.lua:91: in function <.../wesdemos/.config/nvim/lua/plugins/wip/osc-reference.lua:84>       --
-]]
-
 local expected_trace1 = {
     {
         filename = "...a/ask-openai/agents/viewer/buffers_integration_tests.lua",
@@ -105,6 +95,16 @@ local expected_trace1 = {
         text = "in function 'run'",
     },
 }
+
+local trace2 = [[
+Error detected while processing TermRequest Autocommands for "*":
+Error executing lua callback: TermRequest Autocommands for "*": Vim(normal):Can't re-enter normal mode from terminal mode
+stack traceback:
+        [C]: in function 'win_execute'
+        ...epos/github/g0t4/devtools.nvim/lua/devtools/messages.lua:231: in function 'dump_background'
+        ...epos/github/g0t4/devtools.nvim/lua/devtools/messages.lua:257: in function 'append'
+        .../wesdemos/.config/nvim/lua/plugins/wip/osc-reference.lua:91: in function <.../wesdemos/.config/nvim/lua/plugins/wip/osc-reference.lua:84>       --
+]]
 
 local expected_trace2 = {
     {
