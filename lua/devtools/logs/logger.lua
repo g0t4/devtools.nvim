@@ -34,8 +34,8 @@ function Logger:clear_iterm_scrollback()
     --   38;2;229;192;123m1337;ClearScrollback
     --   which means I can still cat to analyze older logs if needed (rare) while still getting a focused log!
     --   FYI 50 works instead of 1337 too, in my testing
-    local clear_iterm_scrolback = "\x1b]1337;ClearScrollback\a"
-    self._file:write(clear_iterm_scrolback)
+    local clear_iterm_scrollback = "\x1b]1337;ClearScrollback\a"
+    self._file:write(clear_iterm_scrollback)
     self._file:flush()
 
     -- * ctrl+L through log
