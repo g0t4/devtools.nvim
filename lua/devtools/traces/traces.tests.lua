@@ -3,7 +3,7 @@ local describe = require('devtools.tests.define.describe')
 local only = require('devtools.tests.define.only')
 local skip = require('devtools.tests.define.skip')
 
-local traces = require("devtools.traces.traces")
+local lua_traces = require("devtools.traces.lua_traces")
 -- FYI changing lines below may mess up line numbers in assertion below for this file, just shift those for traces.tests.lua and it'll be fine!
 
 local function boom()
@@ -18,7 +18,7 @@ describe("resolve_truncated_path", function()
         print(err)
 
         -- print("\n******************** search:\n")
-        local fixed = traces.fix_paths_in_error(err)
+        local fixed = lua_traces.fix_paths_in_error(err)
 
         -- print("\n ********************* Fixed traceback:\n")
         -- print(fixed)
@@ -52,7 +52,7 @@ stack traceback:
 
     it("should skip ...", function()
         local dotdotdot = "..."
-        local result = traces.resolve_truncated_path(dotdotdot)
+        local result = lua_traces.resolve_truncated_path(dotdotdot)
         should.be_nil(result)
     end)
 end)
@@ -129,20 +129,20 @@ local expected_trace2 = {
 
 describe("parse_for_quickfix", function()
     it("parses trace1 (truncated paths + virtual frames)", function()
-        local items = traces.parse_trace_for_quickfix(trace1)
+        local items = lua_traces.parse_lua_trace_for_quickfix(trace1)
         should.be_same_colorful_diff(expected_trace1, items)
     end)
 
     it("parses trace2 (autocommand error prefix + truncated paths)", function()
-        local items = traces.parse_trace_for_quickfix(trace2)
+        local items = lua_traces.parse_lua_trace_for_quickfix(trace2)
         should.be_same_colorful_diff(expected_trace2, items)
     end)
 
     it("load_trace_to_quickfix parses, resolves paths, and fills the quickfix list", function()
         -- keep resolution a no-op so the test is deterministic
         --   (the real resolve_truncated_path hits fd + runtimepath)
-        local original_resolve = traces.resolve_truncated_path
-        traces.resolve_truncated_path = function(path)
+        local original_resolve = lua_traces.resolve_truncated_path
+        lua_traces.resolve_truncated_path = function(path)
             return path
         end
 
@@ -155,10 +155,10 @@ describe("parse_for_quickfix", function()
         local original_copen = vim.cmd.copen
         vim.cmd.copen = function() end
 
-        traces.load_trace_to_quickfix(trace1)
+        lua_traces.load_lua_trace_to_quickfix(trace1)
 
         -- restore
-        traces.resolve_truncated_path = original_resolve
+        lua_traces.resolve_truncated_path = original_resolve
         vim.fn.setqflist = original_setqflist
         vim.cmd.copen = original_copen
 
