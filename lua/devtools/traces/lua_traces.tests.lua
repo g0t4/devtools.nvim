@@ -56,12 +56,18 @@ stack traceback:
         should.be_nil(result)
     end)
 
-    it("return absolute paths intact", function()
+    it("returns absolute paths as-is", function()
         local absolute = vim.fn.getenv("HOME") .. "/repos/github/g0t4/devtools.nvim/lua/devtools/traces/lua_traces.tests.lua"
         local result = lua_traces.resolve_truncated_path(absolute)
         should.be_same(absolute, result)
     end)
 
+    it("returns relative paths as-is", function()
+        -- PRN resolve to absolute?
+        local relative = "./lua/devtools/traces/lua_traces.tests.lua"
+        local result = lua_traces.resolve_truncated_path(relative)
+        should.be_same(relative, result)
+    end)
 end)
 
 

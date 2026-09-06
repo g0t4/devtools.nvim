@@ -18,9 +18,13 @@ function M.resolve_truncated_path(truncated_path)
     if truncated_path == "..." then
         return nil
     end
-    local is_not_truncated = truncated_path:match("^/")
-    if is_not_truncated then
+    local is_absolute = truncated_path:match("^/")
+    if is_absolute then
         return truncated_path -- as-is
+    end
+    local is_relative = truncated_path:match("^%./")
+    if is_relative then
+        return truncated_path
     end
 
     local cached = cached_fixes[truncated_path]
