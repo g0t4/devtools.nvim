@@ -129,12 +129,12 @@ local expected_trace2 = {
 
 describe("parse_for_quickfix", function()
     it("parses trace1 (truncated paths + virtual frames)", function()
-        local items = lua_traces.parse_lua_trace_for_quickfix(trace1)
+        local items = lua_traces.parse_trace_for_quickfix(trace1)
         should.be_same_colorful_diff(expected_trace1, items)
     end)
 
     it("parses trace2 (autocommand error prefix + truncated paths)", function()
-        local items = lua_traces.parse_lua_trace_for_quickfix(trace2)
+        local items = lua_traces.parse_trace_for_quickfix(trace2)
         should.be_same_colorful_diff(expected_trace2, items)
     end)
 
@@ -155,7 +155,7 @@ describe("parse_for_quickfix", function()
         local original_copen = vim.cmd.copen
         vim.cmd.copen = function() end
 
-        lua_traces.load_lua_trace_to_quickfix(trace1)
+        lua_traces.load_trace_to_quickfix(trace1)
 
         -- restore
         lua_traces.resolve_truncated_path = original_resolve
