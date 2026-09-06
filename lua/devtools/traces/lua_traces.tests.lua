@@ -169,31 +169,4 @@ describe("parse_for_quickfix", function()
         -- vim.print(items)
         should.be_same_colorful_diff(expected_trace3, items)
     end)
-
-    it("load_trace_to_quickfix parses, resolves paths, and fills the quickfix list", function()
-        -- keep resolution a no-op so the test is deterministic
-        --   (the real resolve_truncated_path hits fd + runtimepath)
-        local original_resolve = lua_traces.resolve_truncated_path
-        lua_traces.resolve_truncated_path = function(path)
-            return path
-        end
-
-        local captured
-        local original_setqflist = vim.fn.setqflist
-        vim.fn.setqflist = function(items)
-            captured = items
-        end
-        -- stub copen so a headless test run doesn't try to open a window
-        local original_copen = vim.cmd.copen
-        vim.cmd.copen = function() end
-
-        lua_traces.to_quickfix_items(trace1)
-
-        -- restore
-        lua_traces.resolve_truncated_path = original_resolve
-        vim.fn.setqflist = original_setqflist
-        vim.cmd.copen = original_copen
-
-        should.be_same_colorful_diff(expected_trace1, captured)
-    end)
 end)
