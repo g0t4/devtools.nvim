@@ -136,13 +136,12 @@ end
 
 ---Parse a lua traceback, resolve truncated paths, and load it into the quickfix list.
 ---@param trace string
-function M.load_trace_to_quickfix(trace)
+function M.to_quickfix_items(trace)
     local items = M.parse_trace_for_quickfix(trace)
     for _, item in ipairs(items) do
         item.filename = M.resolve_truncated_path(item.filename) or item.filename
     end
-    vim.fn.setqflist(items, 'r')
-    vim.cmd('copen')
+    return items
 end
 
 return M

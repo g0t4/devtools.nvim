@@ -187,7 +187,7 @@ describe("parse_for_quickfix", function()
         local original_copen = vim.cmd.copen
         vim.cmd.copen = function() end
 
-        lua_traces.load_trace_to_quickfix(trace1)
+        lua_traces.to_quickfix_items(trace1)
 
         -- restore
         lua_traces.resolve_truncated_path = original_resolve

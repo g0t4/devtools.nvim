@@ -5,27 +5,12 @@ local lua_traces = require('devtools.traces.lua_traces')
 -- * WIP for quick fix / location-list
 
 local function from_lua_traceback(text)
-    log:info('from_lua_traceback')
-    vim.notify('Fixing lua traceback paths can take a few seconds...')
+    vim.notify('fixing lua traceback paths (can be slow)...')
 
     -- TODO hammerspoon will need lua fixes but not with vim.rtp, instead needs HS specific roots to look through
-    --     SEE devtools trace for notes about hammerspoon paths (I could run hs command to do this)
+    --   * SEE devtools trace for notes about hammerspoon paths
 
-    local text = lua_traces.fix_paths_in_error(text)
-    local lines = vim.split(text, "\n")
-
-    local items = {}
-    for line in text:gmatch("[^\n]+") do
-        local file, lnum, msg = line:match("^%s*(.-):(%d+):%s*(.*)$")
-        if file then
-            table.insert(items, {
-                filename = file,
-                lnum = tonumber(lnum),
-                text = msg,
-            })
-        end
-    end
-    log:info(items)
+    local items = lua_traces.to_quickfix_items(text)
 
     vim.fn.setqflist({}, " ", {
         title = "Lua Traceback",
@@ -34,7 +19,6 @@ local function from_lua_traceback(text)
 
     vim.cmd("copen")
 end
-
 
 function M.set_quickfix_from(text)
     if text:find("stack traceback:\n") then
