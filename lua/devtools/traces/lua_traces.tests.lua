@@ -153,7 +153,7 @@ local expected_trace3 = { {
     -- filename = "E5108: Lua: /Users/wesdemos/repos/github/g0t4/devtools.nvim/lua/devtools/traces/to_quickfix.lua",
     filename = "/Users/wesdemos/repos/github/g0t4/devtools.nvim/lua/devtools/traces/to_quickfix.lua",
     lnum = 40,
-    text = "attempt to index global 'ext' (a nil value)"
+    text = "E5108: Lua:  attempt to index global 'ext' (a nil value)"
 }, {
     col = 0,
     filename = "/Users/wesdemos/repos/github/g0t4/devtools.nvim/lua/devtools/traces/to_quickfix.lua",

@@ -117,11 +117,18 @@ function M.parse_trace_for_quickfix(trace)
         if not path then
             -- fallback: look for absolute path with leading " /" (whitespace before the /)
             local prefix
-            prefix, path, lnum, text = line:match("^(.-)%s+(/[^:]+):(%d+):(.*)$")
+            prefix, path, lnum, text = line:match("^(.-%s+)(/[^:]+):(%d+):(.*)$")
             -- log:info("prefix:", vim.inspect(prefix))
             -- INCLUDE prefix in text?
             --   add this via existing test case that has example "E5108: Lua: "
             --   only first line appears to have a prefix before file path
+            if prefix ~= nil then
+                if text ~= nil then
+                    text = prefix .. text
+                else
+                    text = prefix
+                end
+            end
         end
         if not path then
             -- fallback: capture the path up to the first ":number:"
