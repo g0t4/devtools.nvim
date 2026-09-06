@@ -12,27 +12,27 @@ local function lua_short_path(path)
 end
 
 local cached_fixes = {}
----@param truncated_path string -- path from traceback that starts with ... and is truncated ending of the absolute path
----@return string? - returns the resolved path (or original path if already resolved), OR nil if invalid path
-function M.resolve_truncated_path(truncated_path)
-    if truncated_path == "..." then
+---@param original_path string -- path from traceback -- truncated ("..." prefix), relative or absolute
+---@return string? - returns the resolved path OR nil if cannot resolve (i.e. invalid path)
+function M.resolve_truncated_path(original_path)
+    if original_path == "..." then
         return nil
     end
-    local is_absolute = truncated_path:match("^/")
+    local is_absolute = original_path:match("^/")
     if is_absolute then
-        return truncated_path -- as-is
+        return original_path -- as-is
     end
-    local is_relative = truncated_path:match("^%./")
+    local is_relative = original_path:match("^%./")
     if is_relative then
-        return truncated_path
+        return original_path
     end
 
-    local cached = cached_fixes[truncated_path]
+    local cached = cached_fixes[original_path]
     if cached then
         return cached
     end
 
-    local suffix = truncated_path:gsub("^%.%.%.", "")
+    local suffix = original_path:gsub("^%.%.%.", "")
 
     -- TODO hammerspoon will need diff roots to look through
     --  and especially add /Applications/Hammerspoon.app/Contents
@@ -78,14 +78,14 @@ function M.resolve_truncated_path(truncated_path)
 
             if #matches == 1 then
                 local match = matches[1]
-                if lua_short_path(match) == truncated_path then
-                    cached_fixes[truncated_path] = match
+                if lua_short_path(match) == original_path then
+                    cached_fixes[original_path] = match
                     return match
                 end
             elseif #matches > 1 then
                 vim.print(table.concat(cmd, " ")) -- leave print of command so I can replicate
                 error(("Multiple matches for %q:\n%s"):format(
-                    truncated_path,
+                    original_path,
                     table.concat(matches, "\n")
                 ))
             end
