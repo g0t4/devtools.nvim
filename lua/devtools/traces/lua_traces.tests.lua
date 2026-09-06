@@ -166,6 +166,30 @@ local expected_trace3 = { {
     text = "in function </Users/wesdemos/.config/nvim/lua/non-plugins/quickfixs.lua:30>"
 } }
 
+-- relative (./) paths, not real paths
+local trace4_relative_paths = [[
+E5108: Lua: ./lua/devtools/traces/to_quickfix.lua:40: attempt to index global 'ext' (a nil value)
+stack traceback:
+        ./lua/devtools/traces/to_quickfix.lua:40: in function 'set_quickfix_from'
+        ./lua/devtools/non-plugins/quickfixs.lua:32: in function </lua/devtools/non-plugins/quickfixs.lua:30>
+]]
+local expected_trace4 = { {
+    col = 0,
+    filename = "./lua/devtools/traces/to_quickfix.lua",
+    lnum = 40,
+    text = "E5108: Lua:  attempt to index global 'ext' (a nil value)"
+}, {
+    col = 0,
+    filename = "./lua/devtools/traces/to_quickfix.lua",
+    lnum = 40,
+    text = "in function 'set_quickfix_from'"
+}, {
+    col = 0,
+    filename = "./lua/devtools/non-plugins/quickfixs.lua",
+    lnum = 32,
+    text = "in function </lua/devtools/non-plugins/quickfixs.lua:30>"
+} }
+
 describe("parse_for_quickfix", function()
     it("parses trace1 (truncated paths + virtual frames)", function()
         local items = lua_traces.parse_trace_for_quickfix(trace1)
@@ -177,9 +201,15 @@ describe("parse_for_quickfix", function()
         should.be_same_colorful_diff(expected_trace2, items)
     end)
 
-    it("parses trace3", function()
+    it("parses trace3 (absolute paths)", function()
         local items = lua_traces.parse_trace_for_quickfix(trace3_absolute_fixed_paths)
         -- vim.print(items)
         should.be_same_colorful_diff(expected_trace3, items)
+    end)
+
+    it("parses trace4 (relative paths)", function()
+        local items = lua_traces.parse_trace_for_quickfix(trace4_relative_paths)
+        -- vim.print(items)
+        should.be_same_colorful_diff(expected_trace4, items)
     end)
 end)

@@ -115,19 +115,21 @@ function M.parse_trace_for_quickfix(trace)
         -- don't get glued onto the filename (lua shortens long paths in stack traces)
         local path, lnum, text = line:match("(%.%.%.%S-):(%d+):(.*)$")
         if not path then
-            -- fallback: look for non-truncated paths (i.e. absolute path)
+            -- fallback: look for non-truncated paths (i.e. absolute or relative ./ path)
             --   must have whitespace before the path starts
-            -- TODO relative paths too (test this)
             local prefix
             prefix, path, lnum, text = line:match("^(.-%s+)(/[^:]+):(%d+):(.*)$")
             -- FYI in my testing... only first line appears to have a prefix before file path
             if prefix ~= nil then
                 -- prepend prefix so we don't swallow it when showing in quickfix list
                 -- i.e. can be an error #
-                if text ~= nil then
-                    text = prefix .. text
-                else
-                    text = prefix
+                text = (text ~= nil) and (prefix .. text) or prefix
+            end
+            if not path then
+                -- fallback: look for relative paths starting with ./
+                prefix, path, lnum, text = line:match("^(.-%s+)(%./[^:]+):(%d+):(.*)$")
+                if prefix ~= nil then
+                    text = (text ~= nil) and (prefix .. text) or prefix
                 end
             end
         end
