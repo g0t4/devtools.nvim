@@ -55,6 +55,13 @@ stack traceback:
         local result = lua_traces.resolve_truncated_path(dotdotdot)
         should.be_nil(result)
     end)
+
+    it("return absolute paths intact", function()
+        local absolute = vim.fn.getenv("HOME") .. "/repos/github/g0t4/devtools.nvim/lua/devtools/traces/lua_traces.tests.lua"
+        local result = lua_traces.resolve_truncated_path(absolute)
+        should.be_same(absolute, result)
+    end)
+
 end)
 
 

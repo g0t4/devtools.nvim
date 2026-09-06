@@ -13,9 +13,14 @@ end
 
 local cached_fixes = {}
 ---@param truncated_path string -- path from traceback that starts with ... and is truncated ending of the absolute path
+---@return string? - returns the resolved path (or original path if already resolved), OR nil if invalid path
 function M.resolve_truncated_path(truncated_path)
     if truncated_path == "..." then
         return nil
+    end
+    local is_not_truncated = truncated_path:match("^/")
+    if is_not_truncated then
+        return truncated_path -- as-is
     end
 
     local cached = cached_fixes[truncated_path]
