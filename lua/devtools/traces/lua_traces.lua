@@ -119,9 +119,9 @@ function M.parse_trace_for_quickfix(trace)
             local prefix
             prefix, path, lnum, text = line:match("^(.-)%s+(/[^:]+):(%d+):(.*)$")
             -- log:info("prefix:", vim.inspect(prefix))
-            -- TODO where can I put prefix to include it too?
-            --   FYI only first line appears to have a prefix before file path
-            --   TODO add this via test case that has an example "E5108: Lua: "
+            -- INCLUDE prefix in text?
+            --   add this via existing test case that has example "E5108: Lua: "
+            --   only first line appears to have a prefix before file path
         end
         if not path then
             -- fallback: capture the path up to the first ":number:"
