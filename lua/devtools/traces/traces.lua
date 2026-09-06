@@ -1,3 +1,5 @@
+local log = require("devtools.logs.logger"):universal()
+
 local M = {}
 
 local function lua_short_path(path)
@@ -119,6 +121,7 @@ function M.parse_lua_trace_for_quickfix(trace)
             })
         end
     end
+    log:debug("Parsed quickfix items:", items)
     return items
 end
 
