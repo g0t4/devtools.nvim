@@ -127,6 +127,32 @@ local expected_trace2 = {
     },
 }
 
+-- currently fails on a trace with absolute paths (fixed paths) instead of ...paths
+local trace3_absolute_fixed_paths = [[
+E5108: Lua: /Users/wesdemos/repos/github/g0t4/devtools.nvim/lua/devtools/traces/to_quickfix.lua:40: attempt to index global 'ext' (a nil value)
+stack traceback:
+        /Users/wesdemos/repos/github/g0t4/devtools.nvim/lua/devtools/traces/to_quickfix.lua:40: in function 'set_quickfix_from'
+        /Users/wesdemos/.config/nvim/lua/non-plugins/quickfixs.lua:32: in function </Users/wesdemos/.config/nvim/lua/non-plugins/quickfixs.lua:30>
+]]
+local expected_trace3 = { {
+    col = 0,
+    -- currently has wrong filename:
+    -- filename = "E5108: Lua: /Users/wesdemos/repos/github/g0t4/devtools.nvim/lua/devtools/traces/to_quickfix.lua",
+    filename = "/Users/wesdemos/repos/github/g0t4/devtools.nvim/lua/devtools/traces/to_quickfix.lua",
+    lnum = 40,
+    text = "attempt to index global 'ext' (a nil value)"
+}, {
+    col = 0,
+    filename = "/Users/wesdemos/repos/github/g0t4/devtools.nvim/lua/devtools/traces/to_quickfix.lua",
+    lnum = 40,
+    text = "in function 'set_quickfix_from'"
+}, {
+    col = 0,
+    filename = "/Users/wesdemos/.config/nvim/lua/non-plugins/quickfixs.lua",
+    lnum = 32,
+    text = "in function </Users/wesdemos/.config/nvim/lua/non-plugins/quickfixs.lua:30>"
+} }
+
 describe("parse_for_quickfix", function()
     it("parses trace1 (truncated paths + virtual frames)", function()
         local items = lua_traces.parse_trace_for_quickfix(trace1)
@@ -136,6 +162,12 @@ describe("parse_for_quickfix", function()
     it("parses trace2 (autocommand error prefix + truncated paths)", function()
         local items = lua_traces.parse_trace_for_quickfix(trace2)
         should.be_same_colorful_diff(expected_trace2, items)
+    end)
+
+    it("parses trace3", function()
+        local items = lua_traces.parse_trace_for_quickfix(trace3_absolute_fixed_paths)
+        -- vim.print(items)
+        should.be_same_colorful_diff(expected_trace3, items)
     end)
 
     it("load_trace_to_quickfix parses, resolves paths, and fills the quickfix list", function()
