@@ -115,14 +115,15 @@ function M.parse_trace_for_quickfix(trace)
         -- don't get glued onto the filename (lua shortens long paths in stack traces)
         local path, lnum, text = line:match("(%.%.%.%S-):(%d+):(.*)$")
         if not path then
-            -- fallback: look for absolute path with leading " /" (whitespace before the /)
+            -- fallback: look for non-truncated paths (i.e. absolute path)
+            --   must have whitespace before the path starts
+            -- TODO relative paths too (test this)
             local prefix
             prefix, path, lnum, text = line:match("^(.-%s+)(/[^:]+):(%d+):(.*)$")
-            -- log:info("prefix:", vim.inspect(prefix))
-            -- INCLUDE prefix in text?
-            --   add this via existing test case that has example "E5108: Lua: "
-            --   only first line appears to have a prefix before file path
+            -- FYI in my testing... only first line appears to have a prefix before file path
             if prefix ~= nil then
+                -- prepend prefix so we don't swallow it when showing in quickfix list
+                -- i.e. can be an error #
                 if text ~= nil then
                     text = prefix .. text
                 else
