@@ -173,32 +173,22 @@ end
 -- * log threshold *
 local MAX_LOG_THRESHOLD = 2 -- must always show WARN/ERROR
 
----@return string, number
-function Logger.cycle_log_verbosity()
-    local current_text, current_number = Logger.get_log_threshold()
-    local next_number = (current_number + 1) % (MAX_LOG_THRESHOLD + 1)
-    -- TODO is this where I want to keep log_threshold_text ?
-    vim.g.log_threshold_text = LEVEL_NUMBER_TO_TEXT[next_number]
-    return vim.g.log_threshold_text, next_number
-end
-
-local HAMMERSPOON_LOG_THRESHOLD = "TRACE"
----@return string level_text, number level_number
-function Logger.get_log_threshold()
+---@return number level_number
+local function _get_log_threshold_number()
+    -- FYI I was never using the configurable threshold so I nuked storing it
+    -- I will change this on the fly, right here... both for neovim and hammerspoon...
+    -- with the log file I always forgot about its current level + I removed level from statusline so yeah... just a hidden butt fuck at best to keep it
     local current_text
     if vim and vim.g then
-        current_text = vim.g.log_threshold_text or LEVEL_NUMBER_TO_TEXT[LEVEL_NUMBERS.INFO] -- TODO default to WARN again?
+        return LEVEL_NUMBERS.INFO
     else
-        -- default to INFO if not vim (for now)
-        -- TODO perhaps pass default level to create? instead of making logger know where to go to store the current level and change it?
-        current_text = HAMMERSPOON_LOG_THRESHOLD
+        return LEVEL_NUMBERS.INFO
+        -- return LEVEL_NUMBERS.TRACE
     end
-    local current_number = LEVEL_TEXT_TO_NUMBER[current_text]
-    return current_text, current_number
 end
 
 function Logger:is_enabled(level_number)
-    local _, threshold = Logger.get_log_threshold()
+    local threshold = _get_log_threshold_number()
     return level_number <= threshold
 end
 
@@ -300,7 +290,7 @@ local function build_log_entry(logger, level_number, ...)
 end
 
 function Logger:log(level_number, ...)
-    local _, threshold_number = Logger.get_log_threshold()
+    local threshold_number = _get_log_threshold_number()
     if level_number < threshold_number then
         return
     end
