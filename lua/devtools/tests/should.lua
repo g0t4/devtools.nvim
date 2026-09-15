@@ -4,26 +4,26 @@ local ansi = require('devtools.ansi')
 
 local M = {}
 
-function M.be_greater_than(expected, actual)
+function M.be_greater_than(left, right)
     error("move to expect, or just assert(x>y)... this was a terrible idea")
-    local is_greater_than = actual > expected
+    local is_greater_than = right > left
     assert.is_true(is_greater_than)
 end
 
-function M.be_equal(expected, actual)
-    assert.are.equal(expected, actual)
+function M.be_equal(left, right)
+    assert.are.equal(left, right)
 end
 
-function M.be_same(expected, actual)
-    assert.are.same(expected, actual)
+function M.be_same(left, right)
+    assert.are.same(left, right)
 end
 
 --- show a diff if they're not the same by vim.inspecting each input and then diff that (great for table values)
-function M.be_same_colorful_diff(expected, actual)
+function M.be_same_colorful_diff(left, right)
     -- use diff to compare and show mismatch
-    expected_text = vim.inspect(expected)
-    actual_text = vim.inspect(actual)
-    if actual_text == expected_text then
+    left_text = vim.inspect(left)
+    right_text = vim.inspect(right)
+    if right_text == left_text then
         -- nothing to show
         return
     end
@@ -31,13 +31,13 @@ function M.be_same_colorful_diff(expected, actual)
     local function _assert_same()
         -- btw metatables can differ, as long as the two tables match otherwise...
         --  this is one reason why it's important to defer printing the diff (b/c it will show metatable differences)
-        assert.are.same(expected, actual, "see colorful diff above")
+        assert.are.same(left, right, "see colorful diff above")
     end
 
     -- * catch assertion failure, and only then show the diff
     local ok, err = pcall(_assert_same)
     if not ok then
-        local diff_message = combined.combined_word_diff(expected_text, actual_text)
+        local diff_message = combined.combined_word_diff(left_text, right_text)
         -- M.inspect_diff looks GREAT in plenary's float window test results!
         print("diff:\n" .. M.inspect_diff(diff_message))
         error(err)
