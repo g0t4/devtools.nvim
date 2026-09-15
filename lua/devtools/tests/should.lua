@@ -4,12 +4,6 @@ local ansi = require('devtools.ansi')
 
 local M = {}
 
-function M.be_greater_than(left, right)
-    error("move to expect, or just assert(x>y)... this was a terrible idea")
-    local is_greater_than = right > left
-    assert.is_true(is_greater_than)
-end
-
 function M.be_equal(left, right)
     assert.are.equal(left, right)
 end
