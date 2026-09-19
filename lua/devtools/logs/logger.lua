@@ -417,9 +417,11 @@ function Logger.create(basename)
     end
 
     if cached_loggers[basename] then
+        -- print("using cached logger")
         return cached_loggers[basename]
     end
     local new_logger = Logger:new(basename)
+    -- print("new logger")
     cached_loggers[basename] = new_logger
     new_logger:ensure_file_is_open()
     return new_logger
