@@ -16,7 +16,8 @@ local TestTimer = {}
 function TestTimer:new(allowed_time)
     local obj = {
         start_time = get_ms(),
-        allowed_time = allowed_time
+        allowed_time = allowed_time,
+        tolerance = nil,
     }
     setmetatable(obj, { __index = self })
     return obj
@@ -25,12 +26,13 @@ end
 ---@param msg string
 function TestTimer:throw_if_time_not_acceptable(msg)
     local elapsed = get_ms() - self.start_time
-    local tolerance = self.allowed_time * 0.04
-    local min_time = self.allowed_time - tolerance
-    local max_time = self.allowed_time + tolerance
+    local tolerance = self.tolerance or 0.04
+    local swing = self.allowed_time * tolerance
+    local min_time = self.allowed_time - swing
+    local max_time = self.allowed_time + swing
 
     if elapsed < min_time or elapsed > max_time then
-        error(msg .. " - actual: " .. string.format("%.1f", elapsed) .. "ms, expected: " .. self.allowed_time .. "ms ±" .. tolerance .. "ms")
+        error(msg .. " - actual: " .. string.format("%.1f", elapsed) .. "ms, expected: " .. self.allowed_time .. "ms ±" .. swing .. "ms")
     end
 end
 
