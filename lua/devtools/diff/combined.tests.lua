@@ -1,9 +1,9 @@
 local histogram = require('devtools.diff.histogram')
 local should = require('devtools.tests.should')
 local combined = require('devtools.diff.combined')
-local describe = require('devtools.tests.define.describe')
-local only = require('devtools.tests.define.only')
-local skip = require('devtools.tests.define.skip')
+local describe = require('devtools.tests.describe')
+local only = require('devtools.tests.only')
+local skip = require('devtools.tests.skip')
 
 -- TODO revisit this idea in devtools.tests and find a clean way to handle this
 --  perhaps add your own _it and _only? and override clear registraiton on an _only? and then on the only replace _it() func with nothing after that point...?

@@ -1,6 +1,6 @@
 local assert = require 'luassert'
 local buffers = require('devtools.tests.buffers')
-local describe = require('devtools.tests.define.describe')
+local describe = require('devtools.tests.describe')
 
 describe("test log_auto_inspect", function()
     local log = require("devtools.logs.logger"):universal() -- for now use my single logger is fine

@@ -1,5 +1,5 @@
 local assert = require 'luassert'
-local describe = require('devtools.tests.define.describe')
+local describe = require('devtools.tests.describe')
 
 describe("test CoroutineStateTracker", function()
     local CoroutineStateTracker = require("devtools.co.state")

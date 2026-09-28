@@ -1,7 +1,7 @@
-local describe = require('devtools.tests.define.describe')
+local describe = require('devtools.tests.describe')
 local should = require('devtools.tests.should')
-local only = require('devtools.tests.define.only')
-local skip = require('devtools.tests.define.skip')
+local only = require('devtools.tests.only')
+local skip = require('devtools.tests.skip')
 
 local Timer = require('devtools.logs.timer')
 

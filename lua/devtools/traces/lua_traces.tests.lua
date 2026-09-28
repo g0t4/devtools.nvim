@@ -1,7 +1,7 @@
 local should = require('devtools.tests.should')
-local describe = require('devtools.tests.define.describe')
-local only = require('devtools.tests.define.only')
-local skip = require('devtools.tests.define.skip')
+local describe = require('devtools.tests.describe')
+local only = require('devtools.tests.only')
+local skip = require('devtools.tests.skip')
 
 local lua_traces = require("devtools.traces.lua_traces")
 -- FYI changing lines below may mess up line numbers in assertion below for this file, just shift those for lua_traces.tests.lua and it'll be fine!

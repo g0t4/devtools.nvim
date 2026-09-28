@@ -1,9 +1,9 @@
 local histogram = require('devtools.diff.histogram')
 local should = require('devtools.tests.should')
 local combined = require('devtools.diff.combined')
-local describe = require('devtools.tests.define.describe')
-local only = require('devtools.tests.define.only')
-local skip = require('devtools.tests.define.skip')
+local describe = require('devtools.tests.describe')
+local only = require('devtools.tests.only')
+local skip = require('devtools.tests.skip')
 
 local TestTimer = require("devtools.async.test_timer")
 local Counter = require("devtools.async.counter")

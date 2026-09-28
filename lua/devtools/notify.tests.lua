@@ -1,4 +1,4 @@
-local describe = require('devtools.tests.define.describe')
+local describe = require('devtools.tests.describe')
 local notify = require("devtools.notify")
 
 describe("devtools.notify", function()

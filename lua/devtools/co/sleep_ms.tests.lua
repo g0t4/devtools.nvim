@@ -1,7 +1,7 @@
 local sleep_ms = require("devtools.co.sleep_ms")
 local TestTimer = require("devtools.async.test_timer")
 local ensure_in_coroutine = require("devtools.co.ensure_in_coroutine")
-local describe = require("devtools.tests.define.describe")
+local describe = require("devtools.tests.describe")
 
 -- FYI not sure this test was for sleep_ms, but it works for it (assuming other parts like TestTimer are well tested)
 describe("sleep_ms", function()

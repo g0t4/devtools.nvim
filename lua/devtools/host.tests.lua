@@ -1,5 +1,5 @@
 local inspect = require("devtools.inspect")
-local describe = require('devtools.tests.define.describe')
+local describe = require('devtools.tests.describe')
 local host = require("devtools.host")
 
 describe("lookup host", function()

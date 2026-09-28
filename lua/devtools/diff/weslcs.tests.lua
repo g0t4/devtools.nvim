@@ -2,7 +2,7 @@ local inspect = require('devtools.inspect')
 local should = require('devtools.tests.should')
 local weslcs = require('devtools.diff.weslcs')
 local splitter = require('devtools.diff.splitter')
-local describe = require('devtools.tests.define.describe')
+local describe = require('devtools.tests.describe')
 
 describe('tiny, no shared prefix/suffix words', function()
     local before_text = 'b )'

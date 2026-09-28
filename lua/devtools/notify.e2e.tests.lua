@@ -1,7 +1,7 @@
-local describe = require("devtools.tests.define.describe")
+local describe = require("devtools.tests.describe")
 local notify = require("devtools.notify")
 local screen = require("devtools.tests.screen")
-local only = require("devtools.tests.define.only")
+local only = require("devtools.tests.only")
 
 --- Wait for a condition to become true, polling every `poll_ms` milliseconds.
 --- @param predicate fun(): boolean
