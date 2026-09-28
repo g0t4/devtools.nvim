@@ -1,0 +1,18 @@
+local sleep_ms = require("devtools.co.sleep_ms")
+local TestTimer = require("devtools.async.test_timer")
+local ensure_in_coroutine = require("devtools.co.ensure_in_coroutine")
+local describe = require("devtools.tests.define.describe")
+
+-- FYI not sure this test was for sleep_ms, but it works for it (assuming other parts like TestTimer are well tested)
+describe("sleep_ms", function()
+    it("test sleep_ms works with TestTimer", function()
+        -- !!! MUST wrap with ensure_in_coroutine for _busted_ test runner to work
+        -- - b/c busted (standalone cmd) runs tests in main thread! and thus the yield in sleep_ms blows up on the main thread (cannot yield/resume the main coroutine/thread)
+        -- BTW plenary's runner (in nvim) does not run tests in main coroutine... so it will work w/o ensure_in_coroutine (but leave this here to be compat with busted)
+        ensure_in_coroutine(function()
+            local timer = TestTimer:new(250)
+            sleep_ms(250)
+            timer:stop()
+        end)
+    end)
+end)
