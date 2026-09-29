@@ -1,8 +1,8 @@
 local Counter = {}
 Counter.__index = Counter
 
-function Counter:new()
-    return setmetatable({ count = 0 }, self)
+function Counter.new()
+    return setmetatable({ count = 0 }, Counter)
 end
 
 function Counter:increment()
