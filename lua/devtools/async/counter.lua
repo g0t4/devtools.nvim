@@ -7,7 +7,7 @@ end
 
 function Counter.one()
     -- PRN `Counter.new_one()` if `one()` is confusing
-    return setmetatable({ count = 1 }, Counter)
+    return Counter.new():increment()
 end
 
 function Counter:increment()
