@@ -5,11 +5,19 @@ function Counter:new()
     return setmetatable({ count = 0 }, self)
 end
 
-function Counter:increment() self.count = self.count + 1 end
+function Counter:increment()
+    self.count = self.count + 1
+    return self -- so can do `Counter:new():increment()`
+end
 
-function Counter:decrement() self.count = self.count - 1 end
+function Counter:decrement()
+    self.count = self.count - 1
+    return self
+end
 
-function Counter:is_done() return self.count == 0 end
+function Counter:is_done()
+    return self.count == 0
+end
 
 function Counter:wait(timeout)
     -- up to 1 second or timeout...
