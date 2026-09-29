@@ -5,6 +5,11 @@ function Counter.new()
     return setmetatable({ count = 0 }, Counter)
 end
 
+function Counter.one()
+    -- PRN `Counter.new_one()` if `one()` is confusing
+    return setmetatable({ count = 1 }, Counter)
+end
+
 function Counter:increment()
     self.count = self.count + 1
     return self -- so can do `Counter:new():increment()`
