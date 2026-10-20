@@ -85,7 +85,7 @@ function Notification:new(msg, level, opts)
             hl_group = title_hl.group,
             hl_eol = true,
             end_row = 0,
-            end_col = -1,
+            end_col = #self.opts.title,
         })
     end
 
