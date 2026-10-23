@@ -100,7 +100,7 @@ function expect(truthy)
     while true do
         local name, value = debug.getlocal(2, num_locals)
         if not name then break end
-        print("(locals) bindings[" .. name .. "]=" .. vim.inspect(value))
+        -- print("(locals) bindings[" .. name .. "]=" .. vim.inspect(value))
         bindings[name] = vim.inspect(value)
         num_locals = num_locals + 1
     end
@@ -110,7 +110,7 @@ function expect(truthy)
     while true do
         local name, value = debug.getupvalue(calling_frame.func, num_upvalues)
         if not name then break end
-        print("(upvalues) bindings[" .. name .. "]=" .. vim.inspect(value))
+        -- print("(upvalues) bindings[" .. name .. "]=" .. vim.inspect(value))
         if bindings[name] == nil then
             bindings[name] = vim.inspect(value)
         end
