@@ -6,6 +6,7 @@ local str = require("devtools.tests.str")
 should.COLORFUL = false
 
 describe("expect", function()
+
     describe("vim.inspect the values?", function()
         it("strings are quoted", function()
             assert.error_match(function()
@@ -15,13 +16,14 @@ describe("expect", function()
             end, "assertion failed:\n *Source: *expect%(x == y%)\n *Values: *expect%('foo' == 'bar'%)")
         end)
     end)
+
     describe("locals in outer scope", function()
         it("should still show values", function()
             local x = "100%"
             local y = 'something else'
             assert.error_match(function()
                 expect(x == y)
-            end, "assertion failed:\n *Source: *expect%(x == y%)\n *Values: *expect%(100%% == something else%)")
+            end, "assertion failed:\n *Source: *expect%(x == y%)\n *Values: *expect%(\"100%%\" == \"something else\"%)")
         end)
     end)
 
@@ -31,7 +33,7 @@ describe("expect", function()
                 local x = "100%"
                 local y = 'something else'
                 expect(x == y)
-            end, "assertion failed:\n *Source: *expect%(x == y%)\n *Values: *expect%(100%% == something else%)")
+            end, "assertion failed:\n *Source: *expect%(x == y%)\n *Values: *expect%(\"100%%\" == \"something else\"%)")
         end)
     end)
 

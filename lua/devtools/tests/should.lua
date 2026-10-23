@@ -101,7 +101,7 @@ function expect(truthy)
         -- print("locals[" .. num_locals .. "]=" .. tostring(debug.getlocal(2, num_locals)))
         local name, value = debug.getlocal(2, num_locals)
         if not name then break end
-        locals[name] = tostring(value)
+        locals[name] = vim.inspect(value)
         num_locals = num_locals + 1
     end
 
