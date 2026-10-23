@@ -6,6 +6,14 @@ local str = require("devtools.tests.str")
 should.COLORFUL = false
 
 describe("expect", function()
+    describe("ensure values work", function()
+        it("% in value should not", function()
+            assert.error_match(function()
+                expect("foo%" == "bar%")
+            end, "assertion failed:\n *Source: *expect%(\"foo%%\" == \"bar%%\"%)")
+        end)
+    end)
+
     describe("greater than ", function()
         describe("is greater than", function()
             it("literals works", function()
