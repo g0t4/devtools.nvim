@@ -98,6 +98,7 @@ function expect(truthy)
     local locals = {}
     local num_locals = 1
     while true do
+        -- TODO locals in outer scope issue (anonymous functions)
         -- print("locals[" .. num_locals .. "]=" .. tostring(debug.getlocal(2, num_locals)))
         local name, value = debug.getlocal(2, num_locals)
         if not name then break end
@@ -118,8 +119,6 @@ function expect(truthy)
     local substituted_line = line
     for name, value in pairs(locals) do
         -- Simple pattern: replace whole word matches of the variable name
-        -- PRN wrap strings in '' if no ' => "" if no " => or pick one and escape the other?
-        -- TODO locals in outer scope issue (anonymous functions)
         substituted_line = substituted_line:gsub(
             "%f[%w_]" .. name .. "%f[^%w_]",
             function() return value end
