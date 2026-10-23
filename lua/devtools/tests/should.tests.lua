@@ -7,10 +7,12 @@ should.COLORFUL = false
 
 describe("expect", function()
     describe("ensure values work", function()
-        it("% in value should not", function()
+        it("% shouldn't break showing values", function()
             assert.error_match(function()
-                expect("foo%" == "bar%")
-            end, "assertion failed:\n *Source: *expect%(\"foo%%\" == \"bar%%\"%)")
+                local x = "100%"
+                local y = 'something else'
+                expect(x == y)
+            end, "assertion failed:\n *Source: *expect%(x == y%)\n *Values: *expect%(100%% == something else%)")
         end)
     end)
 

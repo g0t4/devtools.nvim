@@ -68,7 +68,6 @@ end
 M.COLORFUL = true
 
 function expect(truthy)
-
     -- TODO should this be a module? leave it global for now?
     -- SPIKE an idea for a new expect that can make it easier to understand what went wrong... think of reverse engineering the test code that triggered this
     --   first off I can just print the expect call's source line
@@ -119,7 +118,12 @@ function expect(truthy)
     local substituted_line = line
     for name, value in pairs(locals) do
         -- Simple pattern: replace whole word matches of the variable name
-        substituted_line = substituted_line:gsub("%f[%w]" .. name .. "%f[%W]", value)
+        -- PRN wrap strings in '' if no ' => "" if no " => or pick one and escape the other?
+        -- TODO locals in outer scope issue (anonymous functions)
+        substituted_line = substituted_line:gsub(
+            "%f[%w_]" .. name .. "%f[^%w_]",
+            function() return value end
+        )
     end
 
     error("\nassertion failed:\n  Source: " .. source .. "\n  Values: " .. substituted_line)
