@@ -6,6 +6,15 @@ local str = require("devtools.tests.str")
 should.COLORFUL = false
 
 describe("expect", function()
+    describe("vim.inspect the values?", function()
+        it("strings are quoted", function()
+            assert.error_match(function()
+                local x = "foo"
+                local y = 'bar'
+                expect(x == y)
+            end, "assertion failed:\n *Source: *expect%(x == y%)\n *Values: *expect%('foo' == 'bar'%)")
+        end)
+    end)
     describe("locals in outer scope", function()
         it("should still show values", function()
             local x = "100%"
