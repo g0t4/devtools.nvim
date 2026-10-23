@@ -3,6 +3,8 @@ local str = require("devtools.tests.str")
 
 --TODO! see if someone already made a library for this idea?
 
+should.COLORFUL = false
+
 describe("expect", function()
     describe("greater than ", function()
         describe("is greater than", function()

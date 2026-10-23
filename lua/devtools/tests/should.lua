@@ -64,7 +64,11 @@ function M.be_nil(actual)
     assert.is_nil(actual)
 end
 
+--- disable color for testing only
+M.COLORFUL = true
+
 function expect(truthy)
+
     -- TODO should this be a module? leave it global for now?
     -- SPIKE an idea for a new expect that can make it easier to understand what went wrong... think of reverse engineering the test code that triggered this
     --   first off I can just print the expect call's source line
@@ -103,6 +107,9 @@ function expect(truthy)
     end
 
     local source = line
+    if M.COLORFUL then
+        source = ansi.red(source)
+    end
     if num_locals == 1 then
         error("\nassertion failed:\n  Source: " .. source)
         return
