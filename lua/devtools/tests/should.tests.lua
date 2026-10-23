@@ -6,6 +6,16 @@ local str = require("devtools.tests.str")
 should.COLORFUL = false
 
 describe("expect", function()
+    describe("locals in outer scope", function()
+        it("should still show values", function()
+            local x = "100%"
+            local y = 'something else'
+            assert.error_match(function()
+                expect(x == y)
+            end, "assertion failed:\n *Source: *expect%(x == y%)\n *Values: *expect%(100%% == something else%)")
+        end)
+    end)
+
     describe("ensure values work", function()
         it("% shouldn't break showing values", function()
             assert.error_match(function()
