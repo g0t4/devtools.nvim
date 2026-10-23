@@ -121,7 +121,8 @@ function expect(truthy)
     if M.COLORFUL then
         source = ansi.red(source)
     end
-    if num_upvalues + num_locals == 2 then
+    local no_bindings = num_upvalues + num_locals == 2
+    if no_bindings then
         error("\nassertion failed:\n  Source: " .. source)
         return
     end
