@@ -102,8 +102,9 @@ function expect(truthy)
         num_locals = num_locals + 1
     end
 
+    local source = line
     if num_locals == 1 then
-        error("\nassertion failed:\n  Source: " .. line)
+        error("\nassertion failed:\n  Source: " .. source)
         return
     end
 
@@ -114,7 +115,7 @@ function expect(truthy)
         substituted_line = substituted_line:gsub("%f[%w]" .. name .. "%f[%W]", value)
     end
 
-    error("\nassertion failed:\n  Source: " .. line .. "\n  Values: " .. substituted_line)
+    error("\nassertion failed:\n  Source: " .. source .. "\n  Values: " .. substituted_line)
 end
 
 return M
