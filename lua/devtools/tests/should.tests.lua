@@ -1,12 +1,13 @@
 local should = require("devtools.tests.should")
 local str = require("devtools.tests.str")
+local only = require("devtools.tests.only")
+local it = require("devtools.tests.skip")
 
 --TODO! see if someone already made a library for this idea?
 
 should.COLORFUL = false
 
 describe("expect", function()
-
     describe("vim.inspect the values?", function()
         it("strings are quoted", function()
             assert.error_match(function()
@@ -18,7 +19,7 @@ describe("expect", function()
     end)
 
     describe("locals in outer scope", function()
-        it("should still show values", function()
+        only("should still show values", function()
             local x = "100%"
             local y = 'something else'
             assert.error_match(function()

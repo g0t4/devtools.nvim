@@ -99,7 +99,7 @@ function expect(truthy)
     local num_locals = 1
     while true do
         -- TODO locals in outer scope issue (anonymous functions)
-        -- print("locals[" .. num_locals .. "]=" .. tostring(debug.getlocal(2, num_locals)))
+        print("locals[" .. num_locals .. "]=" .. tostring(debug.getlocal(2, num_locals)))
         local name, value = debug.getlocal(2, num_locals)
         if not name then break end
         locals[name] = vim.inspect(value)
