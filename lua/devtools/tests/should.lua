@@ -77,7 +77,7 @@ function expect(truthy)
     end
 
     -- PRN also print other lines? maybe detect what called what... can help if I have assertion helpers for reuse
-    local calling_frame = debug.getinfo(2, "Sln")
+    local calling_frame = debug.getinfo(2, "Slnf")
     -- vim.print(tb)
 
     local is_a_file = calling_frame.source:match("^@")
@@ -98,19 +98,30 @@ function expect(truthy)
     local locals = {}
     local num_locals = 1
     while true do
-        -- TODO locals in outer scope issue (anonymous functions)
-        print("locals[" .. num_locals .. "]=" .. tostring(debug.getlocal(2, num_locals)))
         local name, value = debug.getlocal(2, num_locals)
         if not name then break end
+        print("locals[" .. name .. "]=" .. vim.inspect(value))
         locals[name] = vim.inspect(value)
         num_locals = num_locals + 1
+    end
+
+    -- Collect upvalues from the calling function
+    local num_upvalues = 1
+    while true do
+        local name, value = debug.getupvalue(calling_frame.func, num_upvalues)
+        if not name then break end
+        print("upvalues[" .. name .. "]=" .. vim.inspect(value))
+        if locals[name] == nil then
+            locals[name] = vim.inspect(value)
+        end
+        num_upvalues = num_upvalues + 1
     end
 
     local source = line
     if M.COLORFUL then
         source = ansi.red(source)
     end
-    if num_locals == 1 then
+    if num_upvalues + num_locals == 2 then
         error("\nassertion failed:\n  Source: " .. source)
         return
     end
