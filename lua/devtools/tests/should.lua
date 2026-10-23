@@ -95,13 +95,13 @@ function expect(truthy)
     -- error("\nassertion failed:\n" .. line)
 
     -- Collect local variables from the calling frame
-    local locals = {}
+    local bindings = {}
     local num_locals = 1
     while true do
         local name, value = debug.getlocal(2, num_locals)
         if not name then break end
-        -- print("locals[" .. name .. "]=" .. vim.inspect(value))
-        locals[name] = vim.inspect(value)
+        print("(locals) bindings[" .. name .. "]=" .. vim.inspect(value))
+        bindings[name] = vim.inspect(value)
         num_locals = num_locals + 1
     end
 
@@ -110,9 +110,9 @@ function expect(truthy)
     while true do
         local name, value = debug.getupvalue(calling_frame.func, num_upvalues)
         if not name then break end
-        -- print("upvalues[" .. name .. "]=" .. vim.inspect(value))
-        if locals[name] == nil then
-            locals[name] = vim.inspect(value)
+        print("(upvalues) bindings[" .. name .. "]=" .. vim.inspect(value))
+        if bindings[name] == nil then
+            bindings[name] = vim.inspect(value)
         end
         num_upvalues = num_upvalues + 1
     end
@@ -128,7 +128,7 @@ function expect(truthy)
 
     -- Substitute local variable names with their values in the line
     local substituted_line = line
-    for name, value in pairs(locals) do
+    for name, value in pairs(bindings) do
         -- Simple pattern: replace whole word matches of the variable name
         substituted_line = substituted_line:gsub(
             "%f[%w_]" .. name .. "%f[^%w_]",

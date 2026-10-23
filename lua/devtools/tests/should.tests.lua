@@ -18,7 +18,7 @@ describe("expect", function()
         end)
     end)
 
-    describe("locals in outer scope", function()
+    describe("upvalues in outer scope", function()
         only("should still show values", function()
             local x = "100%"
             local y = 'something else'
