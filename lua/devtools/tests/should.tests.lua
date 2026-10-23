@@ -1,7 +1,7 @@
 local should = require("devtools.tests.should")
 local str = require("devtools.tests.str")
 local only = require("devtools.tests.only")
-local it = require("devtools.tests.skip")
+-- local it = require("devtools.tests.skip")
 
 --TODO! see if someone already made a library for this idea?
 
@@ -19,7 +19,7 @@ describe("expect", function()
     end)
 
     describe("upvalues in outer scope", function()
-        only("should still show values", function()
+        it("should still show values", function()
             local x = "100%"
             local y = 'something else'
             assert.error_match(function()

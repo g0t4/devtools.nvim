@@ -67,7 +67,9 @@ end
 --- disable color for testing only
 M.COLORFUL = true
 
-function expect(truthy)
+function expect(truthy, message_on_failure)
+    message_on_failure = message_on_failure or ""
+
     -- TODO should this be a module? leave it global for now?
     -- SPIKE an idea for a new expect that can make it easier to understand what went wrong... think of reverse engineering the test code that triggered this
     --   first off I can just print the expect call's source line
@@ -122,8 +124,13 @@ function expect(truthy)
         source = ansi.red(source)
     end
     local no_bindings = num_upvalues + num_locals == 2
+    local message = "\nassertion failed:\n  Source: " .. source
+    if message_on_failure then
+        message = message .. "\n  Message: " .. ansi.yellow(message_on_failure)
+    end
+
     if no_bindings then
-        error("\nassertion failed:\n  Source: " .. source)
+        error(message)
         return
     end
 
@@ -137,7 +144,8 @@ function expect(truthy)
         )
     end
 
-    error("\nassertion failed:\n  Source: " .. source .. "\n  Values: " .. substituted_line)
+    message = message .. "\n  Values: " .. substituted_line
+    error(message)
 end
 
 return M
