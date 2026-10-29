@@ -20,16 +20,29 @@ local function from_lua_traceback(text)
     vim.cmd("copen")
 end
 
+--- Auto detect the type of trace and use the appropriate handler for it
+---  all parsers/mappers are setup as separate lua modules and well tested so they just work
+---  if you have issues with a trace, save it to a file and load it and test it!
 function M.set_quickfix_from(text)
-    if text:find("stack traceback:\n") then
+    local lua_marker = text:find("stack traceback:\n")
+    if lua_marker then
         -- assume \n after means it was on its own line and dont care if it is first or not (which is why I don't require \n at start)
         -- FYI \n b/c stack traceback label is not first line and has lines after, if you copy the wrong part it might not match
         from_lua_traceback(text)
         return
     end
-    -- TODO xonsh (w/ and w/o SHOW_TRACEBACK)
-    -- TODO python (vanilla vs rich?)
-    vim.notify("did not recognize the clipboard format for quickfix purposes", vim.log.levels.INFO)
+    -- TODO xonsh/python cases (SETUP tests first and then map as appropriate here by designating marker(s))
+    -- TODO other runtimes/languages/fwks
+    --
+    -- FYI I could branch out beyond just traces... but for now that is my focus, but if there's something else that would be convenient to be navigable then add it!
+    vim.notify("did not recognize clipboard format for quickfix setup", vim.log.levels.INFO)
+end
+
+function M.set_quickfix_from_clipboard()
+    -- FYI I register keymaps to call this from my neovim dotfiles config:
+    --  ~/repos/github/g0t4/dotfiles/.config/nvim/lua/non-plugins/quickfixs.lua
+    local clipboard = vim.fn.getreg('+')
+    M.set_quickfix_from(clipboard)
 end
 
 return M

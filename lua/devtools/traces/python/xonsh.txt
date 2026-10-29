@@ -1,0 +1,38 @@
+Unhandled exception in event loop:
+  File "/Users/wesdemos/.local/share/uv/python/cpython-3.14.3-macos-aarch64-none/lib/python3.14/asyncio/events.py", line 94, in _run
+    self._context.run(self._callback, *self._args)
+    ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wesdemos/.local/share/uv/tools/xonsh/lib/python3.14/site-packages/prompt_toolkit/application/application.py", line 710, in read_from_input_in_context
+    context.copy().run(read_from_input)
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/wesdemos/.local/share/uv/tools/xonsh/lib/python3.14/site-packages/prompt_toolkit/application/application.py", line 690, in read_from_input
+    self.key_processor.process_keys()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/wesdemos/.local/share/uv/tools/xonsh/lib/python3.14/site-packages/prompt_toolkit/key_binding/key_processor.py", line 274, in process_keys
+    self._process_coroutine.send(key_press)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "/Users/wesdemos/.local/share/uv/tools/xonsh/lib/python3.14/site-packages/prompt_toolkit/key_binding/key_processor.py", line 189, in _process
+    self._call_handler(matches[-1], key_sequence=buffer[:])
+    ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wesdemos/.local/share/uv/tools/xonsh/lib/python3.14/site-packages/prompt_toolkit/key_binding/key_processor.py", line 324, in _call_handler
+    handler.call(event)
+    ~~~~~~~~~~~~^^^^^^^
+  File "/Users/wesdemos/.local/share/uv/tools/xonsh/lib/python3.14/site-packages/prompt_toolkit/key_binding/key_bindings.py", line 123, in call
+    result = self.handler(event)
+  File "/Users/wesdemos/.config/xonsh/rc.d/abbreviations.xsh", line 167, in _expand_abbreviation_on_space
+    expand_abbreviation_on_space(
+
+  File "/Users/wesdemos/.config/xonsh/lib/wes_xonsh_abbreviations.py", line 203, in expand_abbreviation_on_space
+    result = expander.expand(buffer)
+  File "/Users/wesdemos/.config/xonsh/lib/wes_xonsh_abbreviations.py", line 181, in expand
+    expansion = self.registry.expand(context)
+  File "/Users/wesdemos/.config/xonsh/lib/wes_abbreviations.py", line 205, in expand
+    result = abbreviation.expand(context, match)
+  File "/Users/wesdemos/.config/xonsh/lib/wes_abbreviations.py", line 143, in expand
+    self.replacement(context, regex_match)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/wesdemos/.config/xonsh/lib/wes_trace_helpers.py", line 70, in expand_trace_file
+    selected = files[trace_number - 1] if 1 <= trace_number <= len(files) else None
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Exception '<=' not supported between instances of 'int' and 'str'
