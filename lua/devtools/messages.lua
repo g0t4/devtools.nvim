@@ -320,6 +320,7 @@ function M.create_new_buffer()
     -- ensure listed w/ name:
     --   I want users to easily find it should they want to
     vim.api.nvim_set_option_value('buflisted', true, { buf = M.dump_bufnr })
+    vim.bo[M.dump_bufnr].filetype = 'markdown'
 end
 
 local function ensure_buffer_is_open()
